@@ -10,6 +10,8 @@ public class MainActivity extends Activity {
 	ListView _listView;
 	private String lv_arr[]={"Android","iPhone","BlackBerry","AndroidPeople"};
 	
+	//http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&search=&lang=BG
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -19,6 +21,10 @@ public class MainActivity extends Activity {
 		_listView = (ListView)findViewById(R.id.ListView01);
 		_listView.setAdapter(
 				new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lv_arr ));
+	}
+	
+	private void downloadRates(String url) {
+		
 	}
 
 }
