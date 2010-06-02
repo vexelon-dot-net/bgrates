@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,17 +17,19 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.Menu;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
 	
 	private final static String TAG = Defs.LOG_TAG;
-	ListView _listView;
-	private String lv_arr[]={"Android","iPhone","BlackBerry","AndroidPeople"};
+	private ListView _listView;
+	private ProgressDialog _progressDialog;
+	private CurrencyListAdapter _adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +38,36 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 		Log.i(TAG, "Starting up Application...");
 		
-		downloadFile(Defs.URL_BNB_RATES, Defs.INTERNAL_STORAGE_FILE);
-		parseRates(Defs.INTERNAL_STORAGE_FILE);
+		ExchangeRate xRate = new ExchangeRate();
 		
+		if ( ! parseRates(Defs.INTERNAL_STORAGE_FILE, xRate) ) {
+			downloadFile(Defs.URL_BNB_RATES, Defs.INTERNAL_STORAGE_FILE);
+			parseRates(Defs.INTERNAL_STORAGE_FILE, xRate);
+		}
+		
+		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, xRate.items());
 		_listView = (ListView)findViewById(R.id.ListView01);
-		_listView.setAdapter(
-				new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lv_arr ));
+		_listView.setAdapter(_adapter);
+//		_listView.setAdapter(
+//				new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lv_arr ));
+		
+		//_progressDialog = ProgressDialog.show(this, "Please wait ...", "Downloading data...", true);
 	}
 	
-	private ExchangeRate parseRates(String path) {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, Defs.MENU_REFRESH, 0, "Refresh");
+		menu.add(0, Defs.MENU_ABOUT, 0, "About");
+		return true;
+	}
+	
+	private boolean parseRates(String path, ExchangeRate rates) {
 
 		Log.d(TAG, "Parsing XML file ...");
 	
+		boolean bRet = false;
+		//ExchangeRate rates = null;
 		FileInputStream fis = null;
-		ExchangeRate rates = null;
 		
 		try {
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -71,7 +90,7 @@ public class MainActivity extends Activity {
 				switch(eventType) {
 				case XmlPullParser.START_DOCUMENT:
 					Log.i(TAG, "Creating new ExchangeRate() object ...");
-					rates = new ExchangeRate();
+					//rates = new ExchangeRate();
 					break;
 				
 				case XmlPullParser.START_TAG:
@@ -125,6 +144,9 @@ public class MainActivity extends Activity {
 				// advance to next tag
 				eventType = xpp.next();
 			}
+			
+			bRet = true;
+			
 		}
 		catch(Exception e) {
 			Log.e(TAG, "Error while parsing XML !", e);
@@ -135,7 +157,7 @@ public class MainActivity extends Activity {
 			} catch (IOException e) { }
 		}
 		
-		return rates;
+		return bRet;
 	}
 	
 	private void downloadFile(String url, String destFile) {

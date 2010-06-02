@@ -13,5 +13,8 @@ public class Defs {
 	final static String XML_TAG_REVERSERATE = "REVERSERATE";
 	final static String XML_TAG_RATE = "RATE";
 	final static String XML_TAG_EXTRAINFO = "EXTRAINFO";
+	
+	final static int MENU_REFRESH = 10;
+	final static int MENU_ABOUT = 20;
 
 }

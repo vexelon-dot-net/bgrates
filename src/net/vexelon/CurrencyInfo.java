@@ -13,7 +13,7 @@ public class CurrencyInfo {
 		
 	}
 	
-//	public CurrencyInfo( String name, String code, int ratio, double rate, double reverseRate, String extraInfo ) {
+//	public CurrencyInfo( String name, String code, String ratio, String rate, String reverseRate, String extraInfo ) {
 //		this.name = name;
 //		this.code = code;
 //		this.ratio = ratio;

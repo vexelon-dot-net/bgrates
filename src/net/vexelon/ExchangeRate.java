@@ -22,6 +22,10 @@ public class ExchangeRate {
 		this._header = header;
 	}
 	
+	public List<CurrencyInfo> items() {
+		return this._currencies;
+	}
+	
 	public boolean isHeaderAvailable() {
 		return (this._header != null);
 	}
