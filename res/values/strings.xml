@@ -2,4 +2,6 @@
 <resources>
     <string name="hello">Hello World!</string>
     <string name="app_name">BGrates</string>
+<string name="perm_inet_label">Allow the application to access Internet and download resource files.</string>
+<string name="perm_inet_desc">Allow the application to download a list of currency rates in order to synchronize it\'s local database.</string>
 </resources>
