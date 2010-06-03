@@ -1,4 +1,4 @@
-package net.vexelon;
+package net.vexelon.bgrates;
 
 import java.util.ArrayList;
 import java.util.Collections;

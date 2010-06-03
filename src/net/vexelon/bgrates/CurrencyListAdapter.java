@@ -1,7 +1,9 @@
-package net.vexelon;
+package net.vexelon.bgrates;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.vexelon.R;
 
 import android.content.Context;
 import android.util.Log;

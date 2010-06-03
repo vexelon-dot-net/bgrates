@@ -1,4 +1,4 @@
-package net.vexelon;
+package net.vexelon.bgrates;
 
 public class Defs {
 
