@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import net.vexelon.R;
+import net.vexelon.bgrates.R;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.xmlpull.v1.XmlPullParser;
@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
 				case XmlPullParser.START_TAG:
 					tagName = xpp.getName();
 					
-					Log.d(TAG, "Reading TAG=" + tagName);
+					//Log.d(TAG, "Reading TAG=" + tagName);
 					
 					// parse ROW
 					if ( tagName.equals(Defs.XML_TAG_ROW) ) {
