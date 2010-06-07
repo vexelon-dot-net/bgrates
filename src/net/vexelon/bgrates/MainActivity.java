@@ -19,11 +19,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
@@ -56,20 +58,43 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		switch(item.getItemId()) {
+		case Defs.MENU_REFRESH:
+			refresh();
+			break;
+		}
+
+		return false;
+	}
+	
 	private void refresh() {
 		Log.d(TAG, "Refresh contents ...");
 		
-		this.setTitle(_myRates.getHeader().getTitle());
-		
-		//_progressDialog = ProgressDialog.show(this, "Please wait ...", "Downloading data...", true);		
+		_progressDialog = ProgressDialog.show(this, "Please wait ...", "Updating rates...", true);		
 		
 		_myRates = new ExchangeRate();
 		if ( ! parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
 			downloadFile(Defs.URL_BNB_RATES, Defs.INTERNAL_STORAGE_FILE);
-			parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates);
+			
+			if ( ! parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
+				//TODO:
+			}
+			
+			
 		}
 		
+		_progressDialog.dismiss();
 		
+		// err
+		AlertDialog ad = new AlertDialog.Builder(this).create();
+		ad.setMessage("Error!");
+		ad.setTitle("Something bad happened!");
+		//ad.show();
+		
+		this.setTitle(_myRates.getHeader().getTitle());
 	}
 	
 	private boolean parseRates(String path, ExchangeRate rates) {
