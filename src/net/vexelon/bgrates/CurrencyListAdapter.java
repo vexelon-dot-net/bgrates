@@ -34,11 +34,14 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 		}
 		
 		// set texts
-		ImageView icon = (ImageView) v.findViewById(R.id.icon);
-		icon.setImageResource(R.drawable.bg);
-
 		CurrencyInfo ci = _items.get(position);
 		if ( ci != null ) {
+			
+			ImageView icon = (ImageView) v.findViewById(R.id.icon);
+			int imgId = ExchangeRate.getResrouceFromCode(ci);
+			if ( imgId != -1 )
+				icon.setImageResource(imgId);
+			
 			TextView tvCode = (TextView) v.findViewById(R.id.code);
 			if ( tvCode != null )
 				tvCode.setText(ci.getName());

@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
 	private ListView _listView;
 	private ProgressDialog _progressDialog;
 	private CurrencyListAdapter _adapter;
+	private ExchangeRate _myRates = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,20 +41,12 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 		Log.i(TAG, "Starting up Application...");
 		
-		ExchangeRate xRate = new ExchangeRate();
+		refresh();
 		
-		if ( ! parseRates(Defs.INTERNAL_STORAGE_FILE, xRate) ) {
-			downloadFile(Defs.URL_BNB_RATES, Defs.INTERNAL_STORAGE_FILE);
-			parseRates(Defs.INTERNAL_STORAGE_FILE, xRate);
-		}
-		
-		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, xRate.items());
+		// populate ListView UI
+		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
 		_listView = (ListView)findViewById(R.id.ListView01);
 		_listView.setAdapter(_adapter);
-//		_listView.setAdapter(
-//				new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lv_arr ));
-		
-		//_progressDialog = ProgressDialog.show(this, "Please wait ...", "Downloading data...", true);
 	}
 	
 	@Override
@@ -63,8 +56,23 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
+	private void refresh() {
+		Log.d(TAG, "Refresh contents ...");
+		
+		this.setTitle(_myRates.getHeader().getTitle());
+		
+		//_progressDialog = ProgressDialog.show(this, "Please wait ...", "Downloading data...", true);		
+		
+		_myRates = new ExchangeRate();
+		if ( ! parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
+			downloadFile(Defs.URL_BNB_RATES, Defs.INTERNAL_STORAGE_FILE);
+			parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates);
+		}
+		
+		
+	}
+	
 	private boolean parseRates(String path, ExchangeRate rates) {
-
 		Log.d(TAG, "Parsing XML file ...");
 	
 		boolean bRet = false;
@@ -82,8 +90,10 @@ public class MainActivity extends Activity {
 			
 			int eventType = xpp.getEventType();
 //			boolean done = false;
-			boolean parsingRow = false;
+			boolean parsingRow = false,
+					parsingHeader = false;
 			CurrencyInfo curInfo = null;
+			HeaderInfo headerInfo = null;
 			
 			while( eventType != XmlPullParser.END_DOCUMENT ) {
 				
@@ -101,27 +111,60 @@ public class MainActivity extends Activity {
 					//Log.d(TAG, "Reading TAG=" + tagName);
 					
 					// parse ROW
-					if ( tagName.equals(Defs.XML_TAG_ROW) ) {
+					if ( tagName.equals(Defs.XML_TAG_ROW) && rates.isHeaderAvailable() ) {
 						parsingRow = true;
 						curInfo = new CurrencyInfo();
 					}
-					else if ( tagName.equals(Defs.XML_TAG_NAME) && parsingRow ) {
-						curInfo.setName(xpp.nextText());
+					else if ( tagName.equals(Defs.XML_TAG_ROW) && !rates.isHeaderAvailable() ) {
+						parsingHeader = true;
+						headerInfo = new HeaderInfo();
 					}
-					else if ( tagName.equals(Defs.XML_TAG_CODE) && parsingRow ) {
-						curInfo.setCode(xpp.nextText());
+					
+					if ( parsingRow ) {
+						if ( tagName.equals(Defs.XML_TAG_NAME) ) {
+							curInfo.setName(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_CODE) ) {
+							curInfo.setCode(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_RATIO) ) {
+							curInfo.setRatio(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_RATE) ) {
+							curInfo.setRate(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_REVERSERATE) ) {
+							curInfo.setReverseRate(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_EXTRAINFO) ) {
+							curInfo.setExtraInfo(xpp.nextText());
+						}
 					}
-					else if ( tagName.equals(Defs.XML_TAG_RATIO) && parsingRow ) {
-						curInfo.setRatio(xpp.nextText());
-					}
-					else if ( tagName.equals(Defs.XML_TAG_RATE) && parsingRow ) {
-						curInfo.setRate(xpp.nextText());
-					}
-					else if ( tagName.equals(Defs.XML_TAG_REVERSERATE) && parsingRow ) {
-						curInfo.setReverseRate(xpp.nextText());
-					}
-					else if ( tagName.equals(Defs.XML_TAG_EXTRAINFO) && parsingRow ) {
-						curInfo.setExtraInfo(xpp.nextText());
+					else if ( parsingHeader ) {
+						if ( tagName.equals(Defs.XML_TAG_NAME) ) {
+							headerInfo.setName(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_CODE) ) {
+							headerInfo.setCode(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_RATIO) ) {
+							headerInfo.setRatio(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_RATE) ) {
+							headerInfo.setRate(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_REVERSERATE) ) {
+							headerInfo.setReverseRate(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_EXTRAINFO) ) {
+							headerInfo.setExtraInfo(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_CURR_DATE)) {
+							headerInfo.setCurDate(xpp.nextText());
+						}
+						else if ( tagName.equals(Defs.XML_TAG_TITLE)) {
+							headerInfo.setTitle(xpp.nextText());
+						}
 					}
 					
 					break;
@@ -129,16 +172,14 @@ public class MainActivity extends Activity {
 				case XmlPullParser.END_TAG:
 					tagName = xpp.getName();
 					
-					if ( tagName.equals(Defs.XML_TAG_ROW) ) {
+					if ( tagName.equals(Defs.XML_TAG_ROW) && parsingRow ) {
 						parsingRow = false;
-						
-						if ( !rates.isHeaderAvailable() ) {
-							Log.i(TAG, "Adding currency header info ...");
-							rates.addHeader(curInfo);
-						}
-						else {
-							rates.add(curInfo);
-						}
+						rates.add(curInfo);
+					}
+					else if ( tagName.equals(Defs.XML_TAG_ROW) && parsingHeader ) {
+						Log.i(TAG, "Adding currency header info ...");
+						parsingHeader = false;
+						rates.addHeader(headerInfo);
 					}					
 					break;
 				}
@@ -163,7 +204,6 @@ public class MainActivity extends Activity {
 	}
 	
 	private void downloadFile(String url, String destFile) {
-		
 		Log.d(TAG, "Downloading file " + url);
 		
 		BufferedInputStream bis = null;

@@ -7,4 +7,5 @@
 
 <style name="FontList" parent="@android:style/TextAppearance"><item name="android:textSize">14sp</item>
 </style>
+<string name="last_update">Last update</string>
 </resources>
