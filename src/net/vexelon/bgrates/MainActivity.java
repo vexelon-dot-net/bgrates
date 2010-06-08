@@ -1,8 +1,6 @@
 package net.vexelon.bgrates;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,19 +9,19 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import net.vexelon.bgrates.R;
-
 import org.apache.http.util.ByteArrayBuffer;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -38,25 +36,36 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		Log.v(TAG, "@onCreate()");
+		
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.main);
-		Log.i(TAG, "Starting up Application...");
 		
-		refresh();
-		
-		// populate ListView UI
-		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
 		_listView = (ListView)findViewById(R.id.ListView01);
-		_listView.setAdapter(_adapter);
+
+		init();
+		//refresh();
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, Defs.MENU_REFRESH, 0, "Refresh");
 		menu.add(0, Defs.MENU_ABOUT, 0, "About");
+		menu.add(0, Defs.MENU_EXIT, 1, "Quit");
 		return true;
 	}
+	
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		switch(resultCode) {
+//		case Defs.ACTIVITYRESULT_CLOSE:
+//			this.setResult(Defs.ACTIVITYRESULT_CLOSE);
+//			this.finish();
+//			break;
+//		}
+//		super.onActivityResult(requestCode, resultCode, data);
+//	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -65,44 +74,119 @@ public class MainActivity extends Activity {
 		case Defs.MENU_REFRESH:
 			refresh();
 			break;
+		case Defs.MENU_ABOUT:
+			Intent intent = new Intent(this, AboutActivity.class);
+			startActivity(intent);
+			break;
+		case Defs.MENU_EXIT:
+			
+			this.finish();
+			
+			break;
 		}
 
 		return false;
 	}
 	
-	private void refresh() {
-		Log.d(TAG, "Refresh contents ...");
+	private void init() {
+		Log.v(TAG, "@init()");
 		
-		_progressDialog = ProgressDialog.show(this, "Please wait ...", "Updating rates...", true);		
+		// load defaults
+		InputStream is = this.getResources().openRawResource(R.raw.exchangerates);
+		_myRates = new ExchangeRate();
+		parseRates(is, _myRates);
+	
+		// populate ListView UI
+		this.setTitle(_myRates.getHeader().getTitle());
+		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
+		_listView.setAdapter(_adapter);				
+	}
+	
+	private void refresh() {
+		Log.v(TAG, "@refresh()");
+		
+		_progressDialog = ProgressDialog.show(this, "Please wait ...", "Updating rates...", true);
+//		final Activity thisActivity = this;
+		
+		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 		
 		_myRates = new ExchangeRate();
-		if ( ! parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
-			downloadFile(Defs.URL_BNB_RATES, Defs.INTERNAL_STORAGE_FILE);
+		if ( !parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
 			
-			if ( ! parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
-				//TODO:
+			if ( !downloadFile(Defs.URL_BNB_RATES, Defs.INTERNAL_STORAGE_FILE) )
+			{
+				_progressDialog.dismiss();
+				
+				alertBuilder.setTitle("Error updating!")
+					.setMessage("Could not download file !")
+					.setIcon(R.drawable.alert)
+					.setOnKeyListener(new DialogInterface.OnKeyListener() {
+						
+						@Override
+						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+							dialog.dismiss();
+//							thisActivity.setResult(Defs.ACTIVITYRESULT_CLOSE);
+//							thisActivity.finish();
+							return false;
+						}
+					})
+					.create()
+					.show();
+				return;
+			}
+			else {
+				_myRates = new ExchangeRate();
+				if ( !parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
+					_progressDialog.dismiss();
+					
+					alertBuilder.setTitle("Error parsing!")
+					.setMessage("Could not parse file !")
+					.setIcon(R.drawable.alert)
+					.setOnKeyListener(new DialogInterface.OnKeyListener() {
+						
+						@Override
+						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+							dialog.dismiss();
+//							thisActivity.setResult(Defs.ACTIVITYRESULT_CLOSE);
+//							thisActivity.finish();
+							return false;
+						}
+					})					
+					.create()
+					.show();
+					return;
+				}
 			}
 			
 			
 		}
 		
 		_progressDialog.dismiss();
-		
-		// err
-		AlertDialog ad = new AlertDialog.Builder(this).create();
-		ad.setMessage("Error!");
-		ad.setTitle("Something bad happened!");
-		//ad.show();
-		
+
+		// populate ListView UI
 		this.setTitle(_myRates.getHeader().getTitle());
+		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
+		_listView.setAdapter(_adapter);		
 	}
 	
 	private boolean parseRates(String path, ExchangeRate rates) {
-		Log.d(TAG, "Parsing XML file ...");
-	
-		boolean bRet = false;
-		//ExchangeRate rates = null;
+		
 		FileInputStream fis = null;
+		try {
+			fis = openFileInput(path);
+			
+			return parseRates(fis, rates);
+		}
+		catch(FileNotFoundException e) {
+			Log.e(TAG, "Faild to parse file!", e);
+		}
+		return false;
+	}
+		
+	private boolean parseRates(InputStream is, ExchangeRate rates) {		
+		Log.v(TAG, "@parseRates");
+	
+		boolean ret = false;
 		
 		try {
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -110,11 +194,9 @@ public class MainActivity extends Activity {
 			factory.setValidating(false);
 			XmlPullParser xpp = factory.newPullParser();
 			
-			fis = openFileInput(path);
-			xpp.setInput(fis, null);
+			xpp.setInput(is, null);
 			
 			int eventType = xpp.getEventType();
-//			boolean done = false;
 			boolean parsingRow = false,
 					parsingHeader = false;
 			CurrencyInfo curInfo = null;
@@ -126,7 +208,7 @@ public class MainActivity extends Activity {
 				
 				switch(eventType) {
 				case XmlPullParser.START_DOCUMENT:
-					Log.i(TAG, "Creating new ExchangeRate() object ...");
+					//Log.d(TAG, "Creating new ExchangeRate() object ...");
 					//rates = new ExchangeRate();
 					break;
 				
@@ -202,7 +284,7 @@ public class MainActivity extends Activity {
 						rates.add(curInfo);
 					}
 					else if ( tagName.equals(Defs.XML_TAG_ROW) && parsingHeader ) {
-						Log.i(TAG, "Adding currency header info ...");
+						Log.d(TAG, "Adding currency header info ...");
 						parsingHeader = false;
 						rates.addHeader(headerInfo);
 					}					
@@ -213,7 +295,7 @@ public class MainActivity extends Activity {
 				eventType = xpp.next();
 			}
 			
-			bRet = true;
+			ret = true;
 			
 		}
 		catch(Exception e) {
@@ -221,15 +303,18 @@ public class MainActivity extends Activity {
 		}
 		finally {
 			try { 
-				if ( fis != null ) fis.close(); 
+				if ( is != null ) is.close(); 
 			} catch (IOException e) { }
 		}
 		
-		return bRet;
+		return ret;
 	}
 	
-	private void downloadFile(String url, String destFile) {
-		Log.d(TAG, "Downloading file " + url);
+	private boolean downloadFile(String url, String destFile) {
+		Log.v(TAG, "@downloadFile()");
+		Log.d(TAG, "Downloading " + url);
+		
+		boolean ret = false;
 		
 		BufferedInputStream bis = null;
 		FileOutputStream fos = null;
@@ -253,6 +338,8 @@ public class MainActivity extends Activity {
 			fos.write(baf.toByteArray());
 			fos.close();
 			Log.d(TAG, "File saved successfully.");
+			
+			ret = true;
 		}
 		catch(Exception e) {
 			Log.e(TAG, "Error while downloading and saving file !", e);
@@ -268,6 +355,8 @@ public class MainActivity extends Activity {
 				if ( is != null ) is.close();
 			} catch( IOException e ) {}
 		}
+		
+		return ret;
 	}
 
 }
