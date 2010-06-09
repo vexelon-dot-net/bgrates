@@ -3,6 +3,7 @@ package net.vexelon.bgrates;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
 public class AboutActivity extends Activity {
 	
@@ -15,6 +16,15 @@ public class AboutActivity extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
+		
+		init();
+		
+	}
+	
+	private void init() {
+		
+		ImageView icLogo = (ImageView)findViewById(R.id.about_logo);
+		icLogo.setImageResource(R.drawable.icon);
 		
 	}
 

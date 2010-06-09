@@ -52,7 +52,9 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 			
 			TextView tvRate = (TextView) v.findViewById(R.id.rate);
 			if ( tvRate != null )
-				tvRate.setText(ci.getRate());
+				tvRate.setText(
+						ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ? ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) : ci.getRate()
+						);
 		}
 		
 		return v;

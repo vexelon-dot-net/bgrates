@@ -3,8 +3,10 @@ package net.vexelon.bgrates;
 public class Defs {
 
 	final static String LOG_TAG = "net.vexelon.bgrates";
-	final static String URL_BNB_RATES = "http://www.bnb1s.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&search=&lang=BG";
-	final static String INTERNAL_STORAGE_FILE = "bgrates-inet-cache3";
+	//final static String URL_BNB_RATES = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&search=&lang=BG";
+	final static String INTERNAL_STORAGE_FILE = "bgrates-inet-cache";
+	
+	final static int MAX_RATE_CHARS_SIZE = 8;
 	
 	final static String XML_TAG_ROW = "ROW";
 	final static String XML_TAG_NAME = "NAME_";
@@ -18,7 +20,6 @@ public class Defs {
 	
 	final static int MENU_REFRESH = 10;
 	final static int MENU_ABOUT = 20;
-	final static int MENU_EXIT = 50;
 	
 	final static int ACTIVITYRESULT_CLOSE = 100;
 

@@ -8,4 +8,5 @@
 <style name="FontList" parent="@android:style/TextAppearance"><item name="android:textSize">14sp</item>
 </style>
 <string name="last_update">Last update</string>
+<string name="URL_BNB_RATES">http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&amp;search=&amp;lang=EN</string>
 </resources>

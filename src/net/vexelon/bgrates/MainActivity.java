@@ -50,9 +50,8 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, Defs.MENU_REFRESH, 0, "Refresh");
-		menu.add(0, Defs.MENU_ABOUT, 0, "About");
-		menu.add(0, Defs.MENU_EXIT, 1, "Quit");
+		menu.add(0, Defs.MENU_REFRESH, 0, "Refresh").setIcon(R.drawable.ic_menu_refresh);
+		menu.add(0, Defs.MENU_ABOUT, 0, "About").setIcon(R.drawable.ic_menu_info_details);
 		return true;
 	}
 	
@@ -77,11 +76,6 @@ public class MainActivity extends Activity {
 		case Defs.MENU_ABOUT:
 			Intent intent = new Intent(this, AboutActivity.class);
 			startActivity(intent);
-			break;
-		case Defs.MENU_EXIT:
-			
-			this.finish();
-			
 			break;
 		}
 
@@ -113,7 +107,9 @@ public class MainActivity extends Activity {
 		_myRates = new ExchangeRate();
 		if ( !parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
 			
-			if ( !downloadFile(Defs.URL_BNB_RATES, Defs.INTERNAL_STORAGE_FILE) )
+			if ( !downloadFile(
+					this.getResources().getString(R.string.URL_BNB_RATES), 
+					Defs.INTERNAL_STORAGE_FILE) )
 			{
 				_progressDialog.dismiss();
 				
