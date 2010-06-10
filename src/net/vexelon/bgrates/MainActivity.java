@@ -21,10 +21,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnCreateContextMenuListener;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends Activity {
 	
@@ -93,7 +100,21 @@ public class MainActivity extends Activity {
 		// populate ListView UI
 		this.setTitle(_myRates.getHeader().getTitle());
 		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
-		_listView.setAdapter(_adapter);				
+		_listView.setAdapter(_adapter);	
+		
+		final Context context = this;
+		
+		_listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				
+				CurrencyInfo ci = (CurrencyInfo)_listView.getItemAtPosition(arg2);
+				
+				Toast.makeText(context, "Hello", 1000).show();
+				
+			}
+		});
 	}
 	
 	private void refresh() {

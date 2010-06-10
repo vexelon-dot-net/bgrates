@@ -60,4 +60,5 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 		return v;
 	}
 
+	
 }
