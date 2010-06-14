@@ -110,9 +110,10 @@ public class MainActivity extends Activity {
 					long arg3) {
 				
 				CurrencyInfo ci = (CurrencyInfo)_listView.getItemAtPosition(arg2);
-				
-				Toast.makeText(context, "Hello", 1000).show();
-				
+				if ( ci != null ) {
+					Toast.makeText(context, 
+							String.format("%s\t%s", ci.getCode(), ci.getName() ), 3000).show();
+				}
 			}
 		});
 	}
