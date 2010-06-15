@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BGrates</string>
+<string name="perm_inet_label">Allow the application to access Internet and download resource files.</string>
+<string name="perm_inet_desc">Allow the application to download a list of currency rates in order to synchronize it\'s local database.</string>
+
+<style name="FontList" parent="@android:style/TextAppearance"><item name="android:textSize">14sp</item>
+</style>
+<string name="last_update">Последно обновено</string>
+<string name="URL_BNB_RATES">http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&amp;search=&amp;lang=BG</string>
+<string name="menu_refresh">Обновяване</string>
+<string name="menu_about">Относно</string>
+<string name="dlg_update_title">Сваляне...</string>
+<string name="dlg_update_msg">Сваляне на последните курсове. Моля изчакайте ...</string>
+<string name="dlg_update_error_title">Грешка при сваляне</string>
+<string name="dlg_update_error_msg">Грешка при сваляне на файла с последните обменни курсове !</string>
+<string name="dlg_parse_error_title">Грешка при четене</string>
+<string name="dlg_parse_error_msg">Грешка при четене на файла с обменните курсове!</string>
+<string name="INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg</string>
+</resources>

@@ -28,7 +28,6 @@ public class AboutActivity extends Activity {
 		icLogo.setImageResource(R.drawable.icon);
 		
 		this.setText(R.id.about_apptitle, "BnRates \nApp Server");
-		
 	}
 	
 	void setText(int id, String text) {

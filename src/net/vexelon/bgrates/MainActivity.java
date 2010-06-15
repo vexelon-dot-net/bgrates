@@ -19,6 +19,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -57,8 +58,8 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, Defs.MENU_REFRESH, 0, "Refresh").setIcon(R.drawable.ic_menu_refresh);
-		menu.add(0, Defs.MENU_ABOUT, 0, "About").setIcon(R.drawable.ic_menu_info_details);
+		menu.add(0, Defs.MENU_REFRESH, 0, R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
+		menu.add(0, Defs.MENU_ABOUT, 0, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
 		return true;
 	}
 	
@@ -78,7 +79,16 @@ public class MainActivity extends Activity {
 		
 		switch(item.getItemId()) {
 		case Defs.MENU_REFRESH:
+			
+			_progressDialog = ProgressDialog.show(this, 
+					this.getResources().getString(R.string.dlg_update_title),
+					this.getResources().getString(R.string.dlg_update_msg), 
+					true);
+			
 			refresh();
+			
+			_progressDialog.dismiss();
+			
 			break;
 		case Defs.MENU_ABOUT:
 			Intent intent = new Intent(this, AboutActivity.class);
@@ -93,12 +103,17 @@ public class MainActivity extends Activity {
 		Log.v(TAG, "@init()");
 		
 		// load defaults
-		InputStream is = this.getResources().openRawResource(R.raw.exchangerates);
 		_myRates = new ExchangeRate();
-		parseRates(is, _myRates);
+		if ( !parseRates(this.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), _myRates) ) {
+			InputStream is = this.getResources().openRawResource(R.raw.exchangerates);
+			if ( !parseRates(is, _myRates) ) {
+				// something's really wrong !
+			}
+		}
+		
+		updateLastUpdateTitle();
 	
 		// populate ListView UI
-		this.setTitle(_myRates.getHeader().getTitle());
 		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
 		_listView.setAdapter(_adapter);	
 		
@@ -112,7 +127,7 @@ public class MainActivity extends Activity {
 				CurrencyInfo ci = (CurrencyInfo)_listView.getItemAtPosition(arg2);
 				if ( ci != null ) {
 					Toast.makeText(context, 
-							String.format("%s\t%s", ci.getCode(), ci.getName() ), 3000).show();
+							String.format("%s:\t%s", ci.getName(), ci.getCode() ), Defs.MAX_TOAST_INFO_TIME).show();
 				}
 			}
 		});
@@ -121,70 +136,85 @@ public class MainActivity extends Activity {
 	private void refresh() {
 		Log.v(TAG, "@refresh()");
 		
-		_progressDialog = ProgressDialog.show(this, "Please wait ...", "Updating rates...", true);
-//		final Activity thisActivity = this;
-		
 		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 		
-		_myRates = new ExchangeRate();
-		if ( !parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
+
+		
+		if (!downloadFile(
+				this.getResources().getString(R.string.URL_BNB_RATES),
+				this.getResources().getString(R.string.INTERNAL_STORAGE_CACHE))) {
 			
-			if ( !downloadFile(
-					this.getResources().getString(R.string.URL_BNB_RATES), 
-					Defs.INTERNAL_STORAGE_FILE) )
-			{
-				_progressDialog.dismiss();
-				
-				alertBuilder.setTitle("Error updating!")
-					.setMessage("Could not download file !")
-					.setIcon(R.drawable.alert)
-					.setOnKeyListener(new DialogInterface.OnKeyListener() {
-						
+			_progressDialog.dismiss();
+
+			alertBuilder.setTitle(
+					this.getResources().getString(
+							R.string.dlg_update_error_title)).setMessage(
+					this.getResources()
+							.getString(R.string.dlg_update_error_msg)).setIcon(
+					R.drawable.alert).setOnKeyListener(
+					new DialogInterface.OnKeyListener() {
+
 						@Override
-						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						public boolean onKey(DialogInterface dialog,
+								int keyCode, KeyEvent event) {
 							dialog.dismiss();
-//							thisActivity.setResult(Defs.ACTIVITYRESULT_CLOSE);
-//							thisActivity.finish();
+							// thisActivity.setResult(Defs.ACTIVITYRESULT_CLOSE);
+							// thisActivity.finish();
 							return false;
 						}
-					})
-					.create()
-					.show();
+					}).create().show();
+			return;
+		} 
+		else {
+			
+			_myRates = new ExchangeRate();
+			if (!parseRates(this.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), _myRates)) {
+				
+				_progressDialog.dismiss();
+
+				alertBuilder.setTitle(
+						this.getResources().getString(
+								R.string.dlg_parse_error_title)).setMessage(
+						this.getResources().getString(
+								R.string.dlg_parse_error_msg)).setIcon(
+						R.drawable.alert).setOnKeyListener(
+						new DialogInterface.OnKeyListener() {
+
+							@Override
+							public boolean onKey(DialogInterface dialog,
+									int keyCode, KeyEvent event) {
+								dialog.dismiss();
+								// thisActivity.setResult(Defs.ACTIVITYRESULT_CLOSE);
+								// thisActivity.finish();
+								return false;
+							}
+						}).create().show();
 				return;
 			}
-			else {
-				_myRates = new ExchangeRate();
-				if ( !parseRates(Defs.INTERNAL_STORAGE_FILE, _myRates) ) {
-					_progressDialog.dismiss();
-					
-					alertBuilder.setTitle("Error parsing!")
-					.setMessage("Could not parse file !")
-					.setIcon(R.drawable.alert)
-					.setOnKeyListener(new DialogInterface.OnKeyListener() {
-						
-						@Override
-						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-							dialog.dismiss();
-//							thisActivity.setResult(Defs.ACTIVITYRESULT_CLOSE);
-//							thisActivity.finish();
-							return false;
-						}
-					})					
-					.create()
-					.show();
-					return;
-				}
-			}
-			
-			
 		}
-		
-		_progressDialog.dismiss();
+			
+		updateLastUpdateTitle(_myRates.getHeader().getTitle());
 
 		// populate ListView UI
-		this.setTitle(_myRates.getHeader().getTitle());
 		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
 		_listView.setAdapter(_adapter);		
+		
+	}
+	
+	private void updateLastUpdateTitle() {
+		// try to read locally stored prefs
+		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
+		String lastUpdate = prefs.getString(Defs.PREFS_KEY_LASTUPDATE, "");
+		this.setTitle(lastUpdate);
+	}
+	
+	private void updateLastUpdateTitle(String lastUpdate) {
+		this.setTitle(lastUpdate);
+		// save last update nfo
+		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(Defs.PREFS_KEY_LASTUPDATE, lastUpdate);
+		editor.commit();
 	}
 	
 	private boolean parseRates(String path, ExchangeRate rates) {
@@ -228,6 +258,7 @@ public class MainActivity extends Activity {
 				case XmlPullParser.START_DOCUMENT:
 					//Log.d(TAG, "Creating new ExchangeRate() object ...");
 					//rates = new ExchangeRate();
+					rates.clear();
 					break;
 				
 				case XmlPullParser.START_TAG:
