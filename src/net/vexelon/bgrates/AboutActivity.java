@@ -1,6 +1,9 @@
 package net.vexelon.bgrates;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -27,12 +30,50 @@ public class AboutActivity extends Activity {
 		ImageView icLogo = (ImageView)findViewById(R.id.about_logo);
 		icLogo.setImageResource(R.drawable.icon);
 		
-		this.setText(R.id.about_apptitle, "BnRates \nApp Server");
+		PackageInfo pinfo = null;
+		try {
+			pinfo = this.getPackageManager().getPackageInfo(this.getPackageName(), PackageManager.GET_GIDS);
+		}
+		catch(Exception e) {
+			Log.e(TAG, e.getMessage());
+		}
+		
+		StringBuffer sb = new StringBuffer(500);
+		sb.append(getResString(R.string.app_name));
+		sb.append("\n");
+		sb.append(getResString(R.string.about_tagline));
+		sb.append("\n");
+		if ( pinfo != null ) {
+			sb.append(getResString(R.string.about_version));
+			sb.append(pinfo.versionName);
+			sb.append("\n");
+		}
+		sb.append(getResString(R.string.about_author));
+		sb.append("\n");
+		sb.append("\n");
+		sb.append(getResString(R.string.about_bnb_info));
+		sb.append("\n");
+		sb.append("http://www.bnb.bg");
+		sb.append("\n");
+		sb.append("\n");
+		sb.append(getResString(R.string.about_bnb_info_2));
+		sb.append("\n");
+		sb.append("\n");
+		sb.append(getResString(R.string.about_flag_icons_info));
+		sb.append("\n");
+		sb.append("http://www.famfamfam.com");
+		sb.append("\n");
+		
+		this.setText(R.id.about_apptitle, sb.toString());
 	}
 	
 	void setText(int id, String text) {
 		TextView tx = (TextView)findViewById(id);
 		if ( tx != null )
 			tx.setText(text);
+	}
+	
+	String getResString(int id) {
+		return this.getResources().getString(id);
 	}
 }

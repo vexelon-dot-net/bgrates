@@ -34,11 +34,12 @@ import android.widget.AdapterView.OnItemClickListener;
 public class MainActivity extends Activity {
 	
 	private final static String TAG = Defs.LOG_TAG;
+	private Activity _context = null;
 	private ListView _listView;
 	private ProgressDialog _progressDialog = null;
 	private CurrencyListAdapter _adapter;
 	private ExchangeRate _myRates = null;
-	private Activity _context = null;
+	private String _downloadUrlSuffix;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 		
 		_listView = (ListView)findViewById(R.id.ListView01);
+		_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, this.getResources().getString(R.string.URL_BNB_RATES_SUFFIX));
 
 		init();
 	}
@@ -58,8 +60,10 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Log.v(TAG, "@onCreateOptionsMenu()");
 		
-		menu.add(0, Defs.MENU_REFRESH, 0, R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
-		menu.add(0, Defs.MENU_ABOUT, 0, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
+		menu.add(0, Defs.MENU_BG_RATES, 0, R.string.menu_bg_rates).setIcon(R.drawable.bg);
+		menu.add(0, Defs.MENU_EN_RATES, 0, R.string.menu_en_rates).setIcon(R.drawable.gb);
+		menu.add(1, Defs.MENU_REFRESH, 10, R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
+		menu.add(1, Defs.MENU_ABOUT, 10, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
 		return true;
 	}
 	
@@ -85,6 +89,14 @@ public class MainActivity extends Activity {
 		case Defs.MENU_ABOUT:
 			Intent intent = new Intent(this, AboutActivity.class);
 			startActivity(intent);
+			break;
+		case Defs.MENU_BG_RATES:
+			_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, Defs.URL_BNB_SUFFIX_BG);
+			refresh();
+			break;
+		case Defs.MENU_EN_RATES:
+			_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, Defs.URL_BNB_SUFFIX_EN);
+			refresh();
 			break;
 		}
 
@@ -154,7 +166,7 @@ public class MainActivity extends Activity {
 					
 					// DOWNLOAD //
 					if (!downloadFile(
-							_context.getResources().getString(R.string.URL_BNB_RATES),
+							_downloadUrlSuffix,
 							_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE))) {
 						
 						// SHOW ERROR ALERT //

@@ -57,7 +57,7 @@ public class ExchangeRate {
 	
 	public static int getResrouceFromCode(CurrencyInfo ci) {
 		return _flagIds.get(ci.getCountryCode()) != null ?
-				_flagIds.get(ci.getCountryCode()) : R.drawable.xa;
+				_flagIds.get(ci.getCountryCode()) : R.drawable.money;
 	}
 	
 	public void add(CurrencyInfo currency) {

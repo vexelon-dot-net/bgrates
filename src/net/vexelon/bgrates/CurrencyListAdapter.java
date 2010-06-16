@@ -41,9 +41,9 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 			int imgId = ExchangeRate.getResrouceFromCode(ci);
 			if ( imgId != -1 ) {
 				icon.setImageResource(imgId);
-				icon.setScaleType(ScaleType.FIT_XY);
-				icon.setAdjustViewBounds(true);
-				icon.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+				icon.setScaleType(ScaleType.CENTER);
+				//icon.setAdjustViewBounds(true);
+				//icon.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			}
 			
 			TextView tvCode = (TextView) v.findViewById(R.id.code);
