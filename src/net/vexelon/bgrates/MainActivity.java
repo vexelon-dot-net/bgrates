@@ -22,13 +22,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -38,14 +35,16 @@ public class MainActivity extends Activity {
 	
 	private final static String TAG = Defs.LOG_TAG;
 	private ListView _listView;
-	private ProgressDialog _progressDialog;
+	private ProgressDialog _progressDialog = null;
 	private CurrencyListAdapter _adapter;
 	private ExchangeRate _myRates = null;
+	private Activity _context = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		Log.v(TAG, "@onCreate()");
+
+		_context = this;
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
@@ -53,11 +52,12 @@ public class MainActivity extends Activity {
 		_listView = (ListView)findViewById(R.id.ListView01);
 
 		init();
-		//refresh();
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Log.v(TAG, "@onCreateOptionsMenu()");
+		
 		menu.add(0, Defs.MENU_REFRESH, 0, R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
 		menu.add(0, Defs.MENU_ABOUT, 0, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
 		return true;
@@ -76,19 +76,11 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		//Log.v(TAG, "@onOptionsItemSelected()");
 		
 		switch(item.getItemId()) {
 		case Defs.MENU_REFRESH:
-			
-			_progressDialog = ProgressDialog.show(this, 
-					this.getResources().getString(R.string.dlg_update_title),
-					this.getResources().getString(R.string.dlg_update_msg), 
-					true);
-			
 			refresh();
-			
-			_progressDialog.dismiss();
-			
 			break;
 		case Defs.MENU_ABOUT:
 			Intent intent = new Intent(this, AboutActivity.class);
@@ -107,17 +99,32 @@ public class MainActivity extends Activity {
 		if ( !parseRates(this.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), _myRates) ) {
 			InputStream is = this.getResources().openRawResource(R.raw.exchangerates);
 			if ( !parseRates(is, _myRates) ) {
+
 				// something's really wrong !
+				
+				AlertDialog.Builder alertBuilder = new AlertDialog.Builder(_context);
+				alertBuilder.setTitle(
+						_context.getResources().getString(
+								R.string.dlg_parse_error_title)).setMessage(
+										_context.getResources().getString(R.string.dlg_parse_error_msg)).setIcon(
+						R.drawable.alert).setOnKeyListener(
+						new DialogInterface.OnKeyListener() {
+
+							@Override
+							public boolean onKey(DialogInterface dialog,
+									int keyCode, KeyEvent event) {
+								dialog.dismiss();
+								return false;
+							}
+						}).create().show();				
 			}
 		}
 		
-		updateLastUpdateTitle();
-	
+		updateLastUpdateTitle(_myRates.getHeader().getTitle());
+
 		// populate ListView UI
 		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
 		_listView.setAdapter(_adapter);	
-		
-		final Context context = this;
 		
 		_listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -126,7 +133,7 @@ public class MainActivity extends Activity {
 				
 				CurrencyInfo ci = (CurrencyInfo)_listView.getItemAtPosition(arg2);
 				if ( ci != null ) {
-					Toast.makeText(context, 
+					Toast.makeText(_context, 
 							String.format("%s:\t%s", ci.getName(), ci.getCode() ), Defs.MAX_TOAST_INFO_TIME).show();
 				}
 			}
@@ -136,69 +143,98 @@ public class MainActivity extends Activity {
 	private void refresh() {
 		Log.v(TAG, "@refresh()");
 		
-		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+		_progressDialog = ProgressDialog.show(this, 
+				this.getResources().getString(R.string.dlg_update_title),
+				this.getResources().getString(R.string.dlg_update_msg), 
+				true);
 		
-
-		
-		if (!downloadFile(
-				this.getResources().getString(R.string.URL_BNB_RATES),
-				this.getResources().getString(R.string.INTERNAL_STORAGE_CACHE))) {
-			
-			_progressDialog.dismiss();
-
-			alertBuilder.setTitle(
-					this.getResources().getString(
-							R.string.dlg_update_error_title)).setMessage(
-					this.getResources()
-							.getString(R.string.dlg_update_error_msg)).setIcon(
-					R.drawable.alert).setOnKeyListener(
-					new DialogInterface.OnKeyListener() {
-
-						@Override
-						public boolean onKey(DialogInterface dialog,
-								int keyCode, KeyEvent event) {
-							dialog.dismiss();
-							// thisActivity.setResult(Defs.ACTIVITYRESULT_CLOSE);
-							// thisActivity.finish();
-							return false;
-						}
-					}).create().show();
-			return;
-		} 
-		else {
-			
-			_myRates = new ExchangeRate();
-			if (!parseRates(this.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), _myRates)) {
-				
-				_progressDialog.dismiss();
-
-				alertBuilder.setTitle(
-						this.getResources().getString(
-								R.string.dlg_parse_error_title)).setMessage(
-						this.getResources().getString(
-								R.string.dlg_parse_error_msg)).setIcon(
-						R.drawable.alert).setOnKeyListener(
-						new DialogInterface.OnKeyListener() {
-
+		new Thread() {
+			public void run() {
+				try {
+					
+					// DOWNLOAD //
+					if (!downloadFile(
+							_context.getResources().getString(R.string.URL_BNB_RATES),
+							_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE))) {
+						
+						// SHOW ERROR ALERT //
+						_context.runOnUiThread(new Runnable() {
+							
 							@Override
-							public boolean onKey(DialogInterface dialog,
-									int keyCode, KeyEvent event) {
-								dialog.dismiss();
-								// thisActivity.setResult(Defs.ACTIVITYRESULT_CLOSE);
-								// thisActivity.finish();
-								return false;
-							}
-						}).create().show();
-				return;
-			}
-		}
-			
-		updateLastUpdateTitle(_myRates.getHeader().getTitle());
+							public void run() {
+								AlertDialog.Builder alertBuilder = new AlertDialog.Builder(_context);
+								alertBuilder.setTitle(
+										_context.getResources().getString(
+												R.string.dlg_update_error_title)).setMessage(
+														_context.getResources().getString(R.string.dlg_update_error_msg)).setIcon(
+										R.drawable.alert).setOnKeyListener(
+										new DialogInterface.OnKeyListener() {
 
-		// populate ListView UI
-		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
-		_listView.setAdapter(_adapter);		
-		
+											@Override
+											public boolean onKey(DialogInterface dialog,
+													int keyCode, KeyEvent event) {
+												dialog.dismiss();
+												return false;
+											}
+										}).create().show();								
+							}
+						});
+					} 
+					else {
+						
+						// PARSE //
+						
+						_myRates = new ExchangeRate();
+						if (!parseRates(_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), _myRates)) {
+							
+							// SHOW ERROR ALERT //
+							_context.runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									
+									AlertDialog.Builder alertBuilder = new AlertDialog.Builder(_context);
+									alertBuilder.setTitle(
+											_context.getResources().getString(
+													R.string.dlg_parse_error_title)).setMessage(
+															_context.getResources().getString(R.string.dlg_parse_error_msg)).setIcon(
+											R.drawable.alert).setOnKeyListener(
+											new DialogInterface.OnKeyListener() {
+
+												@Override
+												public boolean onKey(DialogInterface dialog,
+														int keyCode, KeyEvent event) {
+													dialog.dismiss();
+													return false;
+												}
+											}).create().show();
+								}
+							});
+						}
+						else {
+							
+							// UPDATE VIEW //
+							
+							_context.runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									updateLastUpdateTitle(_myRates.getHeader().getTitle());
+									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout, _myRates.items());
+									_listView.setAdapter(_adapter);							
+								}
+							});							
+						}
+					}
+					
+					Thread.sleep(1000);
+				}
+				catch(Exception e) {
+					Log.e(TAG, e.getMessage());
+				}
+				_progressDialog.dismiss();
+			};
+		}.start();
 	}
 	
 	private void updateLastUpdateTitle() {
@@ -333,7 +369,7 @@ public class MainActivity extends Activity {
 						rates.add(curInfo);
 					}
 					else if ( tagName.equals(Defs.XML_TAG_ROW) && parsingHeader ) {
-						Log.d(TAG, "Adding currency header info ...");
+						Log.v(TAG, "Adding currency header info ...");
 						parsingHeader = false;
 						rates.addHeader(headerInfo);
 					}					
@@ -382,11 +418,11 @@ public class MainActivity extends Activity {
 				baf.append((byte) n);
 			
 			// save to internal storage
-			Log.d(TAG, "Saving downloaded file ...");
-			fos = openFileOutput(destFile,Context.MODE_PRIVATE);
+			Log.v(TAG, "Saving downloaded file ...");
+			fos = openFileOutput(destFile, Context.MODE_PRIVATE);
 			fos.write(baf.toByteArray());
 			fos.close();
-			Log.d(TAG, "File saved successfully.");
+			Log.v(TAG, "File saved successfully.");
 			
 			ret = true;
 		}

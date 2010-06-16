@@ -5,7 +5,7 @@
   android:layout_height="fill_parent"
   android:padding="4px">
 
-<ImageView android:id="@+id/icon" android:layout_width="24px" android:layout_height="fill_parent" android:layout_alignParentLeft="true" android:layout_centerVertical="true"></ImageView>
+<ImageView android:id="@+id/icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:layout_centerVertical="true"></ImageView>
 <TextView android:text="@+id/TextView01" android:id="@+id/code" style="@style/FontList" android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_toRightOf="@id/icon" android:layout_marginLeft="10px"></TextView>
 <TextView android:text="@+id/TextView02" android:id="@+id/rate" android:layout_height="fill_parent" android:layout_width="60px" android:layout_alignParentRight="true" android:gravity="right"></TextView>
 <TextView android:text="@+id/TextView03" android:id="@+id/ratio" android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_toLeftOf="@id/rate" android:layout_marginRight="5px" android:gravity="right"></TextView>

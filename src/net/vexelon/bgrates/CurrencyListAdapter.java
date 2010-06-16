@@ -8,9 +8,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ImageView.ScaleType;
 
 public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 	
@@ -36,8 +39,12 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 			
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
 			int imgId = ExchangeRate.getResrouceFromCode(ci);
-			if ( imgId != -1 )
+			if ( imgId != -1 ) {
 				icon.setImageResource(imgId);
+				icon.setScaleType(ScaleType.FIT_XY);
+				icon.setAdjustViewBounds(true);
+				icon.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			}
 			
 			TextView tvCode = (TextView) v.findViewById(R.id.code);
 			if ( tvCode != null )

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BGrates</string>
-<string name="perm_inet_label">Allow the application to access Internet and download resource files.</string>
-<string name="perm_inet_desc">Allow the application to download a list of currency rates in order to synchronize it\'s local database.</string>
+<string name="perm_inet_label">Позволяване на приложението да достъпва интернет, за да сваля необходими файлове и ресурси.</string>
+<string name="perm_inet_desc">Позволяване на приложението да тегли списък с валутни курсова, за да обнови информацията която показва.</string>
 
 <style name="FontList" parent="@android:style/TextAppearance"><item name="android:textSize">14sp</item>
 </style>
