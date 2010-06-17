@@ -30,7 +30,7 @@ public class AboutActivity extends Activity {
 	private void init() {
 
 		ImageView icLogo = (ImageView)findViewById(R.id.about_logo);
-		icLogo.setImageResource(R.drawable.icon);
+		icLogo.setImageResource(R.drawable.about_icon);
 		
 		PackageInfo pinfo = null;
 		try {

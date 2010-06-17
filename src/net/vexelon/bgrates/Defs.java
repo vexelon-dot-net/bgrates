@@ -5,6 +5,7 @@ public class Defs {
 	final static String LOG_TAG = "net.vexelon.bgrates";
 	final static String PREFS_NAME = "BGratesPreferences";
 	final static String PREFS_KEY_LASTUPDATE = "lastUpdate";
+	final static String PREFS_KEY_LASTUPDATE_TIME = "lastUpdateTime";
 	final static String URL_BNB_FORMAT = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=%s";
 	final static String URL_BNB_SUFFIX_BG = "BG";
 	final static String URL_BNB_SUFFIX_EN = "EN";

@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.xmlpull.v1.XmlPullParser;
@@ -20,7 +22,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -132,8 +136,28 @@ public class MainActivity extends Activity {
 			}
 		}
 		
-		updateLastUpdateTitle(_myRates.getHeader().getTitle());
-
+		this.setTitle(_myRates.getHeader().getTitle());
+		
+		// check if download should be performed
+		if (isUpdateRequired()) {
+			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(_context);
+			alertBuilder.setTitle(
+					_context.getResources().getString(
+							R.string.dlg_lastupdate_title)).setMessage(
+									_context.getResources().getString(R.string.dlg_lastupdate_msg)).setIcon(
+					R.drawable.help);
+		
+			alertBuilder.setPositiveButton(this.getResources().getString(R.string.dlg_yes), new OnClickListener() {
+		
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					refresh();
+				}
+			});
+			alertBuilder.setNegativeButton(this.getResources().getString(R.string.dlg_no), null);
+			alertBuilder.show();
+		}
+		
 		// populate ListView UI
 		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
 		_listView.setAdapter(_adapter);	
@@ -231,7 +255,8 @@ public class MainActivity extends Activity {
 								
 								@Override
 								public void run() {
-									updateLastUpdateTitle(_myRates.getHeader().getTitle());
+									saveStatus(_myRates.getHeader().getTitle());
+									_context.setTitle(_myRates.getHeader().getTitle());
 									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout, _myRates.items());
 									_listView.setAdapter(_adapter);							
 								}
@@ -249,20 +274,27 @@ public class MainActivity extends Activity {
 		}.start();
 	}
 	
-	private void updateLastUpdateTitle() {
-		// try to read locally stored prefs
-		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
-		String lastUpdate = prefs.getString(Defs.PREFS_KEY_LASTUPDATE, "");
-		this.setTitle(lastUpdate);
-	}
-	
-	private void updateLastUpdateTitle(String lastUpdate) {
-		this.setTitle(lastUpdate);
+	private void saveStatus(String lastUpdate) {
+		//this.setTitle(lastUpdate);
 		// save last update nfo
 		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(Defs.PREFS_KEY_LASTUPDATE, lastUpdate);
+		
+		String theDate = DateFormat.format(new String("yyyyMMdd"), Calendar.getInstance()).toString();
+		editor.putString(Defs.PREFS_KEY_LASTUPDATE_TIME, theDate);
+		Log.v(TAG, "Saving last update date - " + theDate);
+		
 		editor.commit();
+	}
+	
+	private boolean isUpdateRequired() {
+		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
+		String lastUpdateTime = prefs.getString(Defs.PREFS_KEY_LASTUPDATE_TIME, "");
+		
+		String now = DateFormat.format(new String("yyyyMMdd"), Calendar.getInstance()).toString();
+		Log.v(TAG, String.format("Reading last update date - %s / Now is %s ", lastUpdateTime, now));
+		return lastUpdateTime.length() == 0 || lastUpdateTime.compareTo(now) < 0;
 	}
 	
 	private boolean parseRates(String path, ExchangeRate rates) {

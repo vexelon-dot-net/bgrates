@@ -21,8 +21,11 @@
 <string name="menu_en_rates">Англ.</string>
 <string name="about_tagline">Обменни курсове за Български Лев.</string>
 <string name="about_version">Версия: </string>
-
 <string name="about_bnb_info">Обменните курсове се предоставят и обновяват от сайта на Българска Национална Банка.</string>
 <string name="about_bnb_info_2">Обменните валутни курсове на чуждестранните валути се изчисляват на основата на фиксирания курс на лева спрямо еврото, като за източник се използват публикуваните от Европейската централна банка курсове на еврото към същите валути за съответния ден.</string><string name="about_author">от Петър Петров</string>
 <string name="about_flag_icons_info">Безплатни икони от:</string>
+<string name="dlg_lastupdate_title">Обновяване</string>
+<string name="dlg_lastupdate_msg">Текущите валутни курсове са от предходен ден. Обнови сега ?</string>
+<string name="dlg_yes">Да</string>
+<string name="dlg_no">Не</string>
 </resources>
