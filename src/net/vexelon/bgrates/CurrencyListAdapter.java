@@ -37,15 +37,6 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 		CurrencyInfo ci = _items.get(position);
 		if ( ci != null ) {
 			
-			ImageView icon = (ImageView) v.findViewById(R.id.icon);
-			int imgId = ExchangeRate.getResrouceFromCode(ci);
-			if ( imgId != -1 ) {
-				icon.setImageResource(imgId);
-				icon.setScaleType(ScaleType.CENTER);
-				//icon.setAdjustViewBounds(true);
-				//icon.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-			}
-			
 			TextView tvCode = (TextView) v.findViewById(R.id.code);
 			if ( tvCode != null )
 				tvCode.setText(ci.getName());
@@ -59,6 +50,18 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 				tvRate.setText(
 						ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ? ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) : ci.getRate()
 						);
+			
+			// add last
+			ImageView icon = (ImageView) v.findViewById(R.id.icon);
+			int imgId = ExchangeRate.getResrouceFromCode(ci);
+			if ( imgId != -1 ) {
+				icon.setImageResource(imgId);
+//				icon.setScaleType(ScaleType.FIT_XY);
+//				icon.setAdjustViewBounds(true);
+//				android.widget.RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+//				lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT|RelativeLayout.CENTER_VERTICAL);
+//				icon.setLayoutParams(lp);
+			}			
 		}
 		
 		return v;

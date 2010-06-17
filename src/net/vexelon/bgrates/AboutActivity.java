@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -65,6 +67,7 @@ public class AboutActivity extends Activity {
 		sb.append("\n");
 		
 		this.setText(R.id.about_apptitle, sb.toString());
+		Linkify.addLinks((TextView)findViewById(R.id.about_apptitle), Linkify.ALL);
 	}
 	
 	void setText(int id, String text) {

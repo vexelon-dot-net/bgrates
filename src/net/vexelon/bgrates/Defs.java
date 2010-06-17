@@ -10,7 +10,7 @@ public class Defs {
 	final static String URL_BNB_SUFFIX_EN = "EN";
 	
 	final static int MAX_RATE_CHARS_SIZE = 8;
-	final static int MAX_TOAST_INFO_TIME = 2500;
+	final static int MAX_TOAST_INFO_TIME = 2050;
 	
 	final static String XML_TAG_ROW = "ROW";
 	final static String XML_TAG_NAME = "NAME_";
