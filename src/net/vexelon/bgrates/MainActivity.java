@@ -37,7 +37,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends Activity {
 	
-	private final static String TAG = Defs.LOG_TAG;
+	//private final static String TAG = Defs.LOG_TAG;
 	private Activity _context = null;
 	private ListView _listView;
 	private ProgressDialog _progressDialog = null;
@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.v(TAG, "@onCreate()");
+		//Log.v(TAG, "@onCreate()");
 
 		_context = this;
 		
@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.v(TAG, "@onCreateOptionsMenu()");
+		//Log.v(TAG, "@onCreateOptionsMenu()");
 		
 		menu.add(0, Defs.MENU_BG_RATES, 0, R.string.menu_bg_rates).setIcon(R.drawable.bg);
 		menu.add(0, Defs.MENU_EN_RATES, 0, R.string.menu_en_rates).setIcon(R.drawable.gb);
@@ -108,7 +108,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void init() {
-		Log.v(TAG, "@init()");
+		//Log.v(TAG, "@init()");
 		
 		// load defaults
 		_myRates = new ExchangeRate();
@@ -177,7 +177,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void refresh() {
-		Log.v(TAG, "@refresh()");
+		//Log.v(TAG, "@refresh()");
 		
 		_progressDialog = ProgressDialog.show(this, 
 				this.getResources().getString(R.string.dlg_update_title),
@@ -267,7 +267,7 @@ public class MainActivity extends Activity {
 					Thread.sleep(1000);
 				}
 				catch(Exception e) {
-					Log.e(TAG, e.getMessage());
+					//Log.e(TAG, e.getMessage());
 				}
 				_progressDialog.dismiss();
 			};
@@ -283,7 +283,7 @@ public class MainActivity extends Activity {
 		
 		String theDate = DateFormat.format(new String("yyyyMMdd"), Calendar.getInstance()).toString();
 		editor.putString(Defs.PREFS_KEY_LASTUPDATE_TIME, theDate);
-		Log.v(TAG, "Saving last update date - " + theDate);
+		//Log.v(TAG, "Saving last update date - " + theDate);
 		
 		editor.commit();
 	}
@@ -293,7 +293,7 @@ public class MainActivity extends Activity {
 		String lastUpdateTime = prefs.getString(Defs.PREFS_KEY_LASTUPDATE_TIME, "");
 		
 		String now = DateFormat.format(new String("yyyyMMdd"), Calendar.getInstance()).toString();
-		Log.v(TAG, String.format("Reading last update date - %s / Now is %s ", lastUpdateTime, now));
+		//Log.v(TAG, String.format("Reading last update date - %s / Now is %s ", lastUpdateTime, now));
 		return lastUpdateTime.length() == 0 || lastUpdateTime.compareTo(now) < 0;
 	}
 	
@@ -306,13 +306,13 @@ public class MainActivity extends Activity {
 			return parseRates(fis, rates);
 		}
 		catch(FileNotFoundException e) {
-			Log.e(TAG, "Faild to parse file!", e);
+			//Log.e(TAG, "Faild to parse file!", e);
 		}
 		return false;
 	}
 		
 	private boolean parseRates(InputStream is, ExchangeRate rates) {		
-		Log.v(TAG, "@parseRates");
+		//Log.v(TAG, "@parseRates");
 	
 		boolean ret = false;
 		
@@ -413,7 +413,7 @@ public class MainActivity extends Activity {
 						rates.add(curInfo);
 					}
 					else if ( tagName.equals(Defs.XML_TAG_ROW) && parsingHeader ) {
-						Log.v(TAG, "Adding currency header info ...");
+						//Log.v(TAG, "Adding currency header info ...");
 						parsingHeader = false;
 						rates.addHeader(headerInfo);
 					}					
@@ -428,7 +428,7 @@ public class MainActivity extends Activity {
 			
 		}
 		catch(Exception e) {
-			Log.e(TAG, "Error while parsing XML !", e);
+			//Log.e(TAG, "Error while parsing XML !", e);
 		}
 		finally {
 			try { 
@@ -440,8 +440,8 @@ public class MainActivity extends Activity {
 	}
 	
 	private boolean downloadFile(String url, String destFile) {
-		Log.v(TAG, "@downloadFile()");
-		Log.d(TAG, "Downloading " + url);
+		//Log.v(TAG, "@downloadFile()");
+		//Log.d(TAG, "Downloading " + url);
 		
 		boolean ret = false;
 		
@@ -462,16 +462,16 @@ public class MainActivity extends Activity {
 				baf.append((byte) n);
 			
 			// save to internal storage
-			Log.v(TAG, "Saving downloaded file ...");
+			//Log.v(TAG, "Saving downloaded file ...");
 			fos = openFileOutput(destFile, Context.MODE_PRIVATE);
 			fos.write(baf.toByteArray());
 			fos.close();
-			Log.v(TAG, "File saved successfully.");
+			//Log.v(TAG, "File saved successfully.");
 			
 			ret = true;
 		}
 		catch(Exception e) {
-			Log.e(TAG, "Error while downloading and saving file !", e);
+			//Log.e(TAG, "Error while downloading and saving file !", e);
 		}
 		finally {
 			try {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BGrates</string>
+    <string name="app_name">BGrates M-Tel</string>
 <string name="perm_inet_label">Позволяване на приложението да достъпва интернет, за да сваля необходими файлове и ресурси.</string>
 <string name="perm_inet_desc">Позволяване на приложението да тегли списък с валутни курсова, за да обнови информацията която показва.</string>
 
@@ -13,7 +13,7 @@
 <string name="dlg_update_title">Сваляне...</string>
 <string name="dlg_update_msg">Сваляне на последните курсове. Моля изчакайте ...</string>
 <string name="dlg_update_error_title">Грешка при сваляне</string>
-<string name="dlg_update_error_msg">Грешка при сваляне на файла с последните обменни курсове !</string>
+<string name="dlg_update_error_msg">Грешка при сваляне на файла с последните обменни курсове ! Моля, проверете връзката си към интернет.</string>
 <string name="dlg_parse_error_title">Грешка при четене</string>
 <string name="dlg_parse_error_msg">Грешка при четене на файла с обменните курсове!</string>
 <string name="INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg</string>
@@ -28,4 +28,5 @@
 <string name="dlg_lastupdate_msg">Текущите валутни курсове са от предходен ден. Обнови сега ?</string>
 <string name="dlg_yes">Да</string>
 <string name="dlg_no">Не</string>
+<string name="bg_currency_name">Лв.</string>
 </resources>

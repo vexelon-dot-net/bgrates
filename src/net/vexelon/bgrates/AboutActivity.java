@@ -18,7 +18,7 @@ public class AboutActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
-		Log.v(TAG, "@onCreate()");
+		//Log.v(TAG, "@onCreate()");
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
@@ -37,7 +37,7 @@ public class AboutActivity extends Activity {
 			pinfo = this.getPackageManager().getPackageInfo(this.getPackageName(), PackageManager.GET_GIDS);
 		}
 		catch(Exception e) {
-			Log.e(TAG, e.getMessage());
+			//Log.e(TAG, e.getMessage());
 		}
 		
 		StringBuffer sb = new StringBuffer(500);

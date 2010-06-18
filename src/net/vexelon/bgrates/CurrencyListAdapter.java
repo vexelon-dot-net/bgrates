@@ -46,10 +46,13 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 				tvRatio.setText(ci.getRatio());
 			
 			TextView tvRate = (TextView) v.findViewById(R.id.rate);
-			if ( tvRate != null )
-				tvRate.setText(
-						ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ? ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) : ci.getRate()
-						);
+			if ( tvRate != null ) {
+//				String text = String.format("%s %s", 
+//						ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ? ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) : ci.getRate(),
+//						getContext().getResources().getString(R.string.bg_currency_name)
+//						);
+				tvRate.setText(ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ? ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) : ci.getRate());
+			}
 			
 			// add last
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
