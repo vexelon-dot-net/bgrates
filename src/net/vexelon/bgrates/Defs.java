@@ -25,7 +25,8 @@ public class Defs {
 	
 	final static int MENU_REFRESH = 10;
 	final static int MENU_BG_RATES = 12;
-	final static int MENU_EN_RATES = 14; 
+	final static int MENU_EN_RATES = 14;
+	final static int MENU_CONVERT = 15;
 	final static int MENU_ABOUT = 20;
 	
 	final static int ACTIVITYRESULT_CLOSE = 100;

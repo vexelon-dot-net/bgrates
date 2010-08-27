@@ -10,6 +10,7 @@
 </intent-filter>
 </activity>
 <activity android:name="AboutActivity" android:screenOrientation="portrait"></activity>
+<activity android:name="ConvertActivity" android:screenOrientation="portrait"></activity>
 </application>
 
 

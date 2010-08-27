@@ -29,4 +29,5 @@
 <string name="dlg_yes">Да</string>
 <string name="dlg_no">Не</string>
 <string name="bg_currency_name">Лв.</string>
+<string name="menu_convert">Convert</string>
 </resources>

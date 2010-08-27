@@ -67,7 +67,8 @@ public class MainActivity extends Activity {
 		menu.add(0, Defs.MENU_BG_RATES, 0, R.string.menu_bg_rates).setIcon(R.drawable.bg);
 		menu.add(0, Defs.MENU_EN_RATES, 0, R.string.menu_en_rates).setIcon(R.drawable.gb);
 		menu.add(1, Defs.MENU_REFRESH, 10, R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
-		menu.add(1, Defs.MENU_ABOUT, 10, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
+		menu.add(1, Defs.MENU_CONVERT, 10, R.string.menu_convert).setIcon(R.drawable.ic_menu_info_details);
+		menu.add(1, Defs.MENU_ABOUT, 15, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
 		return true;
 	}
 	
@@ -86,12 +87,14 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//Log.v(TAG, "@onOptionsItemSelected()");
 		
+		Intent intent = null;
+		
 		switch(item.getItemId()) {
 		case Defs.MENU_REFRESH:
 			refresh();
 			break;
 		case Defs.MENU_ABOUT:
-			Intent intent = new Intent(this, AboutActivity.class);
+			intent = new Intent(this, AboutActivity.class);
 			startActivity(intent);
 			break;
 		case Defs.MENU_BG_RATES:
@@ -101,6 +104,10 @@ public class MainActivity extends Activity {
 		case Defs.MENU_EN_RATES:
 			_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, Defs.URL_BNB_SUFFIX_EN);
 			refresh();
+			break;
+		case Defs.MENU_CONVERT:
+			intent = new Intent(this, ConvertActivity.class);
+			startActivity(intent);
 			break;
 		}
 

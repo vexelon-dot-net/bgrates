@@ -33,4 +33,5 @@
 <string name="dlg_yes">Yes</string>
 <string name="dlg_no">No</string>
 <string name="bg_currency_name">BGN</string>
+<string name="menu_convert">Convert</string>
 </resources>
