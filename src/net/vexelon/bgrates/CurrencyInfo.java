@@ -2,12 +2,12 @@ package net.vexelon.bgrates;
 
 public class CurrencyInfo {
 	
-	private String name;
-	private String code;
-	private String ratio;
-	private String rate;
-	private String reverseRate;
-	private String extraInfo;
+	private String name = "";
+	private String code = "";
+	private String ratio = "0";
+	private String rate = "0";
+	private String reverseRate = "0";
+	private String extraInfo = "";
 	
 	public CurrencyInfo() {
 		
