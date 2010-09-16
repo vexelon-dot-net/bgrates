@@ -10,6 +10,9 @@ public class Defs {
 	final static String URL_BNB_SUFFIX_BG = "BG";
 	final static String URL_BNB_SUFFIX_EN = "EN";
 	
+	final static String INT_CURRENCIES = "int-cur";
+	final static String INT_HEADERINFO = "int-hdr";
+	
 	final static int MAX_RATE_CHARS_SIZE = 8;
 	final static int MAX_TOAST_INFO_TIME = 2050;
 	

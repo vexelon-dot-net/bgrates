@@ -58,6 +58,14 @@ public class ExchangeRate {
 		_currencies =  new ArrayList<CurrencyInfo>(20);
 	}
 	
+	public ExchangeRate(HeaderInfo header, CurrencyInfo[] currencies ) {
+		_header = header;
+		_currencies = new ArrayList<CurrencyInfo>(currencies.length);
+		for (CurrencyInfo currencyInfo : currencies) {
+			_currencies.add(currencyInfo);
+		}
+	}
+	
 	public static int getResrouceFromCode(CurrencyInfo ci) {
 		return _flagIds.get(ci.getCountryCode()) != null ?
 				_flagIds.get(ci.getCountryCode()) : R.drawable.money;
@@ -92,19 +100,25 @@ public class ExchangeRate {
 		});
 	}
 	
-	public CurrencyInfo[] toArray() {
-		/*
-		Vector<String> elements = new Vector<String>(_flagIds.size() + 1);
-		
-		Enumeration<CurrencyInfo> i = _currencies.toArray();
-		for(; i.hasMoreElements(); ) {
-			elements.add(i.nextElement());
-		}
-		return (String[])elements.toArray();
-		*/
-		
-		return (CurrencyInfo[]) _currencies.toArray();
+	public CurrencyInfo[] getCurrencies() {
+		CurrencyInfo[] currencies = new CurrencyInfo[_currencies.size()];
+		_currencies.toArray(currencies);
+		return currencies;
 	}
+	
+	public String[] currenciesToStringArray() {
+		Vector<String> elements = new Vector<String>(_currencies.size());
+		
+		Iterator<?> i = _currencies.iterator();
+		for(; i.hasNext(); ) {
+			CurrencyInfo ci = (CurrencyInfo) i.next();
+			elements.add(ci.getCode());
+		}
+		
+		String[] results = new String[ elements.size() ];
+		elements.toArray(results);
+		return results;
+	}	
 	
 	public int count() {
 		return _currencies.size();

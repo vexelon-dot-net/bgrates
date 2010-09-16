@@ -107,9 +107,8 @@ public class MainActivity extends Activity {
 			break;
 		case Defs.MENU_CONVERT:
 			intent = new Intent(this, ConvertActivity.class);
-			
-			//intent.putExtra("currencies", _myRates.g
-			
+			intent.putExtra(Defs.INT_HEADERINFO, _myRates.getHeader());
+			intent.putExtra(Defs.INT_CURRENCIES, _myRates.getCurrencies());
 			startActivity(intent);
 			break;
 		}

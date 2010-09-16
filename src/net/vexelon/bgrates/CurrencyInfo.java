@@ -1,6 +1,9 @@
 package net.vexelon.bgrates;
 
-public class CurrencyInfo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class CurrencyInfo implements Parcelable {
 	
 	private String name = "";
 	private String code = "";
@@ -9,18 +12,28 @@ public class CurrencyInfo {
 	private String reverseRate = "0";
 	private String extraInfo = "";
 	
+	public static final Parcelable.Creator<CurrencyInfo> CREATOR = new Parcelable.Creator<CurrencyInfo>() {
+		public CurrencyInfo createFromParcel(Parcel in) {
+			return new CurrencyInfo(in);
+		}
+
+		public CurrencyInfo[] newArray(int size) {
+			return new CurrencyInfo[size];
+		}
+	};	
+	
 	public CurrencyInfo() {
 		
 	}
 	
-//	public CurrencyInfo( String name, String code, String ratio, String rate, String reverseRate, String extraInfo ) {
-//		this.name = name;
-//		this.code = code;
-//		this.ratio = ratio;
-//		this.rate = rate;
-//		this.reverseRate = reverseRate;
-//		this.extraInfo = extraInfo;
-//	}
+	public CurrencyInfo(Parcel in) {
+		this.name = in.readString();
+		this.code = in.readString();
+		this.ratio = in.readString();
+		this.rate = in.readString();
+		this.reverseRate = in.readString();
+		this.extraInfo = in.readString();
+	}
 	
 	public String getCountryCode() {
 		return this.code.toLowerCase().substring(0, 2); 
@@ -74,4 +87,19 @@ public class CurrencyInfo {
 		this.extraInfo = extraInfo;
 	}
 	
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(name);
+		dest.writeString(code);
+		dest.writeString(ratio);
+		dest.writeString(rate);
+		dest.writeString(reverseRate);
+		dest.writeString(extraInfo);
+	}
 }

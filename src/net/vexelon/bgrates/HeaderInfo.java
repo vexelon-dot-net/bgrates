@@ -1,6 +1,9 @@
 package net.vexelon.bgrates;
 
-public class HeaderInfo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class HeaderInfo implements Parcelable {
 	
 	private String name = "";
 	private String code = "";
@@ -11,8 +14,29 @@ public class HeaderInfo {
 	private String curDate = "";
 	private String title = "";
 	
+	public static final Parcelable.Creator<HeaderInfo> CREATOR = new Parcelable.Creator<HeaderInfo>() {
+		public HeaderInfo createFromParcel(Parcel in) {
+			return new HeaderInfo(in);
+		}
+
+		public HeaderInfo[] newArray(int size) {
+			return new HeaderInfo[size];
+		}
+	};	
+	
 	public HeaderInfo() {
 		
+	}
+	
+	public HeaderInfo(Parcel in) {
+		name = in.readString();
+		code = in.readString();
+		ratio = in.readString();
+		rate = in.readString();
+		reverseRate = in.readString();
+		extraInfo = in.readString();
+		curDate = in.readString();
+		title = in.readString();
 	}
 	
 	public String getName() {
@@ -63,5 +87,21 @@ public class HeaderInfo {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(name);
+		dest.writeString(code);
+		dest.writeString(ratio);
+		dest.writeString(rate);
+		dest.writeString(reverseRate);
+		dest.writeString(extraInfo);
+		dest.writeString(curDate);
+		dest.writeString(curDate);
+	}
 }
