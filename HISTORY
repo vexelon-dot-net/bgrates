@@ -1,0 +1,6 @@
+=BGrates HISTORY file=
+
+==V1.1.0==
+
+  * fixed - Issue 1: Error during startup - "The application BGrates M-Tel ... has stopped unexpectedly"
+  * updated - About screen: added website of application

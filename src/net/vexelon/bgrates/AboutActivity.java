@@ -52,6 +52,8 @@ public class AboutActivity extends Activity {
 		}
 		sb.append(getResString(R.string.about_author));
 		sb.append("\n");
+		sb.append("http://code.google.com/p/bgrates/");
+		sb.append("\n");
 		sb.append("\n");
 		sb.append(getResString(R.string.about_bnb_info));
 		sb.append("\n");
