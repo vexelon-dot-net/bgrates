@@ -3,8 +3,11 @@ package net.vexelon.bgrates;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 public class ExchangeRate {
 	
@@ -87,6 +90,20 @@ public class ExchangeRate {
 				return object1.getCode().compareTo(object2.getCode());
 			}
 		});
+	}
+	
+	public CurrencyInfo[] toArray() {
+		/*
+		Vector<String> elements = new Vector<String>(_flagIds.size() + 1);
+		
+		Enumeration<CurrencyInfo> i = _currencies.toArray();
+		for(; i.hasMoreElements(); ) {
+			elements.add(i.nextElement());
+		}
+		return (String[])elements.toArray();
+		*/
+		
+		return (CurrencyInfo[]) _currencies.toArray();
 	}
 	
 	public int count() {

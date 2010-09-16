@@ -20,7 +20,7 @@ public class ConvertActivity extends Activity {
 		Spinner spinner = (Spinner)findViewById(R.id.SpinnerCurrencies);
 		String[] list = {"USD","EUR","ESP"};
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item, list  );
+				this, android.R.layout.simple_spinner_item, ExchangeRate. );
 		spinner.setAdapter(adapter);
 		
 		// convert method

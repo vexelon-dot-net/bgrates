@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
 		menu.add(0, Defs.MENU_BG_RATES, 0, R.string.menu_bg_rates).setIcon(R.drawable.bg);
 		menu.add(0, Defs.MENU_EN_RATES, 0, R.string.menu_en_rates).setIcon(R.drawable.gb);
 		menu.add(1, Defs.MENU_REFRESH, 10, R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
-		//menu.add(1, Defs.MENU_CONVERT, 10, R.string.menu_convert).setIcon(R.drawable.ic_menu_info_details);
+		menu.add(1, Defs.MENU_CONVERT, 10, R.string.menu_convert).setIcon(R.drawable.ic_menu_info_details);
 		menu.add(1, Defs.MENU_ABOUT, 15, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
 		return true;
 	}
@@ -107,6 +107,9 @@ public class MainActivity extends Activity {
 			break;
 		case Defs.MENU_CONVERT:
 			intent = new Intent(this, ConvertActivity.class);
+			
+			//intent.putExtra("currencies", _myRates.g
+			
 			startActivity(intent);
 			break;
 		}

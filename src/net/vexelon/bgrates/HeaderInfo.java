@@ -2,14 +2,14 @@ package net.vexelon.bgrates;
 
 public class HeaderInfo {
 	
-	private String name;
-	private String code;
-	private String ratio;
-	private String rate;
-	private String reverseRate;
-	private String extraInfo;
-	private String curDate;
-	private String title;
+	private String name = "";
+	private String code = "";
+	private String ratio = "";
+	private String rate = "";
+	private String reverseRate = "";
+	private String extraInfo = "";
+	private String curDate = "";
+	private String title = "";
 	
 	public HeaderInfo() {
 		
