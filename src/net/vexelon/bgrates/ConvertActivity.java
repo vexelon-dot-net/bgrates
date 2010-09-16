@@ -10,44 +10,26 @@ import android.widget.TextView;
 public class ConvertActivity extends Activity {
 	
 	private final static String TAG = Defs.LOG_TAG;
+	private ExchangeRate _myRates;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.convert);
 		
-		//Bundle bundle = getIntent().getP
-		HeaderInfo headerInfo = (HeaderInfo) getIntent().getParcelableExtra(Defs.INT_HEADERINFO);
-		Parcelable[] results = getIntent().getParcelableArrayExtra(Defs.INT_CURRENCIES);
-		CurrencyInfo[] currencies = null;
-		if ( results != null ) {
-			currencies = new CurrencyInfo[results.length];
-			int i = 0;
-			for (Parcelable parcelable : results) {
-				currencies[i++] = (CurrencyInfo) parcelable;
-			}
-		}
-		ExchangeRate myRates = new ExchangeRate(headerInfo, currencies);
+		_myRates = getIntent().getParcelableExtra(Defs.INT_EXCHANGERATES);
 
-		// currencies to work with
-		setText(R.id.TextViewConvert,"Select currency to convert from:");
+		// convert From
 		Spinner spinner = (Spinner)findViewById(R.id.SpinnerCurrencies);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item, myRates.currenciesToStringArray());
+				this, android.R.layout.simple_spinner_item, _myRates.currenciesToStringArray());
 		spinner.setAdapter(adapter);
 		
-		// convert method
-		setText(R.id.TextViewToFrom,"Convert method:");
+		// convert To
 		Spinner spinnerHow = (Spinner)findViewById(R.id.SpinnerConvertHow);
 		adapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item, new String[] {"From", "To"} );
+				this, android.R.layout.simple_spinner_item, _myRates.currenciesToStringArray() );
 		spinnerHow.setAdapter(adapter);
-		
-		// sum nfo
-		
-		// result box
-		setText(R.id.TextViewResult,"Result:");
-		
 		
 	}
 

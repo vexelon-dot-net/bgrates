@@ -12,16 +12,6 @@ public class CurrencyInfo implements Parcelable {
 	private String reverseRate = "0";
 	private String extraInfo = "";
 	
-	public static final Parcelable.Creator<CurrencyInfo> CREATOR = new Parcelable.Creator<CurrencyInfo>() {
-		public CurrencyInfo createFromParcel(Parcel in) {
-			return new CurrencyInfo(in);
-		}
-
-		public CurrencyInfo[] newArray(int size) {
-			return new CurrencyInfo[size];
-		}
-	};	
-	
 	public CurrencyInfo() {
 		
 	}
@@ -86,6 +76,18 @@ public class CurrencyInfo implements Parcelable {
 	public void setExtraInfo(String extraInfo) {
 		this.extraInfo = extraInfo;
 	}
+	
+	//// Parcelable implementation ////	
+	
+	public static final Parcelable.Creator<CurrencyInfo> CREATOR = new Parcelable.Creator<CurrencyInfo>() {
+		public CurrencyInfo createFromParcel(Parcel in) {
+			return new CurrencyInfo(in);
+		}
+
+		public CurrencyInfo[] newArray(int size) {
+			return new CurrencyInfo[size];
+		}
+	};		
 	
 	@Override
 	public int describeContents() {

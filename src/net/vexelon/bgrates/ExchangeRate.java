@@ -9,7 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-public class ExchangeRate {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ExchangeRate implements Parcelable {
 	
 	private List<CurrencyInfo> _currencies = null;
 	private HeaderInfo _header = null;
@@ -58,13 +61,13 @@ public class ExchangeRate {
 		_currencies =  new ArrayList<CurrencyInfo>(20);
 	}
 	
-	public ExchangeRate(HeaderInfo header, CurrencyInfo[] currencies ) {
-		_header = header;
-		_currencies = new ArrayList<CurrencyInfo>(currencies.length);
-		for (CurrencyInfo currencyInfo : currencies) {
-			_currencies.add(currencyInfo);
-		}
-	}
+//	public ExchangeRate(HeaderInfo header, CurrencyInfo[] currencies ) {
+//		_header = header;
+//		_currencies = new ArrayList<CurrencyInfo>(currencies.length);
+//		for (CurrencyInfo currencyInfo : currencies) {
+//			_currencies.add(currencyInfo);
+//		}
+//	}
 	
 	public static int getResrouceFromCode(CurrencyInfo ci) {
 		return _flagIds.get(ci.getCountryCode()) != null ?
@@ -126,6 +129,49 @@ public class ExchangeRate {
 	
 	public void clear() {
 		_currencies.clear();
+	}
+	
+	//// Parcelable implementation ////
+	
+	public ExchangeRate(Parcel in) {
+		_header = in.readParcelable(HeaderInfo.class.getClassLoader());
+		_currencies =  new ArrayList<CurrencyInfo>(20);
+		in.readTypedList(this._currencies, new Parcelable.Creator<CurrencyInfo>() {
+			@Override
+			public CurrencyInfo createFromParcel(Parcel source) {
+				return new CurrencyInfo(source);
+			}
+			
+			@Override
+			public CurrencyInfo[] newArray(int size) {
+				return new CurrencyInfo[size];
+			}
+		});
+	}
+	
+	public static final Parcelable.Creator<ExchangeRate> CREATOR = new Creator<ExchangeRate>() {
+		
+		@Override
+		public ExchangeRate[] newArray(int size) {
+			return new ExchangeRate[size];
+		}
+		
+		@Override
+		public ExchangeRate createFromParcel(Parcel source) {
+			return new ExchangeRate(source);
+		}
+	};
+	
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeParcelable(this._header, flags);
+		dest.writeTypedList(this._currencies);
 	}
 
 }

@@ -14,16 +14,6 @@ public class HeaderInfo implements Parcelable {
 	private String curDate = "";
 	private String title = "";
 	
-	public static final Parcelable.Creator<HeaderInfo> CREATOR = new Parcelable.Creator<HeaderInfo>() {
-		public HeaderInfo createFromParcel(Parcel in) {
-			return new HeaderInfo(in);
-		}
-
-		public HeaderInfo[] newArray(int size) {
-			return new HeaderInfo[size];
-		}
-	};	
-	
 	public HeaderInfo() {
 		
 	}
@@ -87,6 +77,18 @@ public class HeaderInfo implements Parcelable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	
+	//// Parcelable implementation ////	
+	
+	public static final Parcelable.Creator<HeaderInfo> CREATOR = new Parcelable.Creator<HeaderInfo>() {
+		public HeaderInfo createFromParcel(Parcel in) {
+			return new HeaderInfo(in);
+		}
+
+		public HeaderInfo[] newArray(int size) {
+			return new HeaderInfo[size];
+		}
+	};		
 	
 	@Override
 	public int describeContents() {
