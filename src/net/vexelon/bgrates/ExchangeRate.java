@@ -14,7 +14,10 @@ import android.os.Parcelable;
 
 public class ExchangeRate implements Parcelable {
 	
+	private final int DEFAULT_SIZE = 30;
+	
 	private List<CurrencyInfo> _currencies = null;
+	private ArrayList<String> _currencyCodesCache = null;
 	private HeaderInfo _header = null;
 	private static final Hashtable<String, Integer> _flagIds = new Hashtable<String, Integer>(10);
 	
@@ -58,7 +61,8 @@ public class ExchangeRate implements Parcelable {
 	}
 	
 	public ExchangeRate() {
-		_currencies =  new ArrayList<CurrencyInfo>(20);
+		_currencies =  new ArrayList<CurrencyInfo>(DEFAULT_SIZE);
+		_currencyCodesCache = new ArrayList<String>(DEFAULT_SIZE);
 	}
 	
 //	public ExchangeRate(HeaderInfo header, CurrencyInfo[] currencies ) {
@@ -75,23 +79,24 @@ public class ExchangeRate implements Parcelable {
 	}
 	
 	public void add(CurrencyInfo currency) {
-		this._currencies.add(currency);
+		_currencies.add(currency);
+		_currencyCodesCache.add(currency.getCode());
 	}
 	
 	public void addHeader(HeaderInfo header) {
-		this._header = header;
+		_header = header;
 	}
 	
 	public HeaderInfo getHeader() {
-		return this._header;
+		return _header;
 	}
 	
 	public List<CurrencyInfo> items() {
-		return this._currencies;
+		return _currencies;
 	}
 	
 	public boolean isHeaderAvailable() {
-		return (this._header != null);
+		return (_header != null);
 	}
 	
 	public void sort() {
@@ -110,18 +115,18 @@ public class ExchangeRate implements Parcelable {
 	}
 	
 	public String[] currenciesToStringArray() {
-		Vector<String> elements = new Vector<String>(_currencies.size());
-		
-		Iterator<?> i = _currencies.iterator();
-		for(; i.hasNext(); ) {
-			CurrencyInfo ci = (CurrencyInfo) i.next();
-			elements.add(ci.getCode());
-		}
-		
-		String[] results = new String[ elements.size() ];
-		elements.toArray(results);
+		String[] results = new String[ _currencyCodesCache.size() ];
+		_currencyCodesCache.toArray(results);
 		return results;
-	}	
+	}
+	
+	public CurrencyInfo getCurrencyByCode(String code) {
+		for (CurrencyInfo ci : _currencies) {
+			if ( ci.getCode().equalsIgnoreCase(code) )
+				return ci;
+		}
+		return null;
+	}
 	
 	public int count() {
 		return _currencies.size();
@@ -135,7 +140,8 @@ public class ExchangeRate implements Parcelable {
 	
 	public ExchangeRate(Parcel in) {
 		_header = in.readParcelable(HeaderInfo.class.getClassLoader());
-		_currencies =  new ArrayList<CurrencyInfo>(20);
+		
+		_currencies =  new ArrayList<CurrencyInfo>(DEFAULT_SIZE);
 		in.readTypedList(this._currencies, new Parcelable.Creator<CurrencyInfo>() {
 			@Override
 			public CurrencyInfo createFromParcel(Parcel source) {
@@ -147,6 +153,9 @@ public class ExchangeRate implements Parcelable {
 				return new CurrencyInfo[size];
 			}
 		});
+		
+		_currencyCodesCache = new ArrayList<String>(DEFAULT_SIZE);
+		in.readList(_currencyCodesCache, null);
 	}
 	
 	public static final Parcelable.Creator<ExchangeRate> CREATOR = new Creator<ExchangeRate>() {
@@ -170,8 +179,9 @@ public class ExchangeRate implements Parcelable {
 	
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeParcelable(this._header, flags);
-		dest.writeTypedList(this._currencies);
+		dest.writeParcelable(_header, flags);
+		dest.writeTypedList(_currencies);
+		dest.writeList(_currencyCodesCache);
 	}
 
 }
