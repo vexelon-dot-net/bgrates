@@ -3,34 +3,38 @@ package net.vexelon.bgrates;
 
 public class Utils {
 	
-	public static String roundDouble(String value, int maxlen) {
-		String result = value;
-		
-		// 14.4257 = 14.43
-		// 6.9852 = 6.99
+	/**
+	 * Rounds a precision to a certain length
+	 * @param value
+	 * @param maxlen
+	 * @return
+	 */
+	public static String roundPrecision(String value, int maxlen) {
 		
 		StringBuffer sb = new StringBuffer(value.length());
 		boolean reminder = false;
 		
-		for( int i = value.length(); i > maxlen; i-- ) {
+		for( int i = value.length() - 1; i > maxlen; i-- ) {
 			
 			char c = value.charAt(i);
 			
-			if ( c == '.' ) {
+			if ( c == '.' || c == ',' ) {
 				sb.insert(0, c);
 				continue;
 			}
+			else if ( c >= '0' && c <= '9' ) { // skip anything that's not a number
 			
-			if ( reminder )
-				c += 1;
+				int n = (int)c;
 				
-			sb.insert(0, c);
-			reminder = c > '4';			
+				if ( reminder )
+					n += 1;
+					
+				sb.insert(0, n);
+				reminder = n > 4;
+			}
 		}
 		
-		for( int i = maxlen; i > 0; i-- ) {
-			
-		}
+		String result = value.split(".")[0] + sb.toString();
 		
 		return result;
 	}

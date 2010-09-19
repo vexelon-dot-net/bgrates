@@ -1,5 +1,9 @@
 package net.vexelon.bgrates;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -15,43 +19,40 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 public class ConvertActivity extends Activity {
 	
+	enum ConvertOptions {
+		ConvertToBGN,
+		ConvertFromBGN
+	};
+	
 	private final static String TAG = Defs.LOG_TAG;
-	private ConvertActivity _context = null;
 	private ExchangeRate _myRates = null;
-	private CurrencyInfo _selCurrencyFrom = null;
-	private CurrencyInfo _selCurrencyTo = null;
+	private String _selCodeFrom = "";
+	private String _selCodeTo = "";
+	private ConvertOptions _convertOption = ConvertOptions.ConvertToBGN;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
-		_context = this;
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.convert);
 		
 		// read rates from intent bundle
 		_myRates = getIntent().getParcelableExtra(Defs.INT_EXCHANGERATES);
-
-		// convert From
+		
+		// init dropdown convert options
+		initSpinners(_convertOption);
+		
+		// set dropdown actions
 		Spinner spinnerFrom = (Spinner)findViewById(R.id.SpinnerCurFrom);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item, _myRates.currenciesToStringArray());
-		spinnerFrom.setAdapter(adapter);
 		spinnerFrom.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int pos, long row) {
 				
-				try {
-					String code = parent.getItemAtPosition(pos).toString();
-					_selCurrencyFrom = _myRates.getCurrencyByCode(code);
-				}
-				catch(Exception e) {
-					Log.e(TAG, "Error reading item from spinnerFrom!");
-				}
+				_selCodeFrom = parent.getItemAtPosition(pos).toString();
 				
 				// calculate and refresh
-				updateResult(); 
+				updateResult(_convertOption);
 			}
 			
 			@Override
@@ -62,23 +63,15 @@ public class ConvertActivity extends Activity {
 		
 		// convert To
 		Spinner spinnerTo = (Spinner)findViewById(R.id.SpinnerCurTo);
-		adapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item, _myRates.currenciesToStringArray() );
-		spinnerTo.setAdapter(adapter);
 		spinnerTo.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int pos, long row) {
-				try {
-					String code = parent.getItemAtPosition(pos).toString();
-					_selCurrencyTo = _myRates.getCurrencyByCode(code);
-				}
-				catch(Exception e) {
-					Log.e(TAG, "Error reading item from spinnerTo !");
-				}
+
+				_selCodeTo = parent.getItemAtPosition(pos).toString();
 				
 				// calculate and refresh
-				updateResult(); 				
+				updateResult(_convertOption);				
 			}
 			
 			@Override
@@ -87,7 +80,29 @@ public class ConvertActivity extends Activity {
 			}
 		});
 		
-		// buttons functionality
+		// switch convert button
+		Button btnSwitch = (Button) findViewById(R.id.ButtonSwitch);
+		btnSwitch.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				// toggle convert type
+				
+				switch(_convertOption) {
+				case ConvertFromBGN:
+					_convertOption = ConvertOptions.ConvertToBGN;
+					break;
+				case ConvertToBGN:
+					_convertOption = ConvertOptions.ConvertFromBGN;
+					break;
+				}
+				
+				initSpinners(_convertOption);
+			}
+		});		
+
+		// create buttons & functionality
 		createButton(R.id.Button00, "0");
 		createButton(R.id.Button01, "1");
 		createButton(R.id.Button02, "2");
@@ -101,8 +116,8 @@ public class ConvertActivity extends Activity {
 		createButton(R.id.ButtonDot, ".");
 		
 		// delete button
-		Button btn = (Button) findViewById(R.id.ButtonBack);
-		btn.setOnClickListener(new OnClickListener() {
+		Button btnDel = (Button) findViewById(R.id.ButtonBack);
+		btnDel.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -112,29 +127,90 @@ public class ConvertActivity extends Activity {
 				else
 					setResText(R.id.EditTextFrom, "0");
 				
-				updateResult();
+				updateResult(_convertOption);
 			}
-		});	
+		});
 		
 		// set defaults
 		setResText(R.id.EditTextFrom, "0");
 		setResText(R.id.EditTextTo, "0");
 	}
 	
-	private void updateResult() {
-		// do convert calculations and display
+	private void initSpinners(ConvertOptions convertOption) {
+		
+		String[] itemsFrom = null;
+		String[] itemsTo = null;
+		
+		switch(convertOption) {
+		case ConvertFromBGN:
+			itemsFrom = new String[] { "BGN" };
+			itemsTo = _myRates.currenciesToStringArray();
+			break;
+			
+		case ConvertToBGN:
+		default:
+			itemsFrom = _myRates.currenciesToStringArray();
+			itemsTo = new String[] { "BGN" };				
+			break;
+		}
+		
+		// convert From
+		Spinner spinnerFrom = (Spinner)findViewById(R.id.SpinnerCurFrom);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				this, android.R.layout.simple_spinner_item, itemsFrom );
+		spinnerFrom.setAdapter(adapter);
 
+		// convert To
+		Spinner spinnerTo = (Spinner)findViewById(R.id.SpinnerCurTo);
+		adapter = new ArrayAdapter<String>(
+				this, android.R.layout.simple_spinner_item, itemsTo );
+		spinnerTo.setAdapter(adapter);
+		
+	}
+	
+	private void updateResult(ConvertOptions convertOption) {
+		// do convert calculations and display
+		
+		if ( _selCodeTo.equals(_selCodeFrom) ) // invalid update
+			return;
+		
+		CurrencyInfo currency = null;
+		BigDecimal sum, rate, ratio, result = new BigDecimal(0.0);
+		MathContext mc = new MathContext(3);		
+		
 		try {
-			Double rate = Double.parseDouble( _selCurrencyFrom.getRate() );
-			Double ratio = Double.parseDouble( _selCurrencyFrom.getRatio() );
-			Double sum = Double.parseDouble( getResText(R.id.EditTextFrom).toString() );
-			
-			Double result = rate / ratio * sum;
-			setResText(R.id.EditTextTo, result.toString());	
-			
+			sum = new BigDecimal( getResText(R.id.EditTextFrom).toString() );
+		}
+		catch(NumberFormatException e) {
+			Log.e(TAG, e.toString());
+			return; // invalid number
+		}
+		
+		try {
+		
+			switch(convertOption) {
+			case ConvertFromBGN:
+				currency = _myRates.getCurrencyByCode(_selCodeTo);
+				rate = new BigDecimal(currency.getRate(), mc);
+				ratio = new BigDecimal(currency.getRatio(), mc);
+				//result = sum * ratio / rate;
+				result = sum.multiply(ratio.divide(rate, mc), mc);
+				break;
+				
+			case ConvertToBGN:
+				currency = _myRates.getCurrencyByCode(_selCodeFrom);
+				rate = new BigDecimal(currency.getRate(), mc);
+				ratio = new BigDecimal(currency.getRatio(), mc);
+				//result = rate / ratio * sum;
+				result = rate.divide(ratio, mc).multiply(sum, mc);
+				break;
+			}
+		
 		} catch (NumberFormatException e) {
 			Log.e(TAG, e.getMessage());
-		}
+		}		
+		
+		setResText(R.id.EditTextTo, result.round(new MathContext(2, RoundingMode.UP)).toPlainString());	
 	}
 	
 	private void createButton(int id, final CharSequence value) {
@@ -149,7 +225,7 @@ public class ConvertActivity extends Activity {
 				else
 					appendResText(R.id.EditTextFrom, value);
 				
-				updateResult();
+				updateResult(_convertOption);
 			}
 		});		
 	}

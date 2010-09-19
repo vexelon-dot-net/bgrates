@@ -14,7 +14,7 @@ import android.os.Parcelable;
 
 public class ExchangeRate implements Parcelable {
 	
-	private final int DEFAULT_SIZE = 30;
+	private final static int DEFAULT_SIZE = 30;
 	
 	private List<CurrencyInfo> _currencies = null;
 	private ArrayList<String> _currencyCodesCache = null;

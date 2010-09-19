@@ -13,6 +13,7 @@ import java.util.Date;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.Activity;
@@ -289,7 +290,7 @@ public class MainActivity extends Activity {
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(Defs.PREFS_KEY_LASTUPDATE, lastUpdate);
 		
-		String theDate = DateFormat.format(new String("yyyyMMdd"), Calendar.getInstance()).toString();
+		String theDate = DateFormat.format("yyyyMMdd", Calendar.getInstance()).toString();
 		editor.putString(Defs.PREFS_KEY_LASTUPDATE_TIME, theDate);
 		//Log.v(TAG, "Saving last update date - " + theDate);
 		
@@ -300,7 +301,7 @@ public class MainActivity extends Activity {
 		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
 		String lastUpdateTime = prefs.getString(Defs.PREFS_KEY_LASTUPDATE_TIME, "");
 		
-		String now = DateFormat.format(new String("yyyyMMdd"), Calendar.getInstance()).toString();
+		String now = DateFormat.format("yyyyMMdd", Calendar.getInstance()).toString();
 		//Log.v(TAG, String.format("Reading last update date - %s / Now is %s ", lastUpdateTime, now));
 		return lastUpdateTime.length() == 0 || lastUpdateTime.compareTo(now) < 0;
 	}

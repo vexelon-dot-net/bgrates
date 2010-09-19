@@ -12,8 +12,9 @@
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
 >
-<Spinner android:id="@+id/SpinnerCurFrom" android:minWidth="45px" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
-<Spinner android:id="@+id/SpinnerCurTo" android:minWidth="45px" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+<Spinner android:id="@+id/SpinnerCurFrom" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+<Button android:width="50dp" android:text="W" android:id="@+id/ButtonSwitch" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Spinner android:id="@+id/SpinnerCurTo" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
 </LinearLayout>
 
 <LinearLayout
@@ -21,8 +22,9 @@
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
 >
-<EditText android:text="@+id/EditText01" android:id="@+id/EditTextFrom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="numberDecimal" android:maxLength="10"></EditText>
-<EditText android:text="@+id/EditText02" android:id="@+id/EditTextTo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="numberDecimal" android:maxLength="10"></EditText>
+<EditText android:text="@+id/EditText01" android:id="@+id/EditTextFrom" android:width="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLength="10" android:digits="0123456789." android:inputType="none" android:focusable="false"></EditText>
+<Button android:width="50dp" android:text="()" android:id="@+id/ButtonDummy" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<EditText android:text="@+id/EditText02" android:id="@+id/EditTextTo" android:width="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLength="10" android:inputType="none" android:focusable="false"></EditText>
 </LinearLayout>
 
 <!-- Numpad -->
@@ -31,9 +33,9 @@
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
 >
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="1" android:id="@+id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="2" android:id="@+id/Button02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="3" android:id="@+id/Button03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:minWidth="50dp" android:text="1" android:id="@+id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="2" android:id="@+id/Button02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="3" android:id="@+id/Button03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
 </LinearLayout>
 
 <LinearLayout
@@ -41,9 +43,9 @@
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
 >
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="4" android:id="@+id/Button04" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="5" android:id="@+id/Button05" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="6" android:id="@+id/Button06" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="4" android:id="@+id/Button04" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="5" android:id="@+id/Button05" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="6" android:id="@+id/Button06" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
 </LinearLayout>
 
 <LinearLayout
@@ -51,9 +53,9 @@
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
 >
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="7" android:id="@+id/Button07" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="8" android:id="@+id/Button08" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="9" android:id="@+id/Button09" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="7" android:id="@+id/Button07" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="8" android:id="@+id/Button08" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="9" android:id="@+id/Button09" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
 </LinearLayout>
 
 <LinearLayout
@@ -61,22 +63,13 @@
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
 >
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="." android:id="@+id/ButtonDot" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="0" android:id="@+id/Button00" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:paddingLeft="25px" android:paddingRight="25px" android:text="D" android:id="@+id/ButtonBack" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="." android:id="@+id/ButtonDot" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="0" android:id="@+id/Button00" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:width="50dp" android:text="C" android:id="@+id/ButtonBack" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
 </LinearLayout>
 
 <!-- 
 <View android:id="@+id/ViewRuler" android:layout_width="fill_parent" android:layout_height="2dip" android:background="#FF888888"></View>
  -->
- 
- <LinearLayout
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  android:gravity="center_horizontal"
->
-<Button android:paddingLeft="10px" android:paddingRight="10px" android:text="Convert" android:id="@+id/ButtonConvert" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-</LinearLayout>
-
 
 </LinearLayout>
