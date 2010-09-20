@@ -113,10 +113,24 @@ public class ConvertActivity extends Activity {
 		createButton(R.id.Button07, "7");
 		createButton(R.id.Button08, "8");
 		createButton(R.id.Button09, "9");
-		createButton(R.id.ButtonDot, ".");
+		//createButton(R.id.ButtonDot, ".");
+		
+		// dot button
+		Button btnDot = (Button) findViewById(R.id.ButtonDot);
+		btnDot.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String value = getResText(R.id.EditTextFrom).toString();
+				if ( -1 == value.indexOf('.') ) { // only add dot if there is non yet in the value
+					appendResText(R.id.EditTextFrom, ".");
+					updateResult(_convertOption);
+				}
+			}
+		});		
 		
 		// delete button
-		Button btnDel = (Button) findViewById(R.id.ButtonBack);
+		Button btnDel = (Button) findViewById(R.id.ButtonDel);
 		btnDel.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -177,7 +191,7 @@ public class ConvertActivity extends Activity {
 		CurrencyInfo currency = null;
 		BigDecimal sum, rate, ratio, result = new BigDecimal(0.0);
 		MathContext mc = new MathContext(3);		
-		
+
 		try {
 			sum = new BigDecimal( getResText(R.id.EditTextFrom).toString() );
 		}
@@ -210,7 +224,9 @@ public class ConvertActivity extends Activity {
 			Log.e(TAG, e.getMessage());
 		}		
 		
-		setResText(R.id.EditTextTo, result.round(new MathContext(2, RoundingMode.UP)).toPlainString());	
+		setResText(R.id.EditTextTo, 
+				result.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+		
 	}
 	
 	private void createButton(int id, final CharSequence value) {
