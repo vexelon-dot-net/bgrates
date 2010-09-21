@@ -183,5 +183,5 @@ public class ExchangeRate implements Parcelable {
 		dest.writeTypedList(_currencies);
 		dest.writeList(_currencyCodesCache);
 	}
-
+	
 }

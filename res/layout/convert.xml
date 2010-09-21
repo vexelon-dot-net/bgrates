@@ -15,7 +15,7 @@
   android:gravity="center"
 >
 <Spinner android:id="@+id/SpinnerCurFrom" android:minWidth="125dp" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
-<Button  android:id="@+id/ButtonSwitch" android:width="50dp" android:layout_toRightOf="@+id/SpinnerCurFrom" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+<ImageButton android:id="@+id/ButtonSwitch"  android:width="50dp" android:layout_toRightOf="@+id/SpinnerCurFrom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/sym_keyboard_shift"></ImageButton>
 <Spinner android:id="@+id/SpinnerCurTo" android:minWidth="125dp" android:layout_toRightOf="@+id/ButtonSwitch" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
 </RelativeLayout>
 
@@ -26,7 +26,7 @@
   android:gravity="center"
 >
 <EditText android:id="@+id/EditTextFrom" android:width="125dp" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:digits="0123456789." android:inputType="none" android:focusable="false" android:maxLength="5"></EditText>
-<Button android:id="@+id/ButtonDummy" android:width="50dp" android:layout_toRightOf="@+id/EditTextFrom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<ImageButton android:id="@+id/ButtonDummy" android:width="50dp" android:layout_toRightOf="@+id/EditTextFrom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/sym_keyboard_shift"></ImageButton>
 <EditText android:id="@+id/EditTextTo" android:width="125dp" android:layout_toRightOf="@+id/ButtonDummy" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="none" android:focusable="false" android:maxLength="5"></EditText>
 </RelativeLayout>
 
@@ -38,7 +38,7 @@
   android:gravity="center"
 >
 <Button android:text="." android:width="100dp" android:id="@+id/ButtonDot" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:textColor="#0000ff" android:textColorHighlight="#ff0000" android:text="C" android:width="200dp" android:id="@+id/ButtonDel" android:layout_toRightOf="@id/ButtonDot" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<ImageButton android:minWidth="200dp" android:id="@+id/ButtonDel" android:layout_toRightOf="@id/ButtonDot" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px" android:src="@drawable/sym_keyboard_feedback_delete"></ImageButton>
 </RelativeLayout>
 
 <RelativeLayout

@@ -5,24 +5,23 @@ import android.os.Parcelable;
 
 public class CurrencyInfo implements Parcelable {
 	
+	public enum Tendency {
+		TendencyUnknown,
+		TendencyEqual,
+		TendencyUp,
+		TendencyDown,
+	}
+	
 	private String name = "";
 	private String code = "";
 	private String ratio = "0";
 	private String rate = "0";
 	private String reverseRate = "0";
 	private String extraInfo = "";
+	private Tendency tendency = Tendency.TendencyUnknown;
 	
 	public CurrencyInfo() {
 		
-	}
-	
-	public CurrencyInfo(Parcel in) {
-		this.name = in.readString();
-		this.code = in.readString();
-		this.ratio = in.readString();
-		this.rate = in.readString();
-		this.reverseRate = in.readString();
-		this.extraInfo = in.readString();
 	}
 	
 	public String getCountryCode() {
@@ -77,6 +76,14 @@ public class CurrencyInfo implements Parcelable {
 		this.extraInfo = extraInfo;
 	}
 	
+	public Tendency getTendency() {
+		return tendency;
+	}
+
+	public void setTendency(Tendency tendency) {
+		this.tendency = tendency;
+	}	
+	
 	//// Parcelable implementation ////	
 	
 	public static final Parcelable.Creator<CurrencyInfo> CREATOR = new Parcelable.Creator<CurrencyInfo>() {
@@ -88,6 +95,16 @@ public class CurrencyInfo implements Parcelable {
 			return new CurrencyInfo[size];
 		}
 	};		
+	
+	public CurrencyInfo(Parcel in) {
+		this.name = in.readString();
+		this.code = in.readString();
+		this.ratio = in.readString();
+		this.rate = in.readString();
+		this.reverseRate = in.readString();
+		this.extraInfo = in.readString();
+		this.tendency = (Tendency)in.readValue(Tendency.class.getClassLoader());
+	}	
 	
 	@Override
 	public int describeContents() {
@@ -103,5 +120,6 @@ public class CurrencyInfo implements Parcelable {
 		dest.writeString(rate);
 		dest.writeString(reverseRate);
 		dest.writeString(extraInfo);
+		dest.writeValue(tendency);
 	}
 }

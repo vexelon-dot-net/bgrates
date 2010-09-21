@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -81,7 +82,7 @@ public class ConvertActivity extends Activity {
 		});
 		
 		// switch convert button
-		Button btnSwitch = (Button) findViewById(R.id.ButtonSwitch);
+		ImageButton btnSwitch = (ImageButton) findViewById(R.id.ButtonSwitch);
 		btnSwitch.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -130,7 +131,7 @@ public class ConvertActivity extends Activity {
 		});		
 		
 		// delete button
-		Button btnDel = (Button) findViewById(R.id.ButtonDel);
+		ImageButton btnDel = (ImageButton) findViewById(R.id.ButtonDel);
 		btnDel.setOnClickListener(new OnClickListener() {
 			
 			@Override
