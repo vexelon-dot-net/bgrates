@@ -5,8 +5,24 @@
   android:layout_height="fill_parent"
   android:padding="4px">
 
-<ImageView android:id="@+id/icon" android:scaleType="center" android:layout_width="16px" android:layout_height="16px" android:layout_alignParentLeft="true"></ImageView>
-<TextView android:text="@+id/TextView01" android:id="@+id/code" style="@style/FontList" android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_toRightOf="@id/icon" android:layout_marginLeft="10px"></TextView>
-<TextView android:text="@+id/TextView02" android:id="@+id/rate" android:layout_height="fill_parent" android:layout_width="60px" android:layout_alignParentRight="true" android:gravity="right"></TextView>
-<TextView android:text="@+id/TextView03" android:id="@+id/ratio" android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_toLeftOf="@id/rate" android:layout_marginRight="5px" android:gravity="right"></TextView>
+<ImageView android:id="@+id/icon" android:scaleType="fitCenter" android:layout_width="26px" android:layout_height="26px" android:layout_alignParentLeft="true"></ImageView>
+<TextView android:id="@+id/name" style="@style/FontList" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@id/icon" android:layout_marginLeft="8sp"></TextView>
+<!-- 
+<TextView android:id="@+id/rate" android:layout_height="fill_parent" android:layout_width="60px" android:layout_alignParentRight="true" android:gravity="right"></TextView>
+<TextView android:id="@+id/ratio" android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_toLeftOf="@id/rate" android:layout_marginRight="5px" android:gravity="right"></TextView>
+-->
+<TextView android:id="@+id/code" style="@style/FontListCode" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_below="@+id/name" android:layout_toRightOf="@id/icon" android:layout_marginLeft="8sp"></TextView>
+
+<RelativeLayout
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:layout_alignParentRight="true"
+  android:layout_below="@+id/name"
+  android:gravity="right"
+  style="@style/FontListCode"
+>
+<TextView android:id="@+id/ratio" style="@style/FontListCode" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+<TextView android:id="@+id/rate" style="@style/FontListCode" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@+id/ratio" android:layout_marginLeft="8sp"></TextView>
+</RelativeLayout>
+
 </RelativeLayout>

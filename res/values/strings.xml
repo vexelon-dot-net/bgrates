@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="app_name">BGrates M-Tel</string>
+    <style name="FontListCode" parent="@android:style/TextAppearance"><item name="android:textSize">14sp</item>
+</style><style name="FontList" parent="@android:style/TextAppearance"><item name="android:textSize">18sp</item>
+
+
+</style><string name="app_name">BGrates M-Tel</string>
 <string name="perm_inet_label">Allow the application to access Internet and download resources.</string>
 <string name="perm_inet_desc">Allow the application to download a list of currency rates in order to synchronize it\'s local database.</string>
 
-<style name="FontList" parent="@android:style/TextAppearance"><item name="android:textSize">14sp</item>
 
-
-</style>
 <string name="last_update">Last update</string>
 <string name="URL_BNB_RATES_SUFFIX">EN</string>
 <string name="menu_refresh">Update Rates</string>
