@@ -5,7 +5,7 @@
   android:layout_height="fill_parent"
   android:padding="4px">
 
-<ImageView android:id="@+id/icon" android:scaleType="fitCenter" android:layout_width="26px" android:layout_height="26px" android:layout_alignParentLeft="true"></ImageView>
+<ImageView android:id="@+id/icon" android:scaleType="fitCenter" android:layout_width="26px" android:layout_height="26px" android:layout_alignParentLeft="true" android:layout_centerVertical="true" ></ImageView>
 <TextView android:id="@+id/name" style="@style/FontList" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@id/icon" android:layout_marginLeft="8sp"></TextView>
 <!-- 
 <TextView android:id="@+id/rate" android:layout_height="fill_parent" android:layout_width="60px" android:layout_alignParentRight="true" android:gravity="right"></TextView>
@@ -21,8 +21,9 @@
   android:gravity="right"
   style="@style/FontListCode"
 >
-<TextView android:id="@+id/ratio" style="@style/FontListCode" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
-<TextView android:id="@+id/rate" style="@style/FontListCode" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@+id/ratio" android:layout_marginLeft="8sp"></TextView>
+<TextView android:id="@+id/ratio" style="@style/FontListRatioRate" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+<TextView android:id="@+id/rate" style="@style/FontListRatioRate" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@+id/ratio" android:paddingLeft="16sp"></TextView>
+<TextView android:id="@+id/rate_decimals" style="@style/FontListRateDecimals" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@+id/rate" android:paddingRight="5sp"></TextView>
 </RelativeLayout>
 
 </RelativeLayout>

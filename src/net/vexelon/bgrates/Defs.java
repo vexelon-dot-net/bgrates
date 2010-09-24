@@ -32,5 +32,9 @@ public class Defs {
 	final static int MENU_ABOUT = 20;
 	
 	final static int ACTIVITYRESULT_CLOSE = 100;
+	
+	final static int SCALE_SHOW_LONG = 5;
+	final static int SCALE_SHOW_SHORT = 3;
+	final static int SCALE_CALCULATIONS = 3;
 
 }

@@ -1,5 +1,8 @@
 package net.vexelon.bgrates;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import net.vexelon.bgrates.R;
@@ -40,13 +43,14 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 			setResText(v, R.id.name, ci.getName());
 			setResText(v, R.id.code, ci.getCode());
 			setResText(v, R.id.ratio, ci.getRatio());
-			setResText(v, R.id.rate,
-					ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ? ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) : ci.getRate()
-					);
 			
-//			String text = String.format("%s %s", 
-//					ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ? ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) : ci.getRate(),
-//					getContext().getResources().getString(R.string.bg_currency_name)
+			BigDecimal rate = new BigDecimal(ci.getRate());
+			String rateFull = Utils.scaleNumber(rate, Defs.SCALE_SHOW_LONG);
+			setResText(v, R.id.rate, rateFull.substring(0, rateFull.length() - 3) );
+			setResText(v, R.id.rate_decimals, rateFull.substring(rateFull.length() - 3, rateFull.length()) );
+			
+//			setResText(v, R.id.rate,
+//					ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ? ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) : ci.getRate()
 //					);
 			
 			// add last

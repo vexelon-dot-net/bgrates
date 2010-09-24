@@ -4,10 +4,24 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical"
-  android:gravity="center_vertical"  
+  android:gravity="center_vertical" 
   >
   
+<ScrollView android:id="@+id/ScrollView01" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:fillViewport="true"
+	>  
+	
+<LinearLayout
+	android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+	
 <ImageView android:id="@+id/about_logo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal"></ImageView>
 <TextView android:text="@+id/TextView01" style="@style/FontList" android:id="@+id/about_apptitle" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_horizontal"></TextView>
+</LinearLayout>
+
+</ScrollView>
 
 </LinearLayout>

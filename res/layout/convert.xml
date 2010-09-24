@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:padding="4px"
+  android:padding="4sp"
   android:orientation="vertical"
   android:gravity="center_vertical"
   >
@@ -11,76 +11,69 @@
 <RelativeLayout
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:padding="2px"
   android:gravity="center"
 >
-<Spinner android:id="@+id/SpinnerCurFrom" android:minWidth="125dp" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
-<ImageButton android:id="@+id/ButtonSwitch"  android:width="50dp" android:layout_toRightOf="@+id/SpinnerCurFrom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/sym_keyboard_shift"></ImageButton>
-<Spinner android:id="@+id/SpinnerCurTo" android:minWidth="125dp" android:layout_toRightOf="@+id/ButtonSwitch" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+<Spinner android:id="@+id/SpinnerCurFrom" android:minWidth="90dp" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+<ImageButton android:id="@+id/ButtonSwitch"  android:width="60dp" android:layout_toRightOf="@+id/SpinnerCurFrom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/sym_keyboard_shift"></ImageButton>
+<Spinner android:id="@+id/SpinnerCurTo" android:minWidth="90dp" android:layout_toRightOf="@+id/ButtonSwitch" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
 </RelativeLayout>
 
 <RelativeLayout
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:padding="2px"
   android:gravity="center"
 >
-<EditText android:id="@+id/EditTextFrom" android:width="125dp" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:digits="0123456789." android:inputType="none" android:focusable="false" android:maxLength="5"></EditText>
-<ImageButton android:id="@+id/ButtonDummy" android:width="50dp" android:layout_toRightOf="@+id/EditTextFrom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/sym_keyboard_shift"></ImageButton>
-<EditText android:id="@+id/EditTextTo" android:width="125dp" android:layout_toRightOf="@+id/ButtonDummy" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="none" android:focusable="false" android:maxLength="5"></EditText>
+<EditText android:id="@+id/EditTextFrom" android:width="90dp" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:digits="0123456789." android:inputType="none" android:focusable="false" android:maxLength="5"></EditText>
+<ImageButton android:id="@+id/ButtonDummy" android:width="60dp" android:layout_toRightOf="@+id/EditTextFrom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/sym_keyboard_shift"></ImageButton>
+<EditText android:id="@+id/EditTextTo" android:width="90dp" android:layout_toRightOf="@+id/ButtonDummy" android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="none" android:focusable="false" android:maxLength="5"></EditText>
 </RelativeLayout>
 
 <!-- Numpad -->
 <RelativeLayout
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:padding="2px"
   android:gravity="center"
 >
-<Button android:text="." android:width="100dp" android:id="@+id/ButtonDot" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<ImageButton android:minWidth="200dp" android:id="@+id/ButtonDel" android:layout_toRightOf="@id/ButtonDot" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px" android:src="@drawable/sym_keyboard_feedback_delete"></ImageButton>
+<Button android:text="." android:width="80dp" android:id="@+id/ButtonDot" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
+<ImageButton android:minWidth="160dp" android:id="@+id/ButtonDel" android:layout_toRightOf="@id/ButtonDot" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp" android:src="@drawable/sym_keyboard_feedback_delete"></ImageButton>
 </RelativeLayout>
 
 <RelativeLayout
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:padding="2px"
   android:gravity="center"
 >
-<Button android:text="1" android:width="100dp" android:id="@+id/Button01" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:text="2" android:width="100dp" android:id="@+id/Button02" android:layout_toRightOf="@id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:text="3" android:width="100dp" android:id="@+id/Button03" android:layout_toRightOf="@id/Button02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:text="1" android:width="80dp" android:id="@+id/Button01" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
+<Button android:text="2" android:width="80dp" android:id="@+id/Button02" android:layout_toRightOf="@id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
+<Button android:text="3" android:width="80dp" android:id="@+id/Button03" android:layout_toRightOf="@id/Button02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
 </RelativeLayout>
 
 <RelativeLayout
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:padding="2px"
   android:gravity="center"
 >
-<Button android:text="4" android:width="100dp" android:id="@+id/Button04" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:text="5" android:width="100dp" android:id="@+id/Button05" android:layout_toRightOf="@id/Button04" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:text="6" android:width="100dp" android:id="@+id/Button06" android:layout_toRightOf="@id/Button05" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:text="4" android:width="80dp" android:id="@+id/Button04" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
+<Button android:text="5" android:width="80dp" android:id="@+id/Button05" android:layout_toRightOf="@id/Button04" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
+<Button android:text="6" android:width="80dp" android:id="@+id/Button06" android:layout_toRightOf="@id/Button05" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
 </RelativeLayout>
 
 <RelativeLayout
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:padding="2px"
   android:gravity="center"
 >
-<Button android:text="7" android:width="100dp" android:id="@+id/Button07" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:text="8" android:width="100dp" android:id="@+id/Button08" android:layout_toRightOf="@id/Button07" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
-<Button android:text="9" android:width="100dp" android:id="@+id/Button09" android:layout_toRightOf="@id/Button08" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:text="7" android:width="80dp" android:id="@+id/Button07" android:layout_alignParentLeft="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
+<Button android:text="8" android:width="80dp" android:id="@+id/Button08" android:layout_toRightOf="@id/Button07" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
+<Button android:text="9" android:width="80dp" android:id="@+id/Button09" android:layout_toRightOf="@id/Button08" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
 </RelativeLayout>
 
 <RelativeLayout
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:padding="2px"
   android:gravity="center"
 >
-<Button android:text="0" android:id="@+id/Button00" android:width="300dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px"></Button>
+<Button android:text="0" android:id="@+id/Button00" android:width="240dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24sp"></Button>
 </RelativeLayout>
 
 <!-- 

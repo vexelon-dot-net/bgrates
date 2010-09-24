@@ -191,7 +191,7 @@ public class ConvertActivity extends Activity {
 		
 		CurrencyInfo currency = null;
 		BigDecimal sum, rate, ratio, result = new BigDecimal(0.0);
-		MathContext mc = new MathContext(3);		
+		MathContext mc = new MathContext(Defs.SCALE_CALCULATIONS);		
 
 		try {
 			sum = new BigDecimal( getResText(R.id.EditTextFrom).toString() );
@@ -225,8 +225,9 @@ public class ConvertActivity extends Activity {
 			Log.e(TAG, e.getMessage());
 		}		
 		
-		setResText(R.id.EditTextTo, 
-				result.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+//		setResText(R.id.EditTextTo, 
+//				result.setScale(Defs.CONV_SCALE_SHOW, BigDecimal.ROUND_HALF_UP).toPlainString());
+		setResText(R.id.EditTextTo, Utils.roundNumber(result, Defs.SCALE_SHOW_SHORT));
 		
 	}
 	
