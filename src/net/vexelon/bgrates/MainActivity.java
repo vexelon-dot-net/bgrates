@@ -168,7 +168,7 @@ public class MainActivity extends Activity {
 		}
 		
 		// populate ListView UI
-		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.items());
+		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.getItems());
 		_listView.setAdapter(_adapter);	
 		
 		_listView.setOnItemClickListener(new OnItemClickListener() {
@@ -229,8 +229,9 @@ public class MainActivity extends Activity {
 						
 						// PARSE //
 						
-						_myRates = new ExchangeRate();
-						if (!parseRates(_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), _myRates)) {
+						//_myRates = new ExchangeRate();
+						ExchangeRate newRates = new ExchangeRate();
+						if (!parseRates(_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), newRates)) {
 							
 							// SHOW ERROR ALERT //
 							_context.runOnUiThread(new Runnable() {
@@ -258,6 +259,10 @@ public class MainActivity extends Activity {
 						}
 						else {
 							
+							// calculate tendencies
+							newRates.evaluateTendencies(_myRates);
+							_myRates = newRates;
+							
 							// UPDATE VIEW //
 							
 							_context.runOnUiThread(new Runnable() {
@@ -266,7 +271,7 @@ public class MainActivity extends Activity {
 								public void run() {
 									saveStatus(_myRates.getHeader().getTitle());
 									_context.setTitle(_myRates.getHeader().getTitle());
-									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout, _myRates.items());
+									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout, _myRates.getItems());
 									_listView.setAdapter(_adapter);							
 								}
 							});							

@@ -1,5 +1,6 @@
 package net.vexelon.bgrates;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,6 +9,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import net.vexelon.bgrates.CurrencyInfo.Tendency;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -73,6 +76,27 @@ public class ExchangeRate implements Parcelable {
 //		}
 //	}
 	
+	public void evaluateTendencies(ExchangeRate olderRates) {
+		for(CurrencyInfo currency : _currencies) {
+			CurrencyInfo oldCurrency = olderRates.getCurrencyByCode(currency.getCode());
+			if ( oldCurrency != null ) {
+				BigDecimal rate = new BigDecimal(currency.getRate());
+				BigDecimal oldRate = new BigDecimal(oldCurrency.getRate());
+				
+				int res = rate.compareTo(oldRate);
+				if ( res < 0 ) {
+					currency.setTendency(Tendency.TendencyDown);
+				}
+				else if ( res > 0 ) {
+					currency.setTendency(Tendency.TendencyUp);
+				}
+				else {
+					currency.setTendency(Tendency.TendencyEqual);
+				}
+			}
+		}
+	}
+	
 	public static int getResrouceFromCode(CurrencyInfo ci) {
 		return _flagIds.get(ci.getCountryCode()) != null ?
 				_flagIds.get(ci.getCountryCode()) : R.drawable.money;
@@ -91,7 +115,7 @@ public class ExchangeRate implements Parcelable {
 		return _header;
 	}
 	
-	public List<CurrencyInfo> items() {
+	public List<CurrencyInfo> getItems() {
 		return _currencies;
 	}
 	

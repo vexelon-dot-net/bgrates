@@ -22,8 +22,9 @@
   style="@style/FontListCode"
 >
 <TextView android:id="@+id/ratio" style="@style/FontListRatioRate" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
-<TextView android:id="@+id/rate" style="@style/FontListRatioRate" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@+id/ratio" android:paddingLeft="16sp"></TextView>
-<TextView android:id="@+id/rate_decimals" style="@style/FontListRateDecimals" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@+id/rate" android:paddingRight="5sp"></TextView>
+<ImageView android:id="@+id/tendency" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@+id/ratio" android:paddingLeft="16sp"></ImageView>
+<TextView android:id="@+id/rate" style="@style/FontListRatioRate" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@+id/tendency" android:paddingLeft="1sp"></TextView>
+<TextView android:id="@+id/rate_decimals" style="@style/FontListRateDecimals" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_toRightOf="@+id/rate" android:paddingLeft="1sp" android:paddingRight="5sp"></TextView>
 </RelativeLayout>
 
 </RelativeLayout>

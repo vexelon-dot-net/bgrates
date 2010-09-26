@@ -48,12 +48,11 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 			String rateFull = Utils.scaleNumber(rate, Defs.SCALE_SHOW_LONG);
 			setResText(v, R.id.rate, rateFull.substring(0, rateFull.length() - 3) );
 			setResText(v, R.id.rate_decimals, rateFull.substring(rateFull.length() - 3, rateFull.length()) );
-			
 //			setResText(v, R.id.rate,
 //					ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ? ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) : ci.getRate()
 //					);
 			
-			// add last
+			// country ID icon
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
 			int imgId = ExchangeRate.getResrouceFromCode(ci);
 			if ( imgId != -1 ) {
@@ -63,7 +62,21 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 //				android.widget.RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 //				lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT|RelativeLayout.CENTER_VERTICAL);
 //				icon.setLayoutParams(lp);
-			}			
+			}		
+			
+			// add tendency icon
+			ImageView tendencyIcon = (ImageView) v.findViewById(R.id.tendency);
+			switch(ci.getTendency()) {
+			case TendencyUp:
+				tendencyIcon.setImageResource(R.drawable.arrow_up);
+				break;
+			case TendencyDown:
+				tendencyIcon.setImageResource(R.drawable.arrow_down);
+				break;
+			case TendencyEqual:
+				//TODO:
+				break;
+			}
 		}
 		
 		return v;
