@@ -198,7 +198,7 @@ public class MainActivity extends Activity {
 				try {
 					
 					// DOWNLOAD //
-					if (!downloadFile(
+					if (!Utils.downloadFile(_context,
 							_downloadUrlSuffix,
 							_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE))) {
 						
@@ -448,53 +448,6 @@ public class MainActivity extends Activity {
 		return ret;
 	}
 	
-	private boolean downloadFile(String url, String destFile) {
-		//Log.v(TAG, "@downloadFile()");
-		//Log.d(TAG, "Downloading " + url);
-		
-		boolean ret = false;
-		
-		BufferedInputStream bis = null;
-		FileOutputStream fos = null;
-		InputStream is = null;
-		
-		try {
-			URL myUrl = new URL(url);
-			URLConnection connection = myUrl.openConnection();
-			
-			is = connection.getInputStream();
-			bis = new BufferedInputStream(is);
-			ByteArrayBuffer baf = new ByteArrayBuffer(1024);
-			
-			int n = 0;
-			while( (n = bis.read()) != -1 )
-				baf.append((byte) n);
-			
-			// save to internal storage
-			//Log.v(TAG, "Saving downloaded file ...");
-			fos = openFileOutput(destFile, Context.MODE_PRIVATE);
-			fos.write(baf.toByteArray());
-			fos.close();
-			//Log.v(TAG, "File saved successfully.");
-			
-			ret = true;
-		}
-		catch(Exception e) {
-			//Log.e(TAG, "Error while downloading and saving file !", e);
-		}
-		finally {
-			try {
-				if ( fos != null ) fos.close();
-			} catch( IOException e ) {}
-			try {
-				if ( bis != null ) bis.close();
-			} catch( IOException e ) {}
-			try {
-				if ( is != null ) is.close();
-			} catch( IOException e ) {}
-		}
-		
-		return ret;
-	}
+
 
 }

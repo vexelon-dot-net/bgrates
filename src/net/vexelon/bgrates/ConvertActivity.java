@@ -57,7 +57,7 @@ public class ConvertActivity extends Activity {
 	}
 	
 	/**
-	 * Creates and inits UI elements (sinpper & edittext) from logical row
+	 * Creates and inits UI elements (spinner & edittext) from logical row
 	 * @param ConvertRow - initialized ConvertRow object
 	 */
 	private void initRow(ConvertRow row) {
