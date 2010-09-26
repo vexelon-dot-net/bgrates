@@ -3,16 +3,25 @@ package net.vexelon.bgrates;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+
+import net.vexelon.bgrates.ConvertRow.RowType;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.Layout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -20,17 +29,11 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 public class ConvertActivity extends Activity {
 	
-	enum ConvertOptions {
-		ConvertToBGN,
-		ConvertFromBGN
-	};
-	
 	private final static String TAG = Defs.LOG_TAG;
 	private ExchangeRate _myRates = null;
-	private String _selCodeFrom = "";
-	private String _selCodeTo = "";
-	private ConvertOptions _convertOption = ConvertOptions.ConvertToBGN;
-	
+	private ArrayList<ConvertRow> _rows = null;
+	private int _curSelectedRowId = -1;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -40,214 +43,186 @@ public class ConvertActivity extends Activity {
 		// read rates from intent bundle
 		_myRates = getIntent().getParcelableExtra(Defs.INT_EXCHANGERATES);
 		
+		_rows = new ArrayList<ConvertRow>(Defs.MAX_CONVERT_ROWS);
+		_rows.add(new ConvertRow(R.id.Spinner4, R.id.EditText4, RowType.RowOthers));
+		_rows.add(new ConvertRow(R.id.Spinner3, R.id.EditText3, RowType.RowOthers));
+		_rows.add(new ConvertRow(R.id.Spinner2, R.id.EditText2, RowType.RowOthers));
+		_rows.add(new ConvertRow(R.id.Spinner1, R.id.EditText1, RowType.RowBGN));
+		
 		// init dropdown convert options
-		initSpinners(_convertOption);
-		
-		// set dropdown actions
-		Spinner spinnerFrom = (Spinner)findViewById(R.id.SpinnerCurFrom);
-		spinnerFrom.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int pos, long row) {
-				
-				_selCodeFrom = parent.getItemAtPosition(pos).toString();
-				
-				// calculate and refresh
-				updateResult(_convertOption);
-			}
-			
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// do nothing
-			}
-		});
-		
-		// convert To
-		Spinner spinnerTo = (Spinner)findViewById(R.id.SpinnerCurTo);
-		spinnerTo.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int pos, long row) {
-
-				_selCodeTo = parent.getItemAtPosition(pos).toString();
-				
-				// calculate and refresh
-				updateResult(_convertOption);				
-			}
-			
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// do nothing
-			}
-		});
-		
-		// switch convert button
-		ImageButton btnSwitch = (ImageButton) findViewById(R.id.ButtonSwitch);
-		btnSwitch.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				// toggle convert type
-				
-				switch(_convertOption) {
-				case ConvertFromBGN:
-					_convertOption = ConvertOptions.ConvertToBGN;
-					break;
-				case ConvertToBGN:
-					_convertOption = ConvertOptions.ConvertFromBGN;
-					break;
-				}
-				
-				initSpinners(_convertOption);
-			}
-		});		
-
-		// create buttons & functionality
-		createButton(R.id.Button00, "0");
-		createButton(R.id.Button01, "1");
-		createButton(R.id.Button02, "2");
-		createButton(R.id.Button03, "3");
-		createButton(R.id.Button04, "4");
-		createButton(R.id.Button05, "5");
-		createButton(R.id.Button06, "6");
-		createButton(R.id.Button07, "7");
-		createButton(R.id.Button08, "8");
-		createButton(R.id.Button09, "9");
-		//createButton(R.id.ButtonDot, ".");
-		
-		// dot button
-		Button btnDot = (Button) findViewById(R.id.ButtonDot);
-		btnDot.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String value = getResText(R.id.EditTextFrom).toString();
-				if ( -1 == value.indexOf('.') ) { // only add dot if there is non yet in the value
-					appendResText(R.id.EditTextFrom, ".");
-					updateResult(_convertOption);
-				}
-			}
-		});		
-		
-		// delete button
-		ImageButton btnDel = (ImageButton) findViewById(R.id.ButtonDel);
-		btnDel.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				CharSequence value = getResText(R.id.EditTextFrom);
-				if ( value.length() > 1 )
-					setResText(R.id.EditTextFrom, value.subSequence(0, value.length() - 1));
-				else
-					setResText(R.id.EditTextFrom, "0");
-				
-				updateResult(_convertOption);
-			}
-		});
-		
-		// set defaults
-		setResText(R.id.EditTextFrom, "0");
-		setResText(R.id.EditTextTo, "0");
+		for (ConvertRow row : _rows) {
+			_curSelectedRowId = row.getRowId(); // should select the Top one
+			initRow(row);
+		}
 	}
 	
-	private void initSpinners(ConvertOptions convertOption) {
+	/**
+	 * Creates and inits UI elements (sinpper & edittext) from logical row
+	 * @param ConvertRow - initialized ConvertRow object
+	 */
+	private void initRow(ConvertRow row) {
 		
-		String[] itemsFrom = null;
-		String[] itemsTo = null;
+		String[] items = null;
 		
-		switch(convertOption) {
-		case ConvertFromBGN:
-			itemsFrom = new String[] { "BGN" };
-			itemsTo = _myRates.currenciesToStringArray();
+		switch(row.getRowType()) {
+		case RowBGN:
+			items = new String[] { "BGN" };
+			
+			// init the edit text box
+			setResText(row.getEditTextId(), "1.00"); // default
+			
 			break;
 			
-		case ConvertToBGN:
+		case RowOthers:
 		default:
-			itemsFrom = _myRates.currenciesToStringArray();
-			itemsTo = new String[] { "BGN" };				
+			items = _myRates.currenciesToStringArray();
+			
+			// init the edit text box
+			setResText(row.getEditTextId(), "0.00");
+			
 			break;
 		}
 		
-		// convert From
-		Spinner spinnerFrom = (Spinner)findViewById(R.id.SpinnerCurFrom);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item, itemsFrom );
-		spinnerFrom.setAdapter(adapter);
-
-		// convert To
-		Spinner spinnerTo = (Spinner)findViewById(R.id.SpinnerCurTo);
-		adapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item, itemsTo );
-		spinnerTo.setAdapter(adapter);
+		// init the spinner
+		final int thisRowId = row.getRowId();
+		Log.d(TAG, "Creating row " + thisRowId);
 		
+		Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				this, android.R.layout.simple_spinner_item, items );
+		spinner.setAdapter(adapter);
+
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int pos, long listRow) {
+				// calculate and refresh
+				updateResult(_curSelectedRowId);
+			}
+			
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// do nothing
+			}
+		});	
+		
+		// init edit text
+		EditText editText = (EditText)findViewById(row.getEditTextId());
+		editText.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				_curSelectedRowId = thisRowId;
+				updateResult(_curSelectedRowId);
+				return false;
+			}
+			
+		});
 	}
 	
-	private void updateResult(ConvertOptions convertOption) {
-		// do convert calculations and display
+	/**
+	 * Do convert calculations and display results
+	 * @param rowId - the logical row which activated the update
+	 */
+	private void updateResult(int rowId) {
 		
-		if ( _selCodeTo.equals(_selCodeFrom) ) // invalid update
+		Log.d(TAG, "Update Result, caller row is " + rowId);
+		
+		// find caller row
+		ConvertRow callerRow = null;
+		
+		for (ConvertRow row : _rows) {
+			if ( row.getRowId() == rowId ) {
+				callerRow = row;
+				break;
+			}
+		}
+		
+		if ( callerRow == null ) { // something went wrong !
+			Log.e(TAG, "Failed to find caller row !");
 			return;
+		}
 		
-		CurrencyInfo currency = null;
-		BigDecimal sum, rate, ratio, result = new BigDecimal(0.0);
-		MathContext mc = new MathContext(Defs.SCALE_CALCULATIONS);		
+		Spinner callerRowSpinner = (Spinner)findViewById(callerRow.getSpinnerId());
+		String callerRowCode = (String) callerRowSpinner.getItemAtPosition(callerRowSpinner.getSelectedItemPosition());
+		Log.d(TAG, "Caller Row Code is " + callerRowCode);
+		
+		BigDecimal sum;
+		MathContext mc = new MathContext(Defs.SCALE_SHOW_LONG);
 
 		try {
-			sum = new BigDecimal( getResText(R.id.EditTextFrom).toString() );
+			sum = new BigDecimal( getResText(callerRow.getEditTextId()).toString(), mc );
+			Log.d(TAG, "Sum is " + sum.toPlainString());
 		}
 		catch(NumberFormatException e) {
 			Log.e(TAG, e.toString());
 			return; // invalid number
 		}
 		
+		BigDecimal rate, ratio, result;
+		CurrencyInfo currency = null;
+		
 		try {
-		
-			switch(convertOption) {
-			case ConvertFromBGN:
-				currency = _myRates.getCurrencyByCode(_selCodeTo);
-				rate = new BigDecimal(currency.getRate(), mc);
-				ratio = new BigDecimal(currency.getRatio(), mc);
-				//result = sum * ratio / rate;
-				result = sum.multiply(ratio.divide(rate, mc), mc);
-				break;
-				
-			case ConvertToBGN:
-				currency = _myRates.getCurrencyByCode(_selCodeFrom);
-				rate = new BigDecimal(currency.getRate(), mc);
-				ratio = new BigDecimal(currency.getRatio(), mc);
-				//result = rate / ratio * sum;
-				result = rate.divide(ratio, mc).multiply(sum, mc);
-				break;
-			}
-		
+			
+			// update all rows (except the caller row)
+			for (ConvertRow row : _rows) {
+				if ( row.getRowId() != callerRow.getRowId() ) {
+					
+					switch(row.getRowType()) {
+					case RowBGN:
+						//Log.d(TAG, "Updating RowBGN !");
+						
+						// convert from caller row currency to BGN currency
+						currency = _myRates.getCurrencyByCode(callerRowCode);
+						rate = new BigDecimal(currency.getRate(), mc);
+						ratio = new BigDecimal(currency.getRatio(), mc);
+						result = rate.divide(ratio, mc).multiply(sum, mc); //result = rate / ratio * sum;
+						//Log.d(TAG, String.format("rate: %1$s, ratio: %2$s, result: %3$s, sum: %4$s", rate.toPlainString(), ratio.toPlainString(), result.toPlainString(), sum.toPlainString()));
+						setResText(row.getEditTextId(), result.toPlainString());
+						break;
+						
+					case RowOthers:
+						
+						// get selected currency from row's spinner
+						Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
+						String code = (String) spinner.getItemAtPosition(spinner.getSelectedItemPosition());
+						//Log.d(TAG, "Updating RowOthers - " + code);
+						
+						if ( callerRow.getRowType() == RowType.RowBGN ) { // simply convery from BGN currency to selected row currency
+							currency = _myRates.getCurrencyByCode(code);
+							rate = new BigDecimal(currency.getRate(), mc);
+							ratio = new BigDecimal(currency.getRatio(), mc);
+							result = rate.divide(ratio, mc).multiply(sum, mc);
+							setResText(row.getEditTextId(), result.toPlainString());
+						}
+						else { // more complex calculations
+							
+							// Step 1 - Convert from caller row currency to BGN currency
+							currency = _myRates.getCurrencyByCode(callerRowCode);
+							rate = new BigDecimal(currency.getRate(), mc);
+							ratio = new BigDecimal(currency.getRatio(), mc);
+							result = rate.divide(ratio, mc).multiply(sum, mc);
+							//sum = result;
+							
+							// Step 2 - Convert from BGN currency to selected row currency
+							currency = _myRates.getCurrencyByCode(code);
+							rate = new BigDecimal(currency.getRate(), mc);
+							ratio = new BigDecimal(currency.getRatio(), mc);
+							result = result.multiply(ratio.divide(rate, mc), mc); //result = sum * ratio / rate;
+							
+							// Step 3 - Display results
+							setResText(row.getEditTextId(), result.toPlainString());							
+						}
+						break;
+					} // end switch
+				} // end if
+			} // end for			
 		} catch (NumberFormatException e) {
 			Log.e(TAG, e.getMessage());
 		}		
-		
-//		setResText(R.id.EditTextTo, 
-//				result.setScale(Defs.CONV_SCALE_SHOW, BigDecimal.ROUND_HALF_UP).toPlainString());
-		setResText(R.id.EditTextTo, Utils.roundNumber(result, Defs.SCALE_SHOW_SHORT));
-		
 	}
 	
-	private void createButton(int id, final CharSequence value) {
-		Button btn = (Button) findViewById(id);
-		btn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String curValue = getResText(R.id.EditTextFrom).toString();
-				if ( curValue.equalsIgnoreCase("0") )
-					setResText(R.id.EditTextFrom, value);
-				else
-					appendResText(R.id.EditTextFrom, value);
-				
-				updateResult(_convertOption);
-			}
-		});		
-	}
-	
+
 	private void setResText(int id, CharSequence text) {
 		TextView tx = (TextView)findViewById(id);
 		if ( tx != null )

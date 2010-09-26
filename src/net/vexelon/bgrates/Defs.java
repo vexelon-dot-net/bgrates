@@ -36,5 +36,7 @@ public class Defs {
 	final static int SCALE_SHOW_LONG = 5;
 	final static int SCALE_SHOW_SHORT = 3;
 	final static int SCALE_CALCULATIONS = 3;
+	
+	final static int MAX_CONVERT_ROWS = 4;
 
 }
