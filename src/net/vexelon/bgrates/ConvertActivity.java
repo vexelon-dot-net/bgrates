@@ -2,27 +2,20 @@ package net.vexelon.bgrates;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 
 import net.vexelon.bgrates.ConvertRow.RowType;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -32,6 +25,7 @@ public class ConvertActivity extends Activity {
 	private final static String TAG = Defs.LOG_TAG;
 	private ExchangeRate _myRates = null;
 	private ArrayList<ConvertRow> _rows = null;
+	private int[] _visibleCurrencies = null;
 	private int _curSelectedRowId = -1;
 
 	@Override
@@ -54,6 +48,62 @@ public class ConvertActivity extends Activity {
 			_curSelectedRowId = row.getRowId(); // should select the Top one
 			initRow(row);
 		}
+		
+		// load last saved settings and adjust
+		loadSettings();
+		
+		if ( _visibleCurrencies != null ) {
+//			this.runOnUiThread(new Runnable() {
+//				@Override
+//				public void run() {
+					int i = 0;
+					for (ConvertRow row : _rows) {
+						final Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
+						spinner.setSelection(_visibleCurrencies[i++]);
+					}
+//				}
+//			}); // runOnUiThread			
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		saveSettings();
+	}
+	
+	/**
+	 * Read previously selected currencies for convert
+	 */
+	private void loadSettings() {
+		SharedPreferences prefs = this.getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
+		
+		int count = prefs.getInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT, Defs.MAX_CONVERT_ROWS);
+		_visibleCurrencies = new int[count];
+		
+		for( int i = 0; i < count; i++ ) {
+			String key = Defs.CONV_PREFS_KEY_ITEM + i;
+			_visibleCurrencies[i] = prefs.getInt(key, 0);
+		}
+	}
+	
+	/**
+	 * Write currently selected currencies for convert
+	 */
+	private void saveSettings() {
+		SharedPreferences prefs = this.getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
+		SharedPreferences.Editor editor = prefs.edit();
+		
+		editor.putInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT, Defs.MAX_CONVERT_ROWS);
+		int i = 0;
+		for (ConvertRow row : _rows) {
+			Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
+			String key = Defs.CONV_PREFS_KEY_ITEM + i++;
+			editor.putInt(key, spinner.getSelectedItemPosition());
+		}
+		
+		editor.commit();
 	}
 	
 	/**
@@ -148,7 +198,7 @@ public class ConvertActivity extends Activity {
 		Log.d(TAG, "Caller Row Code is " + callerRowCode);
 		
 		BigDecimal sum;
-		MathContext mc = new MathContext(Defs.SCALE_SHOW_LONG);
+		MathContext mc = new MathContext(Defs.SCALE_CALCULATIONS);
 
 		try {
 			sum = new BigDecimal( getResText(callerRow.getEditTextId()).toString(), mc );
@@ -178,7 +228,7 @@ public class ConvertActivity extends Activity {
 						ratio = new BigDecimal(currency.getRatio(), mc);
 						result = rate.divide(ratio, mc).multiply(sum, mc); //result = rate / ratio * sum;
 						//Log.d(TAG, String.format("rate: %1$s, ratio: %2$s, result: %3$s, sum: %4$s", rate.toPlainString(), ratio.toPlainString(), result.toPlainString(), sum.toPlainString()));
-						setResText(row.getEditTextId(), result.toPlainString());
+						setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
 						break;
 						
 					case RowOthers:
@@ -188,12 +238,12 @@ public class ConvertActivity extends Activity {
 						String code = (String) spinner.getItemAtPosition(spinner.getSelectedItemPosition());
 						//Log.d(TAG, "Updating RowOthers - " + code);
 						
-						if ( callerRow.getRowType() == RowType.RowBGN ) { // simply convery from BGN currency to selected row currency
+						if ( callerRow.getRowType() == RowType.RowBGN ) { // simply convert from BGN currency to selected row currency
 							currency = _myRates.getCurrencyByCode(code);
 							rate = new BigDecimal(currency.getRate(), mc);
 							ratio = new BigDecimal(currency.getRatio(), mc);
-							result = rate.divide(ratio, mc).multiply(sum, mc);
-							setResText(row.getEditTextId(), result.toPlainString());
+							result = sum.divide(rate, mc).multiply(ratio, mc);
+							setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
 						}
 						else { // more complex calculations
 							
@@ -211,7 +261,7 @@ public class ConvertActivity extends Activity {
 							result = result.multiply(ratio.divide(rate, mc), mc); //result = sum * ratio / rate;
 							
 							// Step 3 - Display results
-							setResText(row.getEditTextId(), result.toPlainString());							
+							setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));							
 						}
 						break;
 					} // end switch

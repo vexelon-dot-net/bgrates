@@ -12,7 +12,10 @@ import java.net.URLConnection;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.view.KeyEvent;
 
 
 public class Utils {
@@ -80,7 +83,32 @@ public class Utils {
 		}
 		
 		return ret;
-	}	
+	}
+	
+	/**
+	 * Display an alert dialog
+	 * @param context
+	 * @param messageResId
+	 * @param titleResId
+	 */
+	public static void showAlertDialog(Context context, int messageResId, int titleResId) {
+
+		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+		alertBuilder.setTitle(
+				context.getResources().getString(
+						titleResId)).setMessage(
+								context.getResources().getString(messageResId)).setIcon(
+				R.drawable.alert).setOnKeyListener(
+				new DialogInterface.OnKeyListener() {
+
+					@Override
+					public boolean onKey(DialogInterface dialog,
+							int keyCode, KeyEvent event) {
+						dialog.dismiss();
+						return false;
+					}
+				}).create().show();				
+	}
 	
 	/**
 	 * Rounds a precision to a certain length

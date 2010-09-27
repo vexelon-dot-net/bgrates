@@ -7,6 +7,15 @@
   android:orientation="vertical"
   android:gravity="center_vertical"
   >
+  
+<LinearLayout
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:gravity="center_horizontal"
+  android:layout_marginBottom="8sp"
+>
+<TextView android:id="@+id/textConvertTitle" android:text="Currency Convertor" style="@style/FontStyleConvertHint" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+</LinearLayout>
 
 <RelativeLayout
   android:layout_width="fill_parent"

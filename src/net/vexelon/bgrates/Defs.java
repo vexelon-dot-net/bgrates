@@ -6,6 +6,11 @@ public class Defs {
 	final static String PREFS_NAME = "BGratesPreferences";
 	final static String PREFS_KEY_LASTUPDATE = "lastUpdate";
 	final static String PREFS_KEY_LASTUPDATE_TIME = "lastUpdateTime";
+	final static String PREFS_KEY_PREV_RATES_FILE = "previousExchgRatesFile";
+	final static String CONV_PREFS_NAME = "BGratesPreferencesConvert";
+	final static String CONV_PREFS_KEY_CONVITEMS_COUNT = "ConvertItemsCount";
+	final static String CONV_PREFS_KEY_ITEM = "ConvertItem_";
+	
 	final static String URL_BNB_FORMAT = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=%s";
 	final static String URL_BNB_SUFFIX_BG = "BG";
 	final static String URL_BNB_SUFFIX_EN = "EN";
@@ -35,7 +40,7 @@ public class Defs {
 	
 	final static int SCALE_SHOW_LONG = 5;
 	final static int SCALE_SHOW_SHORT = 3;
-	final static int SCALE_CALCULATIONS = 3;
+	final static int SCALE_CALCULATIONS = 10;
 	
 	final static int MAX_CONVERT_ROWS = 4;
 

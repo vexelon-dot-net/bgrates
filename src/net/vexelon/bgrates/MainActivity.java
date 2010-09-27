@@ -1,25 +1,19 @@
 package net.vexelon.bgrates;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Calendar;
-import java.util.Date;
 
-import org.apache.http.util.ByteArrayBuffer;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,12 +32,12 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends Activity {
 	
-	//private final static String TAG = Defs.LOG_TAG;
+	private final static String TAG = Defs.LOG_TAG;
 	private Activity _context = null;
 	private ListView _listView;
 	private ProgressDialog _progressDialog = null;
 	private CurrencyListAdapter _adapter;
-	private ExchangeRate _myRates = null;
+	private ExchangeRate _myRates = null, _oldRates = null;
 	private String _downloadUrlSuffix;
 	
 	@Override
@@ -58,6 +52,7 @@ public class MainActivity extends Activity {
 		_listView = (ListView)findViewById(R.id.ListView01);
 		_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, this.getResources().getString(R.string.URL_BNB_RATES_SUFFIX));
 
+		loadSettings();
 		init();
 	}
 	
@@ -119,36 +114,29 @@ public class MainActivity extends Activity {
 	private void init() {
 		//Log.v(TAG, "@init()");
 		
-		// load defaults
+		// attempt to load last stored exchange rates file
 		_myRates = new ExchangeRate();
+		
 		if ( !parseRates(this.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), _myRates) ) {
+			
+			// try to load locally stored raw resource 
 			InputStream is = this.getResources().openRawResource(R.raw.exchangerates);
 			if ( !parseRates(is, _myRates) ) {
-
 				// something's really wrong !
-				
-				AlertDialog.Builder alertBuilder = new AlertDialog.Builder(_context);
-				alertBuilder.setTitle(
-						_context.getResources().getString(
-								R.string.dlg_parse_error_title)).setMessage(
-										_context.getResources().getString(R.string.dlg_parse_error_msg)).setIcon(
-						R.drawable.alert).setOnKeyListener(
-						new DialogInterface.OnKeyListener() {
-
-							@Override
-							public boolean onKey(DialogInterface dialog,
-									int keyCode, KeyEvent event) {
-								dialog.dismiss();
-								return false;
-							}
-						}).create().show();				
+				Utils.showAlertDialog(_context, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
 			}
 		}
 		
 		this.setTitle(_myRates.getHeader().getTitle());
 		
+		// calculate tendencies
+		if ( _oldRates != null ) {
+			_myRates.evaluateTendencies(_oldRates);
+		}
+		
 		// check if download should be performed
 		if (isUpdateRequired()) {
+			
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(_context);
 			alertBuilder.setTitle(
 					_context.getResources().getString(
@@ -169,8 +157,8 @@ public class MainActivity extends Activity {
 		
 		// populate ListView UI
 		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.getItems());
-		_listView.setAdapter(_adapter);	
 		
+		_listView.setAdapter(_adapter);	
 		_listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -204,30 +192,15 @@ public class MainActivity extends Activity {
 						
 						// SHOW ERROR ALERT //
 						_context.runOnUiThread(new Runnable() {
-							
 							@Override
 							public void run() {
-								AlertDialog.Builder alertBuilder = new AlertDialog.Builder(_context);
-								alertBuilder.setTitle(
-										_context.getResources().getString(
-												R.string.dlg_update_error_title)).setMessage(
-														_context.getResources().getString(R.string.dlg_update_error_msg)).setIcon(
-										R.drawable.alert).setOnKeyListener(
-										new DialogInterface.OnKeyListener() {
-
-											@Override
-											public boolean onKey(DialogInterface dialog,
-													int keyCode, KeyEvent event) {
-												dialog.dismiss();
-												return false;
-											}
-										}).create().show();								
+								Utils.showAlertDialog(_context, R.string.dlg_update_error_msg, R.string.dlg_update_error_title);
 							}
 						});
 					} 
 					else {
 						
-						// PARSE //
+						// Parse rates ...
 						
 						//_myRates = new ExchangeRate();
 						ExchangeRate newRates = new ExchangeRate();
@@ -235,32 +208,20 @@ public class MainActivity extends Activity {
 							
 							// SHOW ERROR ALERT //
 							_context.runOnUiThread(new Runnable() {
-								
 								@Override
 								public void run() {
-									
-									AlertDialog.Builder alertBuilder = new AlertDialog.Builder(_context);
-									alertBuilder.setTitle(
-											_context.getResources().getString(
-													R.string.dlg_parse_error_title)).setMessage(
-															_context.getResources().getString(R.string.dlg_parse_error_msg)).setIcon(
-											R.drawable.alert).setOnKeyListener(
-											new DialogInterface.OnKeyListener() {
-
-												@Override
-												public boolean onKey(DialogInterface dialog,
-														int keyCode, KeyEvent event) {
-													dialog.dismiss();
-													return false;
-												}
-											}).create().show();
+									Utils.showAlertDialog(_context, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
 								}
 							});
 						}
 						else {
 							
+//							if ( ! newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle()) ) {
+//							}
+							
 							// calculate tendencies
 							newRates.evaluateTendencies(_myRates);
+							_oldRates = _myRates; // remember old rates
 							_myRates = newRates;
 							
 							// UPDATE VIEW //
@@ -269,7 +230,7 @@ public class MainActivity extends Activity {
 								
 								@Override
 								public void run() {
-									saveStatus(_myRates.getHeader().getTitle());
+									saveSettings(_myRates.getHeader().getTitle());
 									_context.setTitle(_myRates.getHeader().getTitle());
 									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout, _myRates.getItems());
 									_listView.setAdapter(_adapter);							
@@ -288,18 +249,59 @@ public class MainActivity extends Activity {
 		}.start();
 	}
 	
-	private void saveStatus(String lastUpdate) {
-		//this.setTitle(lastUpdate);
+	/**
+	 * Save activity defaults & settings
+	 * @param lastUpdate
+	 */
+	private void saveSettings(String lastUpdate) {
 		// save last update nfo
 		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
 		SharedPreferences.Editor editor = prefs.edit();
+
 		editor.putString(Defs.PREFS_KEY_LASTUPDATE, lastUpdate);
-		
 		String theDate = DateFormat.format("yyyyMMdd", Calendar.getInstance()).toString();
 		editor.putString(Defs.PREFS_KEY_LASTUPDATE_TIME, theDate);
-		//Log.v(TAG, "Saving last update date - " + theDate);
+		
+		FileInputStream fis = null;
+		try {
+			fis = openFileInput(getResources().getString(R.string.INTERNAL_STORAGE_CACHE));
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+			byte[] buffer = new byte[1024];
+			int read = -1;
+			
+			while( (read = fis.read(buffer) ) != -1 ) {
+				baos.write(buffer, 0, read);
+			}
+			baos.close();
+
+			// write to storage
+			editor.putString(Defs.PREFS_KEY_PREV_RATES_FILE, baos.toString());
+		}
+		catch(Exception e) {
+			// dummy data
+			editor.putString(Defs.PREFS_KEY_PREV_RATES_FILE, "");
+		}
+		finally {
+			try { if ( fis != null ) fis.close(); } catch (IOException e) { }
+		}
 		
 		editor.commit();
+	}
+	
+	/**
+	 * Load last saved activity defaults and settings
+	 */
+	private void loadSettings() {
+		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
+		
+		String fileData = prefs.getString(Defs.PREFS_KEY_PREV_RATES_FILE, "");
+		Log.d(TAG, "Loaded last " + fileData);
+		if ( fileData.length() > 0 ) {
+			ByteArrayInputStream bias = new ByteArrayInputStream(fileData.getBytes());
+			_oldRates = new ExchangeRate();
+			parseRates(bias, _oldRates);
+		}
 	}
 	
 	private boolean isUpdateRequired() {

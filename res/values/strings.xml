@@ -49,4 +49,7 @@
 <item name="android:textColor">#808080</item>
 
 </style>
+<string name="conv_hint_msg">Convert Currencies</string>
+<style name="FontStyleConvertHint" parent="@android:style/TextAppearance"><item name="android:textSize">20sp</item>
+</style>
 </resources>
