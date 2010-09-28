@@ -72,6 +72,16 @@ public class ExchangeRate implements Parcelable {
 //		}
 //	}
 	
+	public String getTimeStamp() {
+		// still looks like hack :(
+		
+		String result = this.getHeader().getTitle().substring(
+				this.getHeader().getTitle().length() - 10,
+				this.getHeader().getTitle().length()
+				);
+		return result;
+	}
+	
 	public void evaluateTendencies(ExchangeRate olderRates) {
 		for(CurrencyInfo currency : _currencies) {
 			CurrencyInfo oldCurrency = olderRates.getCurrencyByCode(currency.getCode());

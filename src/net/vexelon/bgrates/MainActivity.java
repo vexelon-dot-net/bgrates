@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 		
 		_listView = (ListView)findViewById(R.id.ListView01);
-		_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, this.getResources().getString(R.string.URL_BNB_RATES_SUFFIX));
+		_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, getResString(R.string.URL_BNB_RATES_SUFFIX));
 
 		loadSettings();
 		init();
@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
 		menu.add(0, Defs.MENU_BG_RATES, 0, R.string.menu_bg_rates).setIcon(R.drawable.bg);
 		menu.add(0, Defs.MENU_EN_RATES, 0, R.string.menu_en_rates).setIcon(R.drawable.gb);
 		menu.add(1, Defs.MENU_REFRESH, 10, R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
-		menu.add(1, Defs.MENU_CONVERT, 10, R.string.menu_convert).setIcon(R.drawable.ic_menu_rotate);
+		menu.add(1, Defs.MENU_CONVERT, 10, R.string.menu_convert).setIcon(R.drawable.money);
 		menu.add(1, Defs.MENU_ABOUT, 15, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
 		return true;
 	}
@@ -174,9 +174,10 @@ public class MainActivity extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				CurrencyInfo ci = (CurrencyInfo)_listView.getItemAtPosition(arg2);
 				if ( ci != null ) {
-					String message = "";
+					//Log.d(TAG, "Old Rates data: " + _oldRates.getTimeStamp() + " New rates date: " + _myRates.getTimeStamp());
 					
-					if ( _oldRates != null ) {
+					String message = "";
+					if ( _oldRates != null && ! _oldRates.getTimeStamp().equals(_myRates.getTimeStamp()) ) {
 						CurrencyInfo oldCurrencyRate = _oldRates.getCurrencyByCode(ci.getCode());
 						message = String.format("%s\t%s\n%s\t%s", oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRate(), ci.getExtraInfo(), ci.getRate() );
 					}
@@ -231,20 +232,28 @@ public class MainActivity extends Activity {
 						}
 						else {
 							
-							// check if the newly downloaded file is really newer than the currnet
+							// check if the newly downloaded file is really newer than the current
 							if ( ! newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle()) ) {
 								
-								// save current exchange rates file to storage as previous
-								savePreviousRates();
+								// save current exchange rates file to storage as previous (only if timestamps differ)
+								Log.d(TAG, "[2] Current Rates data: " + _myRates.getTimeStamp() + " New rates date: " + newRates.getTimeStamp());
 								
-								// remove cache
-								if ( !Utils.moveCacheFile(_context, cacheFile, _context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE)) )
-									Log.e(TAG, "Failed moving cache file!");
+								if ( ! newRates.getTimeStamp().equals(_myRates.getTimeStamp()) ) {
+									savePreviousRates();
+									
+									// swap exchange rates objects and calculate tendencies
+									newRates.evaluateTendencies(_myRates);
+									_oldRates = _myRates;
+									_myRates = newRates;									
+								}
+								else {
+									// new language file => just evaluate against the old rates
+									newRates.evaluateTendencies(_oldRates);
+									_myRates = newRates;
+								}
 								
-								// swap exchange rates objects and calculate tendencies
-								newRates.evaluateTendencies(_myRates);
-								_oldRates = _myRates;
-								_myRates = newRates;
+								// save downloaded file and remove cache
+								Utils.moveCacheFile(_context, cacheFile, _context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE));
 								
 								// UPDATE VIEW //
 								

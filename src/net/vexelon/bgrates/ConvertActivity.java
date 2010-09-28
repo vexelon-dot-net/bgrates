@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -135,7 +136,7 @@ public class ConvertActivity extends Activity {
 		
 		// init the spinner
 		final int thisRowId = row.getRowId();
-		Log.d(TAG, "Creating row " + thisRowId);
+		//Log.d(TAG, "Creating row " + thisRowId);
 		
 		Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -159,7 +160,6 @@ public class ConvertActivity extends Activity {
 		// init edit text
 		EditText editText = (EditText)findViewById(row.getEditTextId());
 		editText.setOnKeyListener(new OnKeyListener() {
-			
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				_curSelectedRowId = thisRowId;
@@ -168,6 +168,13 @@ public class ConvertActivity extends Activity {
 			}
 			
 		});
+		editText.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				_curSelectedRowId = thisRowId;
+				updateResult(_curSelectedRowId);
+			}
+		});
 	}
 	
 	/**
@@ -175,8 +182,7 @@ public class ConvertActivity extends Activity {
 	 * @param rowId - the logical row which activated the update
 	 */
 	private void updateResult(int rowId) {
-		
-		Log.d(TAG, "Update Result, caller row is " + rowId);
+		//Log.d(TAG, "Update Result, caller row is " + rowId);
 		
 		// find caller row
 		ConvertRow callerRow = null;
@@ -189,23 +195,23 @@ public class ConvertActivity extends Activity {
 		}
 		
 		if ( callerRow == null ) { // something went wrong !
-			Log.e(TAG, "Failed to find caller row !");
+			//Log.e(TAG, "Failed to find caller row !");
 			return;
 		}
 		
 		Spinner callerRowSpinner = (Spinner)findViewById(callerRow.getSpinnerId());
 		String callerRowCode = (String) callerRowSpinner.getItemAtPosition(callerRowSpinner.getSelectedItemPosition());
-		Log.d(TAG, "Caller Row Code is " + callerRowCode);
+		//Log.d(TAG, "Caller Row Code is " + callerRowCode);
 		
 		BigDecimal sum;
 		MathContext mc = new MathContext(Defs.SCALE_CALCULATIONS);
 
 		try {
 			sum = new BigDecimal( getResText(callerRow.getEditTextId()).toString(), mc );
-			Log.d(TAG, "Sum is " + sum.toPlainString());
+			//Log.d(TAG, "Sum is " + sum.toPlainString());
 		}
 		catch(NumberFormatException e) {
-			Log.e(TAG, e.toString());
+			//Log.e(TAG, e.toString());
 			return; // invalid number
 		}
 		
@@ -268,7 +274,7 @@ public class ConvertActivity extends Activity {
 				} // end if
 			} // end for			
 		} catch (NumberFormatException e) {
-			Log.e(TAG, e.getMessage());
+			//Log.e(TAG, e.getMessage());
 		}		
 	}
 	

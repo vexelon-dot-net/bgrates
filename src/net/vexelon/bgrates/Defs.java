@@ -19,7 +19,7 @@ public class Defs {
 	final static String INT_EXCHANGERATES = "int-exch";
 	
 	final static int MAX_RATE_CHARS_SIZE = 8;
-	final static int MAX_TOAST_INFO_TIME = 2050;
+	final static int MAX_TOAST_INFO_TIME = 3150;
 	
 	final static String XML_TAG_ROW = "ROW";
 	final static String XML_TAG_NAME = "NAME_";

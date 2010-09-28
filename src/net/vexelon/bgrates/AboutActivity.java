@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,14 +16,12 @@ public class AboutActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		//Log.v(TAG, "@onCreate()");
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
 		
 		init();
-		
 	}
 	
 	private void init() {
@@ -47,6 +44,7 @@ public class AboutActivity extends Activity {
 		sb.append("\n");
 		if ( pinfo != null ) {
 			sb.append(getResString(R.string.about_version));
+			sb.append(" ");
 			sb.append(pinfo.versionName);
 			sb.append("\n");
 		}
