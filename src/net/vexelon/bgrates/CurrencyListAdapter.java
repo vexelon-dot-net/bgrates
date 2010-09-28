@@ -54,7 +54,7 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 			
 			// country ID icon
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
-			int imgId = ExchangeRate.getResrouceFromCode(ci);
+			int imgId = ExchangeRate.getResourceFromCode(ci);
 			if ( imgId != -1 ) {
 				icon.setImageResource(imgId);
 //				icon.setScaleType(ScaleType.FIT_XY);

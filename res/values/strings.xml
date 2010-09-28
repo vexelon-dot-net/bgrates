@@ -52,4 +52,5 @@
 <string name="conv_hint_msg">Convert Currencies</string>
 <style name="FontStyleConvertHint" parent="@android:style/TextAppearance"><item name="android:textSize">20sp</item>
 </style>
+<string name="PREVIOUS_INTERNAL_STORAGE_CACHE">bgrates-inet-cache-en_previous</string>
 </resources>

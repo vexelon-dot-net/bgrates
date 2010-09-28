@@ -93,7 +93,7 @@ public class ExchangeRate implements Parcelable {
 		}
 	}
 	
-	public static int getResrouceFromCode(CurrencyInfo ci) {
+	public static int getResourceFromCode(CurrencyInfo ci) {
 		return _flagIds.get(ci.getCountryCode()) != null ?
 				_flagIds.get(ci.getCountryCode()) : R.drawable.money;
 	}

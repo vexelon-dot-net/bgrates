@@ -49,4 +49,5 @@
 <string name="bg_currency_name">Лв.</string>
 <string name="menu_convert">Преобразуване</string>
 <string name="conv_hint_msg">Преобразуване на валути</string>
+<string name="PREVIOUS_INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg_previous</string>
 </resources>

@@ -1,6 +1,9 @@
 package net.vexelon.bgrates;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +39,8 @@ public class Utils {
 	 * @param destFile
 	 * @return
 	 */
-	public static boolean downloadFile(Context context, String url, String destFile) {
+	//public static boolean downloadFile(Context context, String url, String destFile) {
+	public static boolean downloadFile(Context context, String url, File destFile) {
 		//Log.v(TAG, "@downloadFile()");
 		//Log.d(TAG, "Downloading " + url);
 		
@@ -60,7 +64,8 @@ public class Utils {
 			
 			// save to internal storage
 			//Log.v(TAG, "Saving downloaded file ...");
-			fos = context.openFileOutput(destFile, context.MODE_PRIVATE);
+			fos = new FileOutputStream(destFile); 
+				//context.openFileOutput(destFile, context.MODE_PRIVATE);
 			fos.write(baf.toByteArray());
 			fos.close();
 			//Log.v(TAG, "File saved successfully.");
@@ -80,6 +85,50 @@ public class Utils {
 			try {
 				if ( is != null ) is.close();
 			} catch( IOException e ) {}
+		}
+		
+		return ret;
+	}
+
+	/**
+	 * Move a file stored in the cache to the internal storage of the specified context
+	 * @param context
+	 * @param cacheFile
+	 * @param internalStorageName
+	 */
+	public static boolean moveCacheFile(Context context, File cacheFile, String internalStorageName) {
+		
+		boolean ret = false;
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		
+		try {
+			fis = new FileInputStream(cacheFile);
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+			byte[] buffer = new byte[1024];
+			int read = -1;
+			while( (read = fis.read(buffer) ) != -1 ) {
+				baos.write(buffer, 0, read);
+			}
+			baos.close();
+			fis.close();
+
+			fos = context.openFileOutput(internalStorageName, Context.MODE_PRIVATE);
+			baos.writeTo(fos);
+			fos.close();
+			
+			// delete cache
+			cacheFile.delete();
+			
+			ret = true;
+		}
+		catch(Exception e) {
+			//Log.e(TAG, "Error saving previous rates!");
+		}
+		finally {
+			try { if ( fis != null ) fis.close(); } catch (IOException e) { }
+			try { if ( fos != null ) fos.close(); } catch (IOException e) { }
 		}
 		
 		return ret;

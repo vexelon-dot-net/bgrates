@@ -1,9 +1,10 @@
 package net.vexelon.bgrates;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
@@ -21,7 +22,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,16 +114,27 @@ public class MainActivity extends Activity {
 	private void init() {
 		//Log.v(TAG, "@init()");
 		
-		// attempt to load last stored exchange rates file
+		// attempt to load latest stored exchange rates file
 		_myRates = new ExchangeRate();
 		
-		if ( !parseRates(this.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), _myRates) ) {
+		if ( !parseRates(getResString(R.string.INTERNAL_STORAGE_CACHE), _myRates) ) {
 			
-			// try to load locally stored raw resource 
+			// Default - try to load locally stored raw resource 
 			InputStream is = this.getResources().openRawResource(R.raw.exchangerates);
 			if ( !parseRates(is, _myRates) ) {
 				// something's really wrong !
 				Utils.showAlertDialog(_context, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
+			}
+		}
+		
+		// attempt to load stored previous rates file 
+		_oldRates = new ExchangeRate();
+		
+		if ( !parseRates(getResString(R.string.PREVIOUS_INTERNAL_STORAGE_CACHE),_oldRates) ) {
+			// Default - try to load locally stored raw resource 
+			InputStream is = this.getResources().openRawResource(R.raw.exchangerates);
+			if ( !parseRates(is, _oldRates) ) {
+				_oldRates = null;
 			}
 		}
 		
@@ -144,14 +155,13 @@ public class MainActivity extends Activity {
 									_context.getResources().getString(R.string.dlg_lastupdate_msg)).setIcon(
 					R.drawable.help);
 		
-			alertBuilder.setPositiveButton(this.getResources().getString(R.string.dlg_yes), new OnClickListener() {
-		
+			alertBuilder.setPositiveButton(getResString(R.string.dlg_yes), new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					refresh();
 				}
 			});
-			alertBuilder.setNegativeButton(this.getResources().getString(R.string.dlg_no), null);
+			alertBuilder.setNegativeButton(getResString(R.string.dlg_no), null);
 			alertBuilder.show();
 		}
 		
@@ -161,13 +171,20 @@ public class MainActivity extends Activity {
 		_listView.setAdapter(_adapter);	
 		_listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				CurrencyInfo ci = (CurrencyInfo)_listView.getItemAtPosition(arg2);
 				if ( ci != null ) {
-					Toast.makeText(_context, 
-							String.format("%s:\t%s", ci.getName(), ci.getCode() ), Defs.MAX_TOAST_INFO_TIME).show();
+					String message = "";
+					
+					if ( _oldRates != null ) {
+						CurrencyInfo oldCurrencyRate = _oldRates.getCurrencyByCode(ci.getCode());
+						message = String.format("%s\t%s\n%s\t%s", oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRate(), ci.getExtraInfo(), ci.getRate() );
+					}
+					else {
+						message = String.format("%s:\t%s", ci.getName(), ci.getCode() );
+					}
+					
+					Toast.makeText(_context, message, Defs.MAX_TOAST_INFO_TIME).show();
 				}
 			}
 		});
@@ -176,19 +193,19 @@ public class MainActivity extends Activity {
 	private void refresh() {
 		//Log.v(TAG, "@refresh()");
 		
-		_progressDialog = ProgressDialog.show(this, 
-				this.getResources().getString(R.string.dlg_update_title),
-				this.getResources().getString(R.string.dlg_update_msg), 
-				true);
+		_progressDialog = ProgressDialog.show(this, getResString(R.string.dlg_update_title), getResString(R.string.dlg_update_msg), true);
 		
 		new Thread() {
 			public void run() {
 				try {
 					
+					File cacheFile = new File(_context.getCacheDir().getAbsolutePath() + File.separator + Defs.URI_CACHE_NAME);
+					
 					// DOWNLOAD //
 					if (!Utils.downloadFile(_context,
 							_downloadUrlSuffix,
-							_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE))) {
+							cacheFile)) {
+							//_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE))) {
 						
 						// SHOW ERROR ALERT //
 						_context.runOnUiThread(new Runnable() {
@@ -200,12 +217,10 @@ public class MainActivity extends Activity {
 					} 
 					else {
 						
-						// Parse rates ...
-						
-						//_myRates = new ExchangeRate();
 						ExchangeRate newRates = new ExchangeRate();
-						if (!parseRates(_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE), newRates)) {
-							
+						FileInputStream fis = new FileInputStream(cacheFile);
+						
+						if (!parseRates(fis, newRates)) {
 							// SHOW ERROR ALERT //
 							_context.runOnUiThread(new Runnable() {
 								@Override
@@ -216,26 +231,35 @@ public class MainActivity extends Activity {
 						}
 						else {
 							
-//							if ( ! newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle()) ) {
-//							}
-							
-							// calculate tendencies
-							newRates.evaluateTendencies(_myRates);
-							_oldRates = _myRates; // remember old rates
-							_myRates = newRates;
-							
-							// UPDATE VIEW //
-							
-							_context.runOnUiThread(new Runnable() {
+							// check if the newly downloaded file is really newer than the currnet
+							if ( ! newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle()) ) {
 								
-								@Override
-								public void run() {
-									saveSettings(_myRates.getHeader().getTitle());
-									_context.setTitle(_myRates.getHeader().getTitle());
-									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout, _myRates.getItems());
-									_listView.setAdapter(_adapter);							
-								}
-							});							
+								// save current exchange rates file to storage as previous
+								savePreviousRates();
+								
+								// remove cache
+								if ( !Utils.moveCacheFile(_context, cacheFile, _context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE)) )
+									Log.e(TAG, "Failed moving cache file!");
+								
+								// swap exchange rates objects and calculate tendencies
+								newRates.evaluateTendencies(_myRates);
+								_oldRates = _myRates;
+								_myRates = newRates;
+								
+								// UPDATE VIEW //
+								
+								_context.runOnUiThread(new Runnable() {
+									
+									@Override
+									public void run() {
+										saveSettings(_myRates.getHeader().getTitle());
+										_context.setTitle(_myRates.getHeader().getTitle());
+										_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout, _myRates.getItems());
+										_listView.setAdapter(_adapter);							
+									}
+								});							
+								
+							}
 						}
 					}
 					
@@ -262,46 +286,55 @@ public class MainActivity extends Activity {
 		String theDate = DateFormat.format("yyyyMMdd", Calendar.getInstance()).toString();
 		editor.putString(Defs.PREFS_KEY_LASTUPDATE_TIME, theDate);
 		
+		editor.commit();
+	}
+	
+	/**
+	 * Save previous exchange rates file 
+	 */
+	private void savePreviousRates() {
 		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		
 		try {
-			fis = openFileInput(getResources().getString(R.string.INTERNAL_STORAGE_CACHE));
+			fis = openFileInput(getResString(R.string.INTERNAL_STORAGE_CACHE));
 			
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
 			byte[] buffer = new byte[1024];
 			int read = -1;
-			
 			while( (read = fis.read(buffer) ) != -1 ) {
 				baos.write(buffer, 0, read);
 			}
 			baos.close();
+			fis.close();
 
-			// write to storage
-			editor.putString(Defs.PREFS_KEY_PREV_RATES_FILE, baos.toString());
+			// write to old rates cache
+			fos = openFileOutput(getResString(R.string.PREVIOUS_INTERNAL_STORAGE_CACHE), MODE_PRIVATE);
+			baos.writeTo(fos);
+			fos.close();
 		}
 		catch(Exception e) {
-			// dummy data
-			editor.putString(Defs.PREFS_KEY_PREV_RATES_FILE, "");
+			//Log.e(TAG, "Error saving previous rates!");
 		}
 		finally {
 			try { if ( fis != null ) fis.close(); } catch (IOException e) { }
+			try { if ( fos != null ) fos.close(); } catch (IOException e) { }
 		}
-		
-		editor.commit();
 	}
 	
 	/**
 	 * Load last saved activity defaults and settings
 	 */
 	private void loadSettings() {
-		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
-		
-		String fileData = prefs.getString(Defs.PREFS_KEY_PREV_RATES_FILE, "");
-		Log.d(TAG, "Loaded last " + fileData);
-		if ( fileData.length() > 0 ) {
-			ByteArrayInputStream bias = new ByteArrayInputStream(fileData.getBytes());
-			_oldRates = new ExchangeRate();
-			parseRates(bias, _oldRates);
-		}
+//		SharedPreferences prefs = this.getSharedPreferences(Defs.PREFS_NAME, 0);
+//		
+//		String fileData = prefs.getString(Defs.PREFS_KEY_PREV_RATES_FILE, "");
+//		Log.d(TAG, "Loaded last " + fileData);
+//		if ( fileData.length() > 0 ) {
+//			ByteArrayInputStream bias = new ByteArrayInputStream(fileData.getBytes());
+//			_oldRates = new ExchangeRate();
+//			parseRates(bias, _oldRates);
+//		}
 	}
 	
 	private boolean isUpdateRequired() {
@@ -313,12 +346,11 @@ public class MainActivity extends Activity {
 		return lastUpdateTime.length() == 0 || lastUpdateTime.compareTo(now) < 0;
 	}
 	
-	private boolean parseRates(String path, ExchangeRate rates) {
+	private boolean parseRates(String internalStoragePath, ExchangeRate rates) {
 		
 		FileInputStream fis = null;
 		try {
-			fis = openFileInput(path);
-			
+			fis = openFileInput(internalStoragePath);
 			return parseRates(fis, rates);
 		}
 		catch(FileNotFoundException e) {
@@ -455,6 +487,8 @@ public class MainActivity extends Activity {
 		return ret;
 	}
 	
-
+	String getResString(int id) {
+		return this.getResources().getString(id);
+	}
 
 }

@@ -14,6 +14,7 @@ public class Defs {
 	final static String URL_BNB_FORMAT = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=%s";
 	final static String URL_BNB_SUFFIX_BG = "BG";
 	final static String URL_BNB_SUFFIX_EN = "EN";
+	final static String URI_CACHE_NAME = "BGRatesDownloadCache";
 	
 	final static String INT_EXCHANGERATES = "int-exch";
 	
