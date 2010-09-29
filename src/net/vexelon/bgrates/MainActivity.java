@@ -179,7 +179,9 @@ public class MainActivity extends Activity {
 					String message = "";
 					if ( _oldRates != null && ! _oldRates.getTimeStamp().equals(_myRates.getTimeStamp()) ) {
 						CurrencyInfo oldCurrencyRate = _oldRates.getCurrencyByCode(ci.getCode());
-						message = String.format("%s\t%s\n%s\t%s", oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRate(), ci.getExtraInfo(), ci.getRate() );
+						message = String.format("%s\t\t%s\t%s\n%s\t\t%s\t%s", 
+								oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRatio(), oldCurrencyRate.getRate(), 
+								ci.getExtraInfo(), ci.getRatio(), ci.getRate() );
 					}
 					else {
 						message = String.format("%s:\t%s", ci.getName(), ci.getCode() );

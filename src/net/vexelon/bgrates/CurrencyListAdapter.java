@@ -1,8 +1,6 @@
 package net.vexelon.bgrates;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.List;
 
 import net.vexelon.bgrates.R;
@@ -11,12 +9,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 
 public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 	
@@ -74,7 +69,8 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 				tendencyIcon.setImageResource(R.drawable.arrow_down);
 				break;
 			case TendencyEqual:
-				//TODO:
+			default:
+				// Do not show icon
 				break;
 			}
 		}

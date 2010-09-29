@@ -87,7 +87,12 @@ public class ExchangeRate implements Parcelable {
 			CurrencyInfo oldCurrency = olderRates.getCurrencyByCode(currency.getCode());
 			if ( oldCurrency != null ) {
 				BigDecimal rate = new BigDecimal(currency.getRate());
+				BigDecimal ratio = new BigDecimal(currency.getRatio());
 				BigDecimal oldRate = new BigDecimal(oldCurrency.getRate());
+				BigDecimal oldRatio = new BigDecimal(oldCurrency.getRatio());
+				
+				rate = rate.multiply(ratio);
+				oldRate = oldRate.multiply(oldRatio);
 				
 				int res = rate.compareTo(oldRate);
 				if ( res < 0 ) {
