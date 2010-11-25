@@ -136,6 +136,12 @@ public class ExchangeRate implements Parcelable {
 				_flagIds.get(ci.getCountryCode()) : R.drawable.money;
 	}
 	
+	public static int getResourceFromCode(String code) {
+		String smallCode = code.substring(0, 2).toLowerCase();
+		return _flagIds.get(smallCode) != null ?
+				_flagIds.get(smallCode) : R.drawable.money;
+	}	
+	
 	public void add(CurrencyInfo currency) {
 		_currencies.add(currency);
 		_currencyCodesCache.add(currency.getCode());

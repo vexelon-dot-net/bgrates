@@ -67,5 +67,9 @@ public class Defs {
 	final static int SCALE_CALCULATIONS = 10;
 	
 	final static int MAX_CONVERT_ROWS = 4;
+	
+	final static String INTENT_FLAG_ID = "_FLAG_ID";
+	final static String INTENT_OLD_RATEINFO = "_OLD_RATEINFO";
+	final static String INTENT_NEW_RATEINFO = "_NEW_RATEINFO";
 
 }

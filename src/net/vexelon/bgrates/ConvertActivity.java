@@ -162,8 +162,11 @@ public class ConvertActivity extends Activity {
 		//Log.d(TAG, "Creating row " + thisRowId);
 		
 		Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item, items );
+//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+//				this, android.R.layout.simple_spinner_item, items );
+		ConvertCurrencyAdapter adapter = new ConvertCurrencyAdapter(this, android.R.layout.simple_spinner_item, items);
+		
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {

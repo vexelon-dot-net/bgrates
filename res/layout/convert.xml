@@ -22,16 +22,16 @@
   android:layout_height="wrap_content"
   android:gravity="center"
 >
-<Spinner android:id="@+id/Spinner1" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+<Spinner android:id="@+id/Spinner1" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:prompt="@string/text_selectcurrency"></Spinner>
 <EditText android:id="@+id/EditText1" android:layout_toRightOf="@+id/Spinner1" android:minWidth="140dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:digits="0123456789." android:inputType="numberDecimal" android:maxLength="50" android:focusable="true" android:lines="1"></EditText>
 
-<Spinner android:id="@+id/Spinner2" android:layout_below="@+id/Spinner1" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+<Spinner android:id="@+id/Spinner2" android:layout_below="@+id/Spinner1" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:prompt="@string/text_selectcurrency"></Spinner>
 <EditText android:id="@+id/EditText2" android:layout_below="@+id/Spinner1" android:layout_toRightOf="@+id/Spinner2" android:minWidth="140dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:digits="0123456789." android:inputType="numberDecimal" android:maxLength="50" android:focusable="true" android:lines="1"></EditText>
 
-<Spinner android:id="@+id/Spinner3" android:layout_below="@+id/Spinner2" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+<Spinner android:id="@+id/Spinner3" android:layout_below="@+id/Spinner2" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:prompt="@string/text_selectcurrency"></Spinner>
 <EditText android:id="@+id/EditText3" android:layout_below="@+id/Spinner2" android:layout_toRightOf="@+id/Spinner3" android:minWidth="140dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:digits="0123456789." android:inputType="numberDecimal" android:maxLength="50" android:focusable="true" android:lines="1"></EditText>
 
-<Spinner android:id="@+id/Spinner4" android:layout_below="@+id/Spinner3" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+<Spinner android:id="@+id/Spinner4" android:layout_below="@+id/Spinner3" android:minWidth="100dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:prompt="@string/text_selectcurrency"></Spinner>
 <EditText android:id="@+id/EditText4" android:layout_below="@+id/Spinner3" android:layout_toRightOf="@+id/Spinner4" android:minWidth="140dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:digits="0123456789." android:inputType="numberDecimal" android:maxLength="50" android:focusable="true" android:lines="1"></EditText>
 
 </RelativeLayout>
