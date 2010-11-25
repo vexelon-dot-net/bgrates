@@ -1,5 +1,10 @@
 =BGrates HISTORY file=
 
+==V2.1.0==
+
+  * added - Dedicated view for currency rate comparison before and after rates update.
+  * updated - Styling of currencies select spinner on the convert screen. 
+  
 ==V2.0.0==
 
   * updated - Texts on about screen and also fixed the scrolling of the Activity for devices with smaller screen resolutions.
