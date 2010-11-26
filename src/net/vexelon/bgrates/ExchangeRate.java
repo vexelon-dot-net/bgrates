@@ -140,7 +140,22 @@ public class ExchangeRate implements Parcelable {
 		String smallCode = code.substring(0, 2).toLowerCase();
 		return _flagIds.get(smallCode) != null ?
 				_flagIds.get(smallCode) : R.drawable.money;
-	}	
+	}
+	
+	public static int getResourceFromTendency(Tendency tendency) {
+		switch(tendency) {
+		case TendencyUp:
+			return R.drawable.arrow_up;
+		case TendencyDown:
+			return R.drawable.arrow_down;
+		case TendencyEqual:
+		case TendencyUnknown:
+		default:
+			break;
+		}
+		
+		return -1;
+	}
 	
 	public void add(CurrencyInfo currency) {
 		_currencies.add(currency);

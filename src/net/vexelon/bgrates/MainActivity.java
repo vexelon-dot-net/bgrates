@@ -198,23 +198,21 @@ public class MainActivity extends Activity {
 				CurrencyInfo ci = (CurrencyInfo)_listView.getItemAtPosition(arg2);
 				if ( ci != null ) {
 					//Log.d(TAG, "Old Rates data: " + _oldRates.getTimeStamp() + " New rates date: " + _myRates.getTimeStamp());
-					
-					//String message = "";
 					if ( _oldRates != null && ! _oldRates.getTimeStamp().equals(_myRates.getTimeStamp()) ) {
 						CurrencyInfo oldCurrencyRate = _oldRates.getCurrencyByCode(ci.getCode());
 //						message = String.format("%s\t\t%s\t%s\n%s\t\t%s\t%s", 
 //								oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRatio(), oldCurrencyRate.getRate(), 
 //								ci.getExtraInfo(), ci.getRatio(), ci.getRate() );
-						
 						Intent intent = new Intent(_context, RateInfoActivity.class);
 						intent.putExtra(Defs.INTENT_FLAG_ID, ExchangeRate.getResourceFromCode(ci));
 						intent.putExtra(Defs.INTENT_OLD_RATEINFO, String.format("%s\t\t%s\t\t%s", oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRatio(), oldCurrencyRate.getRate()));
 						intent.putExtra(Defs.INTENT_NEW_RATEINFO, String.format("%s\t\t%s\t\t%s", ci.getExtraInfo(), ci.getRatio(), ci.getRate()));
+						intent.putExtra(Defs.INTENT_NEW_RATEINFO_TENDENCY_ICONID, ExchangeRate.getResourceFromTendency(ci.getTendency()));
 						startActivity(intent);						
 					}
 					else {
-						String message = String.format("%s:\t%s", ci.getName(), ci.getCode() );
-						Toast.makeText(_context, message, Defs.MAX_TOAST_INFO_TIME).show();
+						Toast.makeText(_context, String.format("%s:\t%s", ci.getName(), ci.getCode() ), 
+								Defs.MAX_TOAST_INFO_TIME).show();
 					}
 				}
 			}

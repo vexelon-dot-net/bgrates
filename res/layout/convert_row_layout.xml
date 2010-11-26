@@ -5,5 +5,5 @@
   android:layout_height="fill_parent"
   android:padding="4px">
 <ImageView android:id="@+id/IconConvert" android:scaleType="fitCenter" android:layout_width="26px" android:layout_height="26px"></ImageView>
-<TextView android:id="@+id/TextConvertCode" style="@style/FontList" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+<TextView android:id="@+id/TextConvertCode" style="@style/FontStyleConvert" android:paddingLeft="4dp" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
 </LinearLayout>

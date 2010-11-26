@@ -2,8 +2,8 @@
 
 ==V2.1.0==
 
-  * added - Dedicated view for currency rate comparison before and after rates update.
-  * updated - Styling of currencies select spinner on the convert screen. 
+  * added - Clicking on currency now opens a dedicated view for currency rate comparison before and after update.
+  * updated - Added flags and styling of spinner on convert activity. 
   
 ==V2.0.0==
 

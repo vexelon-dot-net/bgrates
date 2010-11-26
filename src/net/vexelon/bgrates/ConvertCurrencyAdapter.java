@@ -23,9 +23,6 @@
  */
 package net.vexelon.bgrates;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import net.vexelon.bgrates.R;
 
 import android.content.Context;

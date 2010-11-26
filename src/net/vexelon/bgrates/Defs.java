@@ -71,5 +71,6 @@ public class Defs {
 	final static String INTENT_FLAG_ID = "_FLAG_ID";
 	final static String INTENT_OLD_RATEINFO = "_OLD_RATEINFO";
 	final static String INTENT_NEW_RATEINFO = "_NEW_RATEINFO";
+	final static String INTENT_NEW_RATEINFO_TENDENCY_ICONID = "_INTENT_NEW_RATEINFO_TENDENCY_ICONID";
 
 }

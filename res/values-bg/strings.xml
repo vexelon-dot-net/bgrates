@@ -50,5 +50,6 @@
 <string name="menu_convert">Преобразуване</string>
 <string name="conv_hint_msg">Преобразуване на валути</string>
 <string name="PREVIOUS_INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg_previous</string>
-<string name="text_selectcurrency">Изберете валута:</string>
+<string name="text_selectcurrency">Изберете валута:</string><style name="FontStyleConvert" parent="@android:style/TextAppearance"><item name="android:textSize">18sp</item><item name="android:textColor">#606060</item>
+</style>
 </resources>
