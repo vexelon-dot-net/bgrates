@@ -205,8 +205,8 @@ public class MainActivity extends Activity {
 //								ci.getExtraInfo(), ci.getRatio(), ci.getRate() );
 						Intent intent = new Intent(_context, RateInfoActivity.class);
 						intent.putExtra(Defs.INTENT_FLAG_ID, ExchangeRate.getResourceFromCode(ci));
-						intent.putExtra(Defs.INTENT_OLD_RATEINFO, String.format("%s\t\t%s\t\t%s", oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRatio(), oldCurrencyRate.getRate()));
-						intent.putExtra(Defs.INTENT_NEW_RATEINFO, String.format("%s\t\t%s\t\t%s", ci.getExtraInfo(), ci.getRatio(), ci.getRate()));
+						intent.putExtra(Defs.INTENT_OLD_RATEINFO, String.format("%s    %s  %s", oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRatio(), oldCurrencyRate.getRate()));
+						intent.putExtra(Defs.INTENT_NEW_RATEINFO, String.format("%s    %s  %s", ci.getExtraInfo(), ci.getRatio(), ci.getRate()));
 						intent.putExtra(Defs.INTENT_NEW_RATEINFO_TENDENCY_ICONID, ExchangeRate.getResourceFromTendency(ci.getTendency()));
 						startActivity(intent);						
 					}

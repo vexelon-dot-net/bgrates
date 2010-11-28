@@ -1,19 +1,22 @@
+#summary History of project releases and bugfixes
 =BGrates HISTORY file=
 
 ==V2.1.0==
 
-  * added - Clicking on currency now opens a dedicated view for currency rate comparison before and after update.
-  * updated - Added flags and styling of spinner on convert activity. 
+  * fixed - Division by zero bug when converting from currencies with 0 exchange rate (ISK case).
+  * fixed - Fixed bug that caused tendency flag to be shown after update for currencies without a change in the rate.
+  * changed/updated - Added flags and styling of spinner when using the Convert activity.
+  * added - Clicking on currency now opens a dedicated view for currency rate comparison before and after update. 
   
 ==V2.0.0==
 
-  * updated - Texts on about screen and also fixed the scrolling of the Activity for devices with smaller screen resolutions.
-  * changed - Font size and colors on main activity screen. Precision numbers for each currency now shown with gray text.  
-  * changed - The Hint/Toast window that is shown when clicking on a currency from the list now shows old and new currency values if available.
-  * added - Issue 3: Currency increase/decrease rate status. It is now possible to view currency tendencies when updating to the latest exchange rates. The tendencies are marked with green arrow for "UP" and red arrow for "DOWN".
+  * changed/updated - Texts on about screen and also fixed the scrolling of the Activity for devices with smaller screen resolutions.
+  * changed/updated - Font size and colors on main activity screen. Precision numbers for each currency now shown with gray text.  
+  * changed/updated - The Hint/Toast window that is shown when clicking on a currency from the list now shows old and new currency values if available.
+  * added - Issue 3: Currency increase/decrease rate status. It is nw possible to view currency tendencies when updating to the latest exchange rates. The tendencies are marked with green arrow for "UP" and red arrow for "DOWN".
   * added - Issue 2: Currency convert feature. It is now possible to convert between currencies using the Convert activity from the menu.
 
 ==V1.1.0==
 
   * fixed - Issue 1: Error during startup - "The application BGrates M-Tel ... has stopped unexpectedly"
-  * updated - About screen: added website of application
+  * changed/updated - About screen: added website of application

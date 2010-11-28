@@ -9,10 +9,11 @@
 <ImageView android:id="@+id/IconRateInfo" android:scaleType="fitCenter" android:layout_width="26px" android:layout_height="26px" android:layout_gravity="center_horizontal" android:paddingBottom="8dp"></ImageView>
 <RelativeLayout 
 	android:layout_width="wrap_content"
-	android:layout_height="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center_horizontal"
 	>
-<TextView android:id="@+id/TextRatioNew" style="@style/FontListRatioRate" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
-<ImageView android:id="@+id/IconRateInfoTendency" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" android:layout_toRightOf="@+id/TextRatioNew"></ImageView>
+<TextView android:id="@+id/TextRatioNew" android:textStyle="bold" style="@style/FontListRatioRate" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+<ImageView android:id="@+id/IconRateInfoTendency" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" android:layout_toRightOf="@+id/TextRatioNew"></ImageView>
 </RelativeLayout>
 <TextView android:id="@+id/TextRatioOld" style="@style/FontListRatioRate" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
 

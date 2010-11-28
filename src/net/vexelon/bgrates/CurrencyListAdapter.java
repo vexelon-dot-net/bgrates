@@ -84,20 +84,7 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 			
 			// add tendency icon
 			ImageView tendencyIcon = (ImageView) v.findViewById(R.id.tendency);
-			if (ExchangeRate.getResourceFromTendency(ci.getTendency()) != -1)
-				tendencyIcon.setImageResource(ExchangeRate.getResourceFromTendency(ci.getTendency()));
-//			switch(ci.getTendency()) {
-//			case TendencyUp:
-//				tendencyIcon.setImageResource(R.drawable.arrow_up);
-//				break;
-//			case TendencyDown:
-//				tendencyIcon.setImageResource(R.drawable.arrow_down);
-//				break;
-//			case TendencyEqual:
-//			default:
-//				// Do not show icon
-//				break;
-//			}
+			tendencyIcon.setImageResource(ExchangeRate.getResourceFromTendency(ci.getTendency()));
 		}
 		
 		return v;

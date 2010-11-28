@@ -154,7 +154,7 @@ public class ExchangeRate implements Parcelable {
 			break;
 		}
 		
-		return -1;
+		return 0; // 0 sets image resouce to nothing
 	}
 	
 	public void add(CurrencyInfo currency) {

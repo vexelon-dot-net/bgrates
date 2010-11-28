@@ -165,7 +165,6 @@ public class ConvertActivity extends Activity {
 //		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 //				this, android.R.layout.simple_spinner_item, items );
 		ConvertCurrencyAdapter adapter = new ConvertCurrencyAdapter(this, android.R.layout.simple_spinner_item, items);
-		
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 
@@ -258,7 +257,13 @@ public class ConvertActivity extends Activity {
 						currency = _myRates.getCurrencyByCode(callerRowCode);
 						rate = new BigDecimal(currency.getRate(), mc);
 						ratio = new BigDecimal(currency.getRatio(), mc);
-						result = rate.divide(ratio, mc).multiply(sum, mc); //result = rate / ratio * sum;
+						try {
+							result = rate.divide(ratio, mc).multiply(sum, mc); //result = rate / ratio * sum;
+						}
+						catch(Exception e) {
+							Log.d(TAG, e.toString());
+							result = BigDecimal.ZERO;
+						}
 						//Log.d(TAG, String.format("rate: %1$s, ratio: %2$s, result: %3$s, sum: %4$s", rate.toPlainString(), ratio.toPlainString(), result.toPlainString(), sum.toPlainString()));
 						setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
 						break;
@@ -274,7 +279,13 @@ public class ConvertActivity extends Activity {
 							currency = _myRates.getCurrencyByCode(code);
 							rate = new BigDecimal(currency.getRate(), mc);
 							ratio = new BigDecimal(currency.getRatio(), mc);
-							result = sum.divide(rate, mc).multiply(ratio, mc);
+							try {
+								result = sum.divide(rate, mc).multiply(ratio, mc);
+							}
+							catch(Exception e) {
+								Log.e(TAG, e.toString());
+								result = BigDecimal.ZERO;
+							}
 							setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
 						}
 						else { // more complex calculations
@@ -283,7 +294,13 @@ public class ConvertActivity extends Activity {
 							currency = _myRates.getCurrencyByCode(callerRowCode);
 							rate = new BigDecimal(currency.getRate(), mc);
 							ratio = new BigDecimal(currency.getRatio(), mc);
-							result = rate.divide(ratio, mc).multiply(sum, mc);
+							try {
+								result = rate.divide(ratio, mc).multiply(sum, mc);
+							}
+							catch(Exception e) {
+								Log.e(TAG, e.toString());
+								result = BigDecimal.ZERO;
+							}
 							//sum = result;
 							
 							// Step 2 - Convert from BGN currency to selected row currency
