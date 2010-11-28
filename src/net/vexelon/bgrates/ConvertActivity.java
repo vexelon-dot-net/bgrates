@@ -261,7 +261,7 @@ public class ConvertActivity extends Activity {
 							result = rate.divide(ratio, mc).multiply(sum, mc); //result = rate / ratio * sum;
 						}
 						catch(Exception e) {
-							Log.d(TAG, e.toString());
+//							Log.d(TAG, e.toString());
 							result = BigDecimal.ZERO;
 						}
 						//Log.d(TAG, String.format("rate: %1$s, ratio: %2$s, result: %3$s, sum: %4$s", rate.toPlainString(), ratio.toPlainString(), result.toPlainString(), sum.toPlainString()));
@@ -283,7 +283,7 @@ public class ConvertActivity extends Activity {
 								result = sum.divide(rate, mc).multiply(ratio, mc);
 							}
 							catch(Exception e) {
-								Log.e(TAG, e.toString());
+//								Log.e(TAG, e.toString());
 								result = BigDecimal.ZERO;
 							}
 							setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
@@ -298,7 +298,7 @@ public class ConvertActivity extends Activity {
 								result = rate.divide(ratio, mc).multiply(sum, mc);
 							}
 							catch(Exception e) {
-								Log.e(TAG, e.toString());
+//								Log.e(TAG, e.toString());
 								result = BigDecimal.ZERO;
 							}
 							//sum = result;
@@ -307,7 +307,13 @@ public class ConvertActivity extends Activity {
 							currency = _myRates.getCurrencyByCode(code);
 							rate = new BigDecimal(currency.getRate(), mc);
 							ratio = new BigDecimal(currency.getRatio(), mc);
-							result = result.multiply(ratio.divide(rate, mc), mc); //result = sum * ratio / rate;
+							try {
+								result = result.multiply(ratio.divide(rate, mc), mc); //result = sum * ratio / rate;
+							}
+							catch(Exception e) {
+//								Log.e(TAG, e.toString());
+								result = BigDecimal.ZERO;
+							}
 							
 							// Step 3 - Display results
 							setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));							
