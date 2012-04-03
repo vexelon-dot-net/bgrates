@@ -80,6 +80,7 @@ public class ExchangeRate implements Parcelable {
 		_flagIds.put("us", R.drawable.us);
 		_flagIds.put("xa", R.drawable.xa);
 		_flagIds.put("za", R.drawable.za);
+		_flagIds.put("eu", R.drawable.eu);
 	}
 	
 	public ExchangeRate() {

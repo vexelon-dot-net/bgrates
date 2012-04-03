@@ -23,17 +23,37 @@
  */
 package net.vexelon.bgrates;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -45,6 +65,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -200,15 +221,18 @@ public class MainActivity extends Activity {
 					//Log.d(TAG, "Old Rates data: " + _oldRates.getTimeStamp() + " New rates date: " + _myRates.getTimeStamp());
 					if ( _oldRates != null && ! _oldRates.getTimeStamp().equals(_myRates.getTimeStamp()) ) {
 						CurrencyInfo oldCurrencyRate = _oldRates.getCurrencyByCode(ci.getCode());
-//						message = String.format("%s\t\t%s\t%s\n%s\t\t%s\t%s", 
-//								oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRatio(), oldCurrencyRate.getRate(), 
-//								ci.getExtraInfo(), ci.getRatio(), ci.getRate() );
-						Intent intent = new Intent(_context, RateInfoActivity.class);
-						intent.putExtra(Defs.INTENT_FLAG_ID, ExchangeRate.getResourceFromCode(ci));
-						intent.putExtra(Defs.INTENT_OLD_RATEINFO, String.format("%s    %s  %s", oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRatio(), oldCurrencyRate.getRate()));
-						intent.putExtra(Defs.INTENT_NEW_RATEINFO, String.format("%s    %s  %s", ci.getExtraInfo(), ci.getRatio(), ci.getRate()));
-						intent.putExtra(Defs.INTENT_NEW_RATEINFO_TENDENCY_ICONID, ExchangeRate.getResourceFromTendency(ci.getTendency()));
-						startActivity(intent);						
+						// some currencies are new, and now old records exist!
+						if (oldCurrencyRate != null) {
+	//						message = String.format("%s\t\t%s\t%s\n%s\t\t%s\t%s", 
+	//								oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRatio(), oldCurrencyRate.getRate(), 
+	//								ci.getExtraInfo(), ci.getRatio(), ci.getRate() );
+							Intent intent = new Intent(_context, RateInfoActivity.class);
+							intent.putExtra(Defs.INTENT_FLAG_ID, ExchangeRate.getResourceFromCode(ci));
+							intent.putExtra(Defs.INTENT_OLD_RATEINFO, String.format("%s    %s  %s", oldCurrencyRate.getExtraInfo(), oldCurrencyRate.getRatio(), oldCurrencyRate.getRate()));
+							intent.putExtra(Defs.INTENT_NEW_RATEINFO, String.format("%s    %s  %s", ci.getExtraInfo(), ci.getRatio(), ci.getRate()));
+							intent.putExtra(Defs.INTENT_NEW_RATEINFO_TENDENCY_ICONID, ExchangeRate.getResourceFromTendency(ci.getTendency()));
+							startActivity(intent);
+						}
 					}
 					else {
 						Toast.makeText(_context, String.format("%s:\t%s", ci.getName(), ci.getCode() ), 
@@ -245,6 +269,18 @@ public class MainActivity extends Activity {
 						});
 					} 
 					else {
+						
+						//Issue #1: EUR currency is not presented in the currency list
+						// Try to download index.htm page
+						File cacheFileHtml = new File(_context.getCacheDir().getAbsolutePath() + File.separator + Defs.URI_CACHE_NAME_INDEXHTM);
+						if (Utils.downloadFile(_context, Defs.URL_BNB_INDEX, cacheFileHtml)) {
+							CurrencyInfo currency = parseEuro(cacheFileHtml);
+							if (currency == null || !injectCurrency(currency, cacheFile)) {
+								// save downloaded file and remove cache
+								Log.e(TAG, "Failed to load EUR currency rate!");
+							}
+						}
+						// -------------
 						
 						ExchangeRate newRates = new ExchangeRate();
 						FileInputStream fis = new FileInputStream(cacheFile);
@@ -406,7 +442,6 @@ public class MainActivity extends Activity {
 			factory.setNamespaceAware(false);
 			factory.setValidating(false);
 			XmlPullParser xpp = factory.newPullParser();
-			
 			xpp.setInput(is, null);
 			
 			int eventType = xpp.getEventType();
@@ -517,11 +552,151 @@ public class MainActivity extends Activity {
 		}
 		finally {
 			try { 
-				if ( is != null ) is.close(); 
-			} catch (IOException e) { }
+				if ( is != null ) is.close(); } catch (IOException e) { }
 		}
 		
 		return ret;
+	}
+	
+	private CurrencyInfo parseEuro(File file) {		
+		Log.v(TAG, "@parseEuro");
+	
+		CurrencyInfo currency = null;
+		
+		BufferedReader br = null;
+		
+		try {
+			br = new BufferedReader(new FileReader(file));
+			String line;
+			while((line = br.readLine()) != null) {
+//				<em>1 EUR = </em> <strong>1.95583 BGN</strong>
+				Pattern p = Pattern.compile("1\\sEUR(.[^\\d]*)(\\d+.\\d+)\\sBGN(.*)", Pattern.CASE_INSENSITIVE);
+				Matcher m = p.matcher(line);
+				if (m.find()) {
+//					Log.v(TAG, "MATCH1: " + m.group(0));
+//					Log.v(TAG, "MATCH2: " + m.group(1));
+					Log.v(TAG, "MATCH3: " + m.group(2));
+//					Log.v(TAG, "MATCH4: " + m.group(3));
+					
+					//
+					currency = new CurrencyInfo();
+					currency.setName("Euro");
+					currency.setCode("EUR");
+					currency.setRatio("1");
+					currency.setRate(m.group(2));
+//					currency.setReverseRate("0");
+					currency.setExtraInfo(DateFormat.format("dd.MM.yyyy", Calendar.getInstance()).toString());
+//					rates.add(currency);
+					
+					break; // no need to search for more
+				}
+			}
+		}
+		catch(Exception e) {
+			Log.e(TAG, e.getMessage(), e);
+		}
+		finally {
+			try { if ( br != null ) br.close(); } catch(IOException e) { }
+		}
+		
+		return currency;
+	}
+	
+	private boolean injectCurrency(CurrencyInfo currency, File xmlFile) {
+		Log.v(TAG, "@injectCurrency");
+		
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setValidating(false);
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(xmlFile);
+			doc.getDocumentElement().normalize();
+			NodeList items = doc.getElementsByTagName(Defs.XML_TAG_ROW);
+			
+			// find position to insert
+			for(int i = 0; i < items.getLength(); i++) {
+				Node node = items.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) node;
+					boolean added = false;
+					
+					NodeList childList = element.getElementsByTagName(Defs.XML_TAG_CODE);
+					if (childList.getLength() > 0) {
+						
+						Element child = (Element) childList.item(0);
+					
+						int result = child.getTextContent().compareTo(currency.getCode());
+						if (result > 0) {
+							Element newElement = doc.createElement(Defs.XML_TAG_ROW);
+							
+							Element subElement = doc.createElement(Defs.XML_TAG_GOLD);
+							subElement.setTextContent("1");
+							newElement.appendChild(subElement);
+							
+							subElement = doc.createElement(Defs.XML_TAG_NAME);
+							subElement.setTextContent(currency.getName());
+							newElement.appendChild(subElement);
+							
+							subElement = doc.createElement(Defs.XML_TAG_CODE);
+							subElement.setTextContent(currency.getCode());
+							newElement.appendChild(subElement);
+							
+							subElement = doc.createElement(Defs.XML_TAG_RATIO);
+							subElement.setTextContent(currency.getRatio());
+							newElement.appendChild(subElement);
+							
+							subElement = doc.createElement(Defs.XML_TAG_REVERSERATE);
+							subElement.setTextContent(currency.getReverseRate());
+							newElement.appendChild(subElement);
+							
+							subElement = doc.createElement(Defs.XML_TAG_RATE);
+							subElement.setTextContent(currency.getRate());
+							newElement.appendChild(subElement);
+							
+							subElement = doc.createElement(Defs.XML_TAG_EXTRAINFO);
+							subElement.setTextContent(currency.getExtraInfo());
+							newElement.appendChild(subElement);
+							
+							subElement = doc.createElement(Defs.XML_TAG_F_STAR);
+							subElement.setTextContent("");
+							newElement.appendChild(subElement);
+							
+							// insert into DOM
+							node.getParentNode().insertBefore(newElement, node);
+							
+							added = true;
+							Log.v(TAG, "ADDED before " + child.getTextContent());
+							break;
+						}
+						else if (result == 0) {
+							added = true;
+							Log.w(TAG, "EUR currency already in XML! Injection failed.");
+							break; // special case, EUR already added !
+						}
+					}
+					
+					if (added)
+						break; // break the loop					
+				}
+			}
+			
+			// save the modified file
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//			StreamResult result = new StreamResult(new StringWriter());
+			StreamResult result = new StreamResult(xmlFile);
+			DOMSource source = new DOMSource(doc);
+			transformer.transform(source, result);
+//			String xmlString = result.getWriter().toString();
+//			Log.v(TAG, xmlString);
+			
+			return true;
+		}
+		catch (Exception e) {
+			Log.e(TAG, e.getMessage(), e);
+		}
+		
+		return false;
 	}
 	
 	String getResString(int id) {

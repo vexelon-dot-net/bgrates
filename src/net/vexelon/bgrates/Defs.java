@@ -38,13 +38,17 @@ public class Defs {
 	final static String URL_BNB_SUFFIX_BG = "BG";
 	final static String URL_BNB_SUFFIX_EN = "EN";
 	final static String URI_CACHE_NAME = "BGRatesDownloadCache";
+	final static String URL_BNB_INDEX = "http://www.bnb.bg/index.htm";
+	final static String URI_CACHE_NAME_INDEXHTM = "BGRatesDownloadCacheHTM";
 	
 	final static String INT_EXCHANGERATES = "int-exch";
 	
 	final static int MAX_RATE_CHARS_SIZE = 8;
 	final static int MAX_TOAST_INFO_TIME = 3150;
 	
+	final static String XML_TAG_ROWSET = "ROWSET";
 	final static String XML_TAG_ROW = "ROW";
+	final static String XML_TAG_GOLD = "GOLD";
 	final static String XML_TAG_NAME = "NAME_";
 	final static String XML_TAG_CODE = "CODE";
 	final static String XML_TAG_RATIO = "RATIO";
@@ -53,6 +57,7 @@ public class Defs {
 	final static String XML_TAG_EXTRAINFO = "EXTRAINFO";
 	final static String XML_TAG_CURR_DATE = "CURR_DATE";
 	final static String XML_TAG_TITLE = "TITLE";
+	final static String XML_TAG_F_STAR = "F_STAR";
 	
 	final static int MENU_REFRESH = 10;
 	final static int MENU_BG_RATES = 12;
