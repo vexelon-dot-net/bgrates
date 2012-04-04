@@ -83,6 +83,7 @@ public class MainActivity extends Activity {
 	private CurrencyListAdapter _adapter;
 	private ExchangeRate _myRates = null, _oldRates = null;
 	private String _downloadUrlSuffix;
+	private boolean _forceDownload = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +129,7 @@ public class MainActivity extends Activity {
 		//Log.v(TAG, "@onOptionsItemSelected()");
 		
 		Intent intent = null;
+		String newDownloadUrlSuffix;
 		
 		switch(item.getItemId()) {
 		case Defs.MENU_REFRESH:
@@ -138,11 +140,15 @@ public class MainActivity extends Activity {
 			startActivity(intent);
 			break;
 		case Defs.MENU_BG_RATES:
-			_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, Defs.URL_BNB_SUFFIX_BG);
+			newDownloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, Defs.URL_BNB_SUFFIX_BG);
+			_forceDownload = !_downloadUrlSuffix.equals(newDownloadUrlSuffix);
+			_downloadUrlSuffix = newDownloadUrlSuffix;
 			refresh();
 			break;
 		case Defs.MENU_EN_RATES:
-			_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, Defs.URL_BNB_SUFFIX_EN);
+			newDownloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, Defs.URL_BNB_SUFFIX_EN);
+			_forceDownload = !_downloadUrlSuffix.equals(newDownloadUrlSuffix);
+			_downloadUrlSuffix = newDownloadUrlSuffix;
 			refresh();
 			break;
 		case Defs.MENU_CONVERT:
@@ -296,8 +302,14 @@ public class MainActivity extends Activity {
 						}
 						else {
 							
+							Log.v(TAG, "ABOUT TO SHOW");
+							
 							// check if the newly downloaded file is really newer than the current
-							if ( ! newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle()) ) {
+							if ( _forceDownload || !newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle()) ) {
+								
+								Log.v(TAG, "SHOWING");
+								// clear flag
+								_forceDownload = false; 
 								
 								// save current exchange rates file to storage as previous (only if timestamps differ)
 								Log.d(TAG, "[2] Current Rates data: " + _myRates.getTimeStamp() + " New rates date: " + newRates.getTimeStamp());
@@ -339,7 +351,7 @@ public class MainActivity extends Activity {
 					Thread.sleep(1000);
 				}
 				catch(Exception e) {
-					//Log.e(TAG, e.getMessage());
+					Log.e(TAG, e.getMessage());
 				}
 				_progressDialog.dismiss();
 			};
@@ -575,10 +587,9 @@ public class MainActivity extends Activity {
 				if (m.find()) {
 //					Log.v(TAG, "MATCH1: " + m.group(0));
 //					Log.v(TAG, "MATCH2: " + m.group(1));
-					Log.v(TAG, "MATCH3: " + m.group(2));
+//					Log.v(TAG, "MATCH3: " + m.group(2));
 //					Log.v(TAG, "MATCH4: " + m.group(3));
-					
-					//
+
 					currency = new CurrencyInfo();
 					currency.setName("Euro");
 					currency.setCode("EUR");
