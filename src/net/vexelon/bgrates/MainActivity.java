@@ -428,7 +428,7 @@ public class MainActivity extends Activity {
 			return parseRates(fis, rates);
 		}
 		catch(FileNotFoundException e) {
-			//Log.e(TAG, "Faild to parse file!", e);
+			Log.e(TAG, "Faild to parse file!", e);
 		}
 		return false;
 	}

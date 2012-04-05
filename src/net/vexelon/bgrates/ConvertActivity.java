@@ -236,7 +236,7 @@ public class ConvertActivity extends Activity {
 			//Log.d(TAG, "Sum is " + sum.toPlainString());
 		}
 		catch(NumberFormatException e) {
-			//Log.e(TAG, e.toString());
+			Log.e(TAG, "Failed to convert value from String!", e);
 			return; // invalid number
 		}
 		
@@ -323,7 +323,7 @@ public class ConvertActivity extends Activity {
 				} // end if
 			} // end for			
 		} catch (NumberFormatException e) {
-			//Log.e(TAG, e.getMessage());
+			Log.e(TAG, "", e);
 		}		
 	}
 	
