@@ -23,7 +23,6 @@
  */
 package net.vexelon.bgrates;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -33,27 +32,22 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
-import org.xmlpull.v1.XmlSerializer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -65,7 +59,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -107,7 +100,7 @@ public class MainActivity extends Activity {
 		
 		menu.add(0, Defs.MENU_BG_RATES, 0, R.string.menu_bg_rates).setIcon(R.drawable.bg);
 		menu.add(0, Defs.MENU_EN_RATES, 0, R.string.menu_en_rates).setIcon(R.drawable.gb);
-		menu.add(1, Defs.MENU_REFRESH, 10, R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
+//		menu.add(1, Defs.MENU_REFRESH, 10, R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
 		menu.add(1, Defs.MENU_CONVERT, 10, R.string.menu_convert).setIcon(R.drawable.money);
 		menu.add(1, Defs.MENU_ABOUT, 15, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
 		return true;
@@ -289,9 +282,8 @@ public class MainActivity extends Activity {
 						// -------------
 						
 						ExchangeRate newRates = new ExchangeRate();
-						FileInputStream fis = new FileInputStream(cacheFile);
 						
-						if (!parseRates(fis, newRates)) {
+						if (!parseRates(cacheFile, newRates)) {
 							// SHOW ERROR ALERT //
 							_context.runOnUiThread(new Runnable() {
 								@Override
@@ -302,12 +294,9 @@ public class MainActivity extends Activity {
 						}
 						else {
 							
-							Log.v(TAG, "ABOUT TO SHOW");
-							
 							// check if the newly downloaded file is really newer than the current
 							if ( _forceDownload || !newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle()) ) {
 								
-								Log.v(TAG, "SHOWING");
 								// clear flag
 								_forceDownload = false; 
 								
@@ -399,7 +388,7 @@ public class MainActivity extends Activity {
 			fos.close();
 		}
 		catch(Exception e) {
-			//Log.e(TAG, "Error saving previous rates!");
+			Log.e(TAG, "Error saving previous rates!");
 		}
 		finally {
 			try { if ( fis != null ) fis.close(); } catch (IOException e) { }
@@ -443,8 +432,21 @@ public class MainActivity extends Activity {
 		}
 		return false;
 	}
+	
+	private boolean parseRates(File xmlFile, ExchangeRate rates) {
 		
-	private boolean parseRates(InputStream is, ExchangeRate rates) {		
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(xmlFile);
+			return parseRates(fis, rates);
+		}
+		catch(FileNotFoundException e) {
+			Log.e(TAG, "Faild to parse file!", e);
+		}
+		return false;
+	}	
+		
+	private boolean parseRates(InputStream fis, ExchangeRate rates) {		
 		//Log.v(TAG, "@parseRates");
 	
 		boolean ret = false;
@@ -454,7 +456,7 @@ public class MainActivity extends Activity {
 			factory.setNamespaceAware(false);
 			factory.setValidating(false);
 			XmlPullParser xpp = factory.newPullParser();
-			xpp.setInput(is, null);
+			xpp.setInput(fis, null);
 			
 			int eventType = xpp.getEventType();
 			boolean parsingRow = false,
@@ -560,28 +562,27 @@ public class MainActivity extends Activity {
 			
 		}
 		catch(Exception e) {
-			//Log.e(TAG, "Error while parsing XML !", e);
+			Log.e(TAG, "Error while parsing XML !", e);
 		}
 		finally {
 			try { 
-				if ( is != null ) is.close(); } catch (IOException e) { }
+				if ( fis != null ) fis.close(); } catch (IOException e) { }
 		}
 		
 		return ret;
 	}
 	
 	private CurrencyInfo parseEuro(File file) {		
-		Log.v(TAG, "@parseEuro");
+//		Log.v(TAG, "@parseEuro");
 	
 		CurrencyInfo currency = null;
-		
 		BufferedReader br = null;
 		
 		try {
 			br = new BufferedReader(new FileReader(file));
 			String line;
 			while((line = br.readLine()) != null) {
-//				<em>1 EUR = </em> <strong>1.95583 BGN</strong>
+//				Pattern: <em>1 EUR = </em> <strong>1.95583 BGN</strong>
 				Pattern p = Pattern.compile("1\\sEUR(.[^\\d]*)(\\d+.\\d+)\\sBGN(.*)", Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(line);
 				if (m.find()) {
@@ -591,13 +592,17 @@ public class MainActivity extends Activity {
 //					Log.v(TAG, "MATCH4: " + m.group(3));
 
 					currency = new CurrencyInfo();
-					currency.setName("Euro");
+					if (_downloadUrlSuffix.endsWith(Defs.URL_BNB_SUFFIX_BG)) {
+						currency.setName("Евро");
+					}
+					else {
+						currency.setName("Euro");
+					}
 					currency.setCode("EUR");
 					currency.setRatio("1");
 					currency.setRate(m.group(2));
 //					currency.setReverseRate("0");
 					currency.setExtraInfo(DateFormat.format("dd.MM.yyyy", Calendar.getInstance()).toString());
-//					rates.add(currency);
 					
 					break; // no need to search for more
 				}
@@ -614,7 +619,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private boolean injectCurrency(CurrencyInfo currency, File xmlFile) {
-		Log.v(TAG, "@injectCurrency");
+//		Log.v(TAG, "@injectCurrency");
 		
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -625,7 +630,7 @@ public class MainActivity extends Activity {
 			NodeList items = doc.getElementsByTagName(Defs.XML_TAG_ROW);
 			
 			// find position to insert
-			for(int i = 0; i < items.getLength(); i++) {
+			for(int i = 1; i < items.getLength(); i++) {
 				Node node = items.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element element = (Element) node;
@@ -635,48 +640,48 @@ public class MainActivity extends Activity {
 					if (childList.getLength() > 0) {
 						
 						Element child = (Element) childList.item(0);
-					
-						int result = child.getTextContent().compareTo(currency.getCode());
+						
+						int result = child.getFirstChild().getNodeValue().compareTo(currency.getCode());
 						if (result > 0) {
 							Element newElement = doc.createElement(Defs.XML_TAG_ROW);
 							
 							Element subElement = doc.createElement(Defs.XML_TAG_GOLD);
-							subElement.setTextContent("1");
+							subElement.appendChild(doc.createTextNode("1"));
 							newElement.appendChild(subElement);
 							
 							subElement = doc.createElement(Defs.XML_TAG_NAME);
-							subElement.setTextContent(currency.getName());
+							subElement.appendChild(doc.createTextNode(currency.getName()));
 							newElement.appendChild(subElement);
 							
 							subElement = doc.createElement(Defs.XML_TAG_CODE);
-							subElement.setTextContent(currency.getCode());
+							subElement.appendChild(doc.createTextNode(currency.getCode()));
 							newElement.appendChild(subElement);
 							
 							subElement = doc.createElement(Defs.XML_TAG_RATIO);
-							subElement.setTextContent(currency.getRatio());
+							subElement.appendChild(doc.createTextNode(currency.getRatio()));
 							newElement.appendChild(subElement);
 							
 							subElement = doc.createElement(Defs.XML_TAG_REVERSERATE);
-							subElement.setTextContent(currency.getReverseRate());
+							subElement.appendChild(doc.createTextNode(currency.getReverseRate()));
 							newElement.appendChild(subElement);
 							
 							subElement = doc.createElement(Defs.XML_TAG_RATE);
-							subElement.setTextContent(currency.getRate());
+							subElement.appendChild(doc.createTextNode(currency.getRate()));
 							newElement.appendChild(subElement);
 							
 							subElement = doc.createElement(Defs.XML_TAG_EXTRAINFO);
-							subElement.setTextContent(currency.getExtraInfo());
+							subElement.appendChild(doc.createTextNode(currency.getExtraInfo()));
 							newElement.appendChild(subElement);
 							
 							subElement = doc.createElement(Defs.XML_TAG_F_STAR);
-							subElement.setTextContent("");
+							subElement.appendChild(doc.createTextNode(("")));
 							newElement.appendChild(subElement);
 							
 							// insert into DOM
 							node.getParentNode().insertBefore(newElement, node);
 							
 							added = true;
-							Log.v(TAG, "ADDED before " + child.getTextContent());
+							Log.d(TAG, "Euro added before: " + child.getNodeValue());
 							break;
 						}
 						else if (result == 0) {
@@ -691,15 +696,17 @@ public class MainActivity extends Activity {
 				}
 			}
 			
-			// save the modified file
-			Transformer transformer = TransformerFactory.newInstance().newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-//			StreamResult result = new StreamResult(new StringWriter());
-			StreamResult result = new StreamResult(xmlFile);
-			DOMSource source = new DOMSource(doc);
-			transformer.transform(source, result);
-//			String xmlString = result.getWriter().toString();
-//			Log.v(TAG, xmlString);
+			// save the modified file (only A2.2 compatible)
+//			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+//			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+////			StreamResult result = new StreamResult(new StringWriter());
+//			StreamResult result = new StreamResult(xmlFile);
+//			DOMSource source = new DOMSource(doc);
+//			transformer.transform(source, result);
+////			String xmlString = result.getWriter().toString();
+			
+//			Log.v(TAG, Utils.getXmlDoc(doc));
+			Utils.saveXmlDoc(doc, xmlFile);
 			
 			return true;
 		}

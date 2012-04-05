@@ -1,21 +1,23 @@
 BGrates HISTORY file
 
 V2.2.0
+  * Improvement/Change - Issue #1: Added EUR currency rate information.
+  * Improvement/Change - Requirements downgraded to Android 1.5.  
   * Improvement/Change - The app can now be moved to SDCard storage. This is the default install location as well.
 
 V2.1.0
-  * fixed - Division by zero bug when converting from currencies with 0 exchange rate (ISK case).
-  * fixed - Fixed bug that caused tendency flag to be shown after update for currencies without a change in the rate.
-  * changed/updated - Added flags and styling of spinner when using the Convert activity.
-  * added - Clicking on currency now opens a dedicated view for currency rate comparison before and after update. 
+  * Fixed - Division by zero bug when converting from currencies with 0 exchange rate (ISK case).
+  * Fixed - Fixed bug that caused tendency flag to be shown after update for currencies without a change in the rate.
+  * Improvement/Change - Added flags and styling of spinner when using the Convert activity.
+  * Improvement/Change - Clicking on currency now opens a dedicated view for currency rate comparison before and after update. 
   
 V2.0.0
-  * changed/updated - Texts on about screen and also fixed the scrolling of the Activity for devices with smaller screen resolutions.
-  * changed/updated - Font size and colors on main activity screen. Precision numbers for each currency now shown with gray text.  
-  * changed/updated - The Hint/Toast window that is shown when clicking on a currency from the list now shows old and new currency values if available.
-  * added - Issue 3: Currency increase/decrease rate status. It is nw possible to view currency tendencies when updating to the latest exchange rates. The tendencies are marked with green arrow for "UP" and red arrow for "DOWN".
-  * added - Issue 2: Currency convert feature. It is now possible to convert between currencies using the Convert activity from the menu.
+  * Improvement/Change - Texts on about screen and also fixed the scrolling of the Activity for devices with smaller screen resolutions.
+  * Improvement/Change - Font size and colors on main activity screen. Precision numbers for each currency now shown with gray text.  
+  * Improvement/Change - The Hint/Toast window that is shown when clicking on a currency from the list now shows old and new currency values if available.
+  * Improvement/Change - Issue 3: Currency increase/decrease rate status. It is nw possible to view currency tendencies when updating to the latest exchange rates. The tendencies are marked with green arrow for "UP" and red arrow for "DOWN".
+  * Improvement/Change - Issue 2: Currency convert feature. It is now possible to convert between currencies using the Convert activity from the menu.
 
 V1.1.0
-  * fixed - Issue 1: Error during startup - "The application BGrates M-Tel ... has stopped unexpectedly"
-  * changed/updated - About screen: added website of application
+  * Fixed - Issue 1: Error during startup - "The application BGrates M-Tel ... has stopped unexpectedly"
+  * Improvement/Change - About screen: added website of application
