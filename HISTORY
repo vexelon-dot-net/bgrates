@@ -2,8 +2,9 @@ BGrates HISTORY file
 
 V2.2.0
   * Improvement/Change - Issue #1: Added EUR currency rate information.
-  * Improvement/Change - Requirements downgraded to Android 1.5.  
-  * Improvement/Change - The app can now be moved to SDCard storage. This is the default install location as well.
+  * Improvement/Change - Requirements downgraded to devices with firmware 1.5.  
+  * Improvement/Change -  "Update Rates" button no longer available, since it repeats functionality of already available (EN) and (BG) update buttons.
+  * Improvement/Change - The App can now be moved to SDCard storage. This is the default install location as well.
 
 V2.1.0
   * Fixed - Division by zero bug when converting from currencies with 0 exchange rate (ISK case).
