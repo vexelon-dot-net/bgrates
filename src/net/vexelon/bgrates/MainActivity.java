@@ -39,13 +39,10 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -295,6 +292,7 @@ public class MainActivity extends Activity {
 						else {
 							
 							// check if the newly downloaded file is really newer than the current
+							// NOTE: currently force download is always "true", therefore this check should later be removed!
 							if ( _forceDownload || !newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle()) ) {
 								
 								// clear flag
@@ -428,7 +426,7 @@ public class MainActivity extends Activity {
 			return parseRates(fis, rates);
 		}
 		catch(FileNotFoundException e) {
-			Log.e(TAG, "Faild to parse file!", e);
+//			Log.e(TAG, "Faild to parse file!", e);
 		}
 		return false;
 	}
@@ -441,7 +439,7 @@ public class MainActivity extends Activity {
 			return parseRates(fis, rates);
 		}
 		catch(FileNotFoundException e) {
-			Log.e(TAG, "Faild to parse file!", e);
+//			Log.e(TAG, "Faild to parse file!", e);
 		}
 		return false;
 	}	
@@ -582,15 +580,12 @@ public class MainActivity extends Activity {
 			br = new BufferedReader(new FileReader(file));
 			String line;
 			while((line = br.readLine()) != null) {
-//				Pattern: <em>1 EUR = </em> <strong>1.95583 BGN</strong>
+				//Pattern: <em>1 EUR = </em> <strong>1.95583 BGN</strong>
+				//TODO: improve the regular expression here, probably catch also the "Rate"
 				Pattern p = Pattern.compile("1\\sEUR(.[^\\d]*)(\\d+.\\d+)\\sBGN(.*)", Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(line);
 				if (m.find()) {
-//					Log.v(TAG, "MATCH1: " + m.group(0));
-//					Log.v(TAG, "MATCH2: " + m.group(1));
 //					Log.v(TAG, "MATCH3: " + m.group(2));
-//					Log.v(TAG, "MATCH4: " + m.group(3));
-
 					currency = new CurrencyInfo();
 					if (_downloadUrlSuffix.endsWith(Defs.URL_BNB_SUFFIX_BG)) {
 						currency.setName("Евро");
@@ -681,7 +676,7 @@ public class MainActivity extends Activity {
 							node.getParentNode().insertBefore(newElement, node);
 							
 							added = true;
-							Log.d(TAG, "Euro added before: " + child.getNodeValue());
+							Log.d(TAG, "Euro added before: " + child.getFirstChild().getNodeValue());
 							break;
 						}
 						else if (result == 0) {
