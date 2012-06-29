@@ -338,7 +338,7 @@ public class MainActivity extends Activity {
 					Thread.sleep(1000);
 				}
 				catch(Exception e) {
-					Log.e(TAG, e.getMessage());
+//					Log.e(TAG, e.getMessage());
 				}
 				_progressDialog.dismiss();
 			};
