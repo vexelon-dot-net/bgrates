@@ -14,7 +14,6 @@ The exchange rates of currencies are calculated on the basis of the fixed exchan
   * Supported Localization - EN (default), bg_BG
 
 
-Please check [HISTORY] for latest release changes.
-Please check [LICENSE] for licensing topics.
+Please check [HISTORY](HISTORY) for latest release changes.
 
-Have fun ! ;)
+Please check [LICENSE](LICENSE) for licensing topics.
