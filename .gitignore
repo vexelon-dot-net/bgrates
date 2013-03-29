@@ -1,2 +1,8 @@
+# ignored builds
 /gen
 /bin
+
+# Eclipse
+.settings/*
+.classpath
+
