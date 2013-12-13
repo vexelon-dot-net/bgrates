@@ -8,7 +8,7 @@ _.o0 BGRates 0o._
 
 [BGrates](https://play.google.com/store/apps/details?id=net.vexelon.bgrates) is an Android application that delivers up-to-date currency exchange rates for Bulgarian Lev (BGN). Exchange rate information is updated from the web site of the Bulgarian National Bank - http://www.bnb.bg
 
-The exchange rates of currencies are calculated on the basis of the fixed exchange rate of the Bulgarian lev to the euro, and the information source is the exchange rates of the euro against these currencies published by the European Central Bank
+The exchange rates of currencies are calculated on the basis of the fixed exchange rate of the Bulgarian Lev to the Euro, and the information source is the exchange rates of the Euro against these currencies published by the European Central Bank
 
 # Requirements
 
