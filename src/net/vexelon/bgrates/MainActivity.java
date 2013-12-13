@@ -249,7 +249,7 @@ public class MainActivity extends Activity {
 				try {
 					
 					File cacheFile = new File(_context.getCacheDir().getAbsolutePath() + File.separator + Defs.URI_CACHE_NAME);
-					Log.i(TAG, "URL:" + _downloadUrlSuffix);
+//					Log.i(TAG, "URL:" + _downloadUrlSuffix);
 					// DOWNLOAD //
 					if (!Utils.downloadFile(_context,
 							_downloadUrlSuffix,
