@@ -134,13 +134,13 @@ public class ExchangeRate implements Parcelable {
 	
 	public static int getResourceFromCode(CurrencyInfo ci) {
 		return _flagIds.get(ci.getCountryCode()) != null ?
-				_flagIds.get(ci.getCountryCode()) : R.drawable.money;
+				_flagIds.get(ci.getCountryCode()) : R.drawable.unknown;
 	}
 	
 	public static int getResourceFromCode(String code) {
 		String smallCode = code.substring(0, 2).toLowerCase();
 		return _flagIds.get(smallCode) != null ?
-				_flagIds.get(smallCode) : R.drawable.money;
+				_flagIds.get(smallCode) : R.drawable.unknown;
 	}
 	
 	public static int getResourceFromTendency(Tendency tendency) {
