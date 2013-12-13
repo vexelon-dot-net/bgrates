@@ -35,8 +35,8 @@
 <string name="dlg_parse_error_title">Грешка при четене</string>
 <string name="dlg_parse_error_msg">Грешка при четене на файла с обменните курсове!</string>
 <string name="INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg</string>
-<string name="menu_bg_rates">Обнови (Бълг.)</string>
-<string name="menu_en_rates">Обнови (Англ.)</string>
+<string name="menu_bg_rates">Обнови</string>
+<string name="menu_en_rates">Update</string>
 <string name="about_tagline">Обменни курсове за Български Лев.</string>
 <string name="about_version">Версия: </string>
 <string name="about_bnb_info">Обменните курсове се предоставят и обновяват от сайта на Българска Национална Банка.</string>
