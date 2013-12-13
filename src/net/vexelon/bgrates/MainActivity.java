@@ -249,7 +249,7 @@ public class MainActivity extends Activity {
 				try {
 					
 					File cacheFile = new File(_context.getCacheDir().getAbsolutePath() + File.separator + Defs.URI_CACHE_NAME);
-					
+					Log.i(TAG, "URL:" + _downloadUrlSuffix);
 					// DOWNLOAD //
 					if (!Utils.downloadFile(_context,
 							_downloadUrlSuffix,
@@ -504,9 +504,16 @@ public class MainActivity extends Activity {
 						else if ( tagName.equals(Defs.XML_TAG_REVERSERATE) ) {
 							curInfo.setReverseRate(xpp.nextText());
 						}
-						else if ( tagName.equals(Defs.XML_TAG_EXTRAINFO) ) {
+						// Bugfix for <EXTRAINFO> XML tag
+						// This tag seems to no longer exist per currency ROW in the XML source
+						// Instead the info is now added in a <CURR_DATE> tag
+						else if ( tagName.equals(Defs.XML_TAG_CURR_DATE) ) {
 							curInfo.setExtraInfo(xpp.nextText());
 						}
+						// keep <EXTRAINFO> just in case <CURR_DATE> cannot be found for some reason
+						else if ( tagName.equals(Defs.XML_TAG_EXTRAINFO) ) {
+							curInfo.setExtraInfo(xpp.nextText());
+						}						
 					}
 					else if ( parsingHeader ) {
 						if ( tagName.equals(Defs.XML_TAG_NAME) ) {
