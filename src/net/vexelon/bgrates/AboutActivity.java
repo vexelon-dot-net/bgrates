@@ -86,7 +86,9 @@ public class AboutActivity extends Activity {
 		sb.append("\n");
 		sb.append("Copyright (c) 2013 Go Squared Ltd. http://www.gosquared.com/");
 		sb.append("\n");
-
+		sb.append("Copyright (CC BY-ND 3.0) Visual Pharm - http://icons8.com/");
+		sb.append("\n");
+			
 		this.setText(R.id.about_apptitle, sb.toString());
 		Linkify.addLinks((TextView)findViewById(R.id.about_apptitle), Linkify.ALL);
 	}
