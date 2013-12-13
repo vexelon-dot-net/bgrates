@@ -84,7 +84,7 @@ public class AboutActivity extends Activity {
 		sb.append("\n");
 		sb.append(getResString(R.string.about_flag_icons_info));
 		sb.append("\n");
-		sb.append("http://www.famfamfam.com");
+		sb.append("Copyright (c) 2013 Go Squared Ltd. http://www.gosquared.com/");
 		sb.append("\n");
 
 		this.setText(R.id.about_apptitle, sb.toString());
