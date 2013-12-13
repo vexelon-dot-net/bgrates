@@ -86,7 +86,9 @@ public class AboutActivity extends Activity {
 		sb.append("\n");
 		sb.append("Copyright (c) 2013 Go Squared Ltd. http://www.gosquared.com/");
 		sb.append("\n");
-		sb.append("Copyright (CC BY-ND 3.0) Visual Pharm - http://icons8.com/");
+		sb.append("Copyright (CC BY-ND 3.0) Visual Pharm. http://icons8.com/");
+		sb.append("\n");
+		sb.append("Copyright (c) 2013 Aha-Soft. http://www.aha-soft.com/free-icons/free-yellow-button-icons/");
 		sb.append("\n");
 			
 		this.setText(R.id.about_apptitle, sb.toString());
