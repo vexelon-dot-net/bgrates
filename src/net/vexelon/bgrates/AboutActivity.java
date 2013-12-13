@@ -65,7 +65,6 @@ public class AboutActivity extends Activity {
 		sb.append("\n");
 		if ( pinfo != null ) {
 			sb.append(getResString(R.string.about_version));
-			sb.append(" ");
 			sb.append(pinfo.versionName);
 			sb.append("\n");
 		}
