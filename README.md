@@ -10,6 +10,8 @@ _.o0 BGRates 0o._
 
 The exchange rates of currencies are calculated on the basis of the fixed exchange rate of the Bulgarian Lev to the Euro, and the information source is the exchange rates of the Euro against these currencies published by the European Central Bank
 
+Please read [HISTORY](HISTORY) for a list of changes.
+
 # Requirements
 
   * Requires Android 1.5 (API Level 3 or above)
