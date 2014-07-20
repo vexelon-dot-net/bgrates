@@ -16,7 +16,5 @@ The exchange rates of currencies are calculated on the basis of the fixed exchan
   * Requires Internet connection
   * Supported Localization - EN (default), bg_BG
 
-# Files
-
-  * Please check [HISTORY](HISTORY) for latest release changes.
-  * Please check [LICENSE](LICENSE) for licensing topics.
+# License
+[MIT License](LICENSE)
