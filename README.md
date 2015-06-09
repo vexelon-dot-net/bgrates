@@ -1,6 +1,8 @@
 _.o0 BGRates 0o._
 =========================
 
+[![Join the chat at https://gitter.im/petarov/bgrates](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/petarov/bgrates?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 <a href="https://play.google.com/store/apps/details?id=net.vexelon.bgrates">
   <img alt="Get it on Google Play"
        src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" />
