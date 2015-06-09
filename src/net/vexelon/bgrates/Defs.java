@@ -33,19 +33,19 @@ public class Defs {
 	final static String CONV_PREFS_NAME = "BGratesPreferencesConvert";
 	final static String CONV_PREFS_KEY_CONVITEMS_COUNT = "ConvertItemsCount";
 	final static String CONV_PREFS_KEY_ITEM = "ConvertItem_";
-	
+
 	final static String URL_BNB_FORMAT = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=%s";
 	final static String URL_BNB_SUFFIX_BG = "BG";
 	final static String URL_BNB_SUFFIX_EN = "EN";
 	final static String URI_CACHE_NAME = "BGRatesDownloadCache";
 	final static String URL_BNB_INDEX = "http://www.bnb.bg/index.htm";
 	final static String URI_CACHE_NAME_INDEXHTM = "BGRatesDownloadCacheHTM";
-	
+
 	final static String INT_EXCHANGERATES = "int-exch";
-	
+
 	final static int MAX_RATE_CHARS_SIZE = 8;
 	final static int MAX_TOAST_INFO_TIME = 3150;
-	
+
 	final static String XML_TAG_ROWSET = "ROWSET";
 	final static String XML_TAG_ROW = "ROW";
 	final static String XML_TAG_GOLD = "GOLD";
@@ -58,21 +58,21 @@ public class Defs {
 	final static String XML_TAG_CURR_DATE = "CURR_DATE";
 	final static String XML_TAG_TITLE = "TITLE";
 	final static String XML_TAG_F_STAR = "F_STAR";
-	
+
 	final static int MENU_REFRESH = 10;
 	final static int MENU_BG_RATES = 12;
 	final static int MENU_EN_RATES = 14;
 	final static int MENU_CONVERT = 15;
 	final static int MENU_ABOUT = 20;
-	
+
 	final static int ACTIVITYRESULT_CLOSE = 100;
-	
+
 	final static int SCALE_SHOW_LONG = 5;
 	final static int SCALE_SHOW_SHORT = 3;
 	final static int SCALE_CALCULATIONS = 10;
-	
+
 	final static int MAX_CONVERT_ROWS = 4;
-	
+
 	final static String INTENT_FLAG_ID = "_FLAG_ID";
 	final static String INTENT_OLD_RATEINFO = "_OLD_RATEINFO";
 	final static String INTENT_NEW_RATEINFO = "_NEW_RATEINFO";
