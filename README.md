@@ -16,9 +16,19 @@ Please read [HISTORY](HISTORY) for a list of changes.
 
 # Requirements
 
-  * Requires Android 1.5 (API Level 3 or above)
+  * Requires Android 4.0.3 (API Level 15+)
   * Requires Internet connection
   * Supported Localization - EN (default), bg_BG
+
+# Development
+
+To generate Eclipse project files run:
+
+    gradle eclipse
+    
+To build the project run:
+
+    gradle clean build
 
 # License
 [MIT License](LICENSE)
