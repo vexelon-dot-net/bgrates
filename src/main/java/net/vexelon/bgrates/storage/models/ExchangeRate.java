@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.vexelon.bgrates;
+package net.vexelon.bgrates.storage.models;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,20 +29,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
-import net.vexelon.bgrates.CurrencyInfo.Tendency;
 
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.storage.models.CurrencyInfo.Tendency;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ExchangeRate implements Parcelable {
-	
+
 	private final static int DEFAULT_SIZE = 30;
-	
+
 	private List<CurrencyInfo> _currencies = null;
 	private ArrayList<String> _currencyCodesCache = null;
 	private HeaderInfo _header = null;
 	private static final Hashtable<String, Integer> _flagIds = new Hashtable<String, Integer>(10);
-	
+
 	static {
 		_flagIds.put("au", R.drawable.au);
 		_flagIds.put("bg", R.drawable.bg);
@@ -82,69 +83,63 @@ public class ExchangeRate implements Parcelable {
 		_flagIds.put("za", R.drawable.za);
 		_flagIds.put("eu", R.drawable.eu);
 	}
-	
+
 	public ExchangeRate() {
-		_currencies =  new ArrayList<CurrencyInfo>(DEFAULT_SIZE);
+		_currencies = new ArrayList<CurrencyInfo>(DEFAULT_SIZE);
 		_currencyCodesCache = new ArrayList<String>(DEFAULT_SIZE);
 	}
-	
-//	public ExchangeRate(HeaderInfo header, CurrencyInfo[] currencies ) {
-//		_header = header;
-//		_currencies = new ArrayList<CurrencyInfo>(currencies.length);
-//		for (CurrencyInfo currencyInfo : currencies) {
-//			_currencies.add(currencyInfo);
-//		}
-//	}
-	
+
+	// public ExchangeRate(HeaderInfo header, CurrencyInfo[] currencies ) {
+	// _header = header;
+	// _currencies = new ArrayList<CurrencyInfo>(currencies.length);
+	// for (CurrencyInfo currencyInfo : currencies) {
+	// _currencies.add(currencyInfo);
+	// }
+	// }
+
 	public String getTimeStamp() {
 		// still looks like hack :(
-		
-		String result = this.getHeader().getTitle().substring(
-				this.getHeader().getTitle().length() - 10,
-				this.getHeader().getTitle().length()
-				);
+
+		String result = this.getHeader().getTitle()
+				.substring(this.getHeader().getTitle().length() - 10, this.getHeader().getTitle().length());
 		return result;
 	}
-	
+
 	public void evaluateTendencies(ExchangeRate olderRates) {
-		for(CurrencyInfo currency : _currencies) {
+		for (CurrencyInfo currency : _currencies) {
 			CurrencyInfo oldCurrency = olderRates.getCurrencyByCode(currency.getCode());
-			if ( oldCurrency != null ) {
+			if (oldCurrency != null) {
 				BigDecimal rate = new BigDecimal(currency.getRate());
 				BigDecimal ratio = new BigDecimal(currency.getRatio());
 				BigDecimal oldRate = new BigDecimal(oldCurrency.getRate());
 				BigDecimal oldRatio = new BigDecimal(oldCurrency.getRatio());
-				
+
 				rate = rate.multiply(ratio);
 				oldRate = oldRate.multiply(oldRatio);
-				
+
 				int res = rate.compareTo(oldRate);
-				if ( res < 0 ) {
+				if (res < 0) {
 					currency.setTendency(Tendency.TendencyDown);
-				}
-				else if ( res > 0 ) {
+				} else if (res > 0) {
 					currency.setTendency(Tendency.TendencyUp);
-				}
-				else {
+				} else {
 					currency.setTendency(Tendency.TendencyEqual);
 				}
 			}
 		}
 	}
-	
+
 	public static int getResourceFromCode(CurrencyInfo ci) {
-		return _flagIds.get(ci.getCountryCode()) != null ?
-				_flagIds.get(ci.getCountryCode()) : R.drawable.unknown;
+		return _flagIds.get(ci.getCountryCode()) != null ? _flagIds.get(ci.getCountryCode()) : R.drawable.unknown;
 	}
-	
+
 	public static int getResourceFromCode(String code) {
 		String smallCode = code.substring(0, 2).toLowerCase();
-		return _flagIds.get(smallCode) != null ?
-				_flagIds.get(smallCode) : R.drawable.unknown;
+		return _flagIds.get(smallCode) != null ? _flagIds.get(smallCode) : R.drawable.unknown;
 	}
-	
+
 	public static int getResourceFromTendency(Tendency tendency) {
-		switch(tendency) {
+		switch (tendency) {
 		case TendencyUp:
 			return R.drawable.arrow_up;
 		case TendencyDown:
@@ -154,31 +149,31 @@ public class ExchangeRate implements Parcelable {
 		default:
 			break;
 		}
-		
+
 		return 0; // 0 sets image resouce to nothing
 	}
-	
+
 	public void add(CurrencyInfo currency) {
 		_currencies.add(currency);
 		_currencyCodesCache.add(currency.getCode());
 	}
-	
+
 	public void addHeader(HeaderInfo header) {
 		_header = header;
 	}
-	
+
 	public HeaderInfo getHeader() {
 		return _header;
 	}
-	
+
 	public List<CurrencyInfo> getItems() {
 		return _currencies;
 	}
-	
+
 	public boolean isHeaderAvailable() {
 		return (_header != null);
 	}
-	
+
 	public void sort() {
 		Collections.sort(_currencies, new Comparator<CurrencyInfo>() {
 			@Override
@@ -187,81 +182,81 @@ public class ExchangeRate implements Parcelable {
 			}
 		});
 	}
-	
+
 	public CurrencyInfo[] getCurrencies() {
 		CurrencyInfo[] currencies = new CurrencyInfo[_currencies.size()];
 		_currencies.toArray(currencies);
 		return currencies;
 	}
-	
+
 	public String[] currenciesToStringArray() {
-		String[] results = new String[ _currencyCodesCache.size() ];
+		String[] results = new String[_currencyCodesCache.size()];
 		_currencyCodesCache.toArray(results);
 		return results;
 	}
-	
+
 	public CurrencyInfo getCurrencyByCode(String code) {
 		for (CurrencyInfo ci : _currencies) {
-			if ( ci.getCode().equalsIgnoreCase(code) )
+			if (ci.getCode().equalsIgnoreCase(code))
 				return ci;
 		}
 		return null;
 	}
-	
+
 	public int count() {
 		return _currencies.size();
 	}
-	
+
 	public void clear() {
 		_currencies.clear();
 	}
-	
-	//// Parcelable implementation ////
-	
+
+	// // Parcelable implementation ////
+
 	public ExchangeRate(Parcel in) {
 		_header = in.readParcelable(HeaderInfo.class.getClassLoader());
-		
-		_currencies =  new ArrayList<CurrencyInfo>(DEFAULT_SIZE);
+
+		_currencies = new ArrayList<CurrencyInfo>(DEFAULT_SIZE);
 		in.readTypedList(this._currencies, new Parcelable.Creator<CurrencyInfo>() {
 			@Override
 			public CurrencyInfo createFromParcel(Parcel source) {
 				return new CurrencyInfo(source);
 			}
-			
+
 			@Override
 			public CurrencyInfo[] newArray(int size) {
 				return new CurrencyInfo[size];
 			}
 		});
-		
+
 		_currencyCodesCache = new ArrayList<String>(DEFAULT_SIZE);
 		in.readList(_currencyCodesCache, null);
 	}
-	
+
 	public static final Parcelable.Creator<ExchangeRate> CREATOR = new Creator<ExchangeRate>() {
-		
+
 		@Override
 		public ExchangeRate[] newArray(int size) {
 			return new ExchangeRate[size];
 		}
-		
+
 		@Override
 		public ExchangeRate createFromParcel(Parcel source) {
 			return new ExchangeRate(source);
 		}
 	};
-	
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeParcelable(_header, flags);
 		dest.writeTypedList(_currencies);
 		dest.writeList(_currencyCodesCache);
 	}
-	
+
 }

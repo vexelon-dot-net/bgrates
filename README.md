@@ -20,7 +20,7 @@ Please read [HISTORY](HISTORY) for a list of changes.
   * Requires Internet connection
   * Supported Localization - EN (default), bg_BG
 
-# Development
+# Development 
 
 To generate Eclipse project files run:
 

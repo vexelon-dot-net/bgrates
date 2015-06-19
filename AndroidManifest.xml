@@ -4,14 +4,14 @@
     <application android:icon="@drawable/icon" android:label="@string/app_name">
 
 
-    <activity android:name="MainActivity" android:label="@string/app_name" android:screenOrientation="portrait"><intent-filter><action android:name="android.intent.action.MAIN"></action>
+    <activity android:name=".ui.activities.MainActivity" android:label="@string/app_name" android:screenOrientation="portrait"><intent-filter><action android:name="android.intent.action.MAIN"></action>
 <category android:name="android.intent.category.LAUNCHER"></category>
 </intent-filter>
 </activity>
-<activity android:name="AboutActivity" android:screenOrientation="portrait"></activity>
-<activity android:name="ConvertActivity" android:screenOrientation="portrait"></activity>
+<activity android:name=".ui.activities.AboutActivity" android:screenOrientation="portrait"></activity>
+<activity android:name=".ui.activities.ConvertActivity" android:screenOrientation="portrait"></activity>
 
-<activity android:name="RateInfoActivity" android:theme="@android:style/Theme.Dialog"></activity>
+<activity android:name=".ui.activities.RateInfoActivity" android:theme="@android:style/Theme.Dialog"></activity>
 </application>
 
 

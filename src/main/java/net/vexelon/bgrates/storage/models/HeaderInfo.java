@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.vexelon.bgrates;
+package net.vexelon.bgrates.storage.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -21,8 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.vexelon.bgrates;
+package net.vexelon.bgrates.ui.activities;
 
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.R.drawable;
+import net.vexelon.bgrates.R.id;
+import net.vexelon.bgrates.R.layout;
+import net.vexelon.bgrates.R.string;
 import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;

@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.vexelon.bgrates;
+package net.vexelon.bgrates.ui.activities;
 
 import net.vexelon.bgrates.R;
-
+import net.vexelon.bgrates.R.id;
+import net.vexelon.bgrates.R.layout;
+import net.vexelon.bgrates.storage.models.ExchangeRate;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -21,14 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.vexelon.bgrates;
+package net.vexelon.bgrates.ui.activities;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 
-import net.vexelon.bgrates.ConvertRow.RowType;
-
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.storage.models.CurrencyInfo;
+import net.vexelon.bgrates.storage.models.ExchangeRate;
+import net.vexelon.bgrates.ui.activities.ConvertRow.RowType;
+import net.vexelon.bgrates.utils.NumberUtils;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -38,10 +42,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 public class ConvertActivity extends Activity {
 
@@ -75,17 +79,17 @@ public class ConvertActivity extends Activity {
 		// load last saved settings and adjust
 		loadSettings();
 
-		if ( _visibleCurrencies != null ) {
-//			this.runOnUiThread(new Runnable() {
-//				@Override
-//				public void run() {
-					int i = 0;
-					for (ConvertRow row : _rows) {
-						final Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
-						spinner.setSelection(_visibleCurrencies[i++]);
-					}
-//				}
-//			}); // runOnUiThread
+		if (_visibleCurrencies != null) {
+			// this.runOnUiThread(new Runnable() {
+			// @Override
+			// public void run() {
+			int i = 0;
+			for (ConvertRow row : _rows) {
+				final Spinner spinner = (Spinner) findViewById(row.getSpinnerId());
+				spinner.setSelection(_visibleCurrencies[i++]);
+			}
+			// }
+			// }); // runOnUiThread
 		}
 	}
 
@@ -105,7 +109,7 @@ public class ConvertActivity extends Activity {
 		int count = prefs.getInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT, Defs.MAX_CONVERT_ROWS);
 		_visibleCurrencies = new int[count];
 
-		for( int i = 0; i < count; i++ ) {
+		for (int i = 0; i < count; i++) {
 			String key = Defs.CONV_PREFS_KEY_ITEM + i;
 			_visibleCurrencies[i] = prefs.getInt(key, 0);
 		}
@@ -121,7 +125,7 @@ public class ConvertActivity extends Activity {
 		editor.putInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT, Defs.MAX_CONVERT_ROWS);
 		int i = 0;
 		for (ConvertRow row : _rows) {
-			Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
+			Spinner spinner = (Spinner) findViewById(row.getSpinnerId());
 			String key = Defs.CONV_PREFS_KEY_ITEM + i++;
 			editor.putInt(key, spinner.getSelectedItemPosition());
 		}
@@ -131,13 +135,15 @@ public class ConvertActivity extends Activity {
 
 	/**
 	 * Creates and inits UI elements (spinner & edittext) from logical row
-	 * @param ConvertRow - initialized ConvertRow object
+	 * 
+	 * @param ConvertRow
+	 *            - initialized ConvertRow object
 	 */
 	private void initRow(ConvertRow row) {
 
 		String[] items = null;
 
-		switch(row.getRowType()) {
+		switch (row.getRowType()) {
 		case RowBGN:
 			items = new String[] { "BGN" };
 
@@ -158,19 +164,18 @@ public class ConvertActivity extends Activity {
 
 		// init the spinner
 		final int thisRowId = row.getRowId();
-		//Log.d(TAG, "Creating row " + thisRowId);
+		// Log.d(TAG, "Creating row " + thisRowId);
 
-		Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
-//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//				this, android.R.layout.simple_spinner_item, items );
+		Spinner spinner = (Spinner) findViewById(row.getSpinnerId());
+		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+		// this, android.R.layout.simple_spinner_item, items );
 		ConvertCurrencyAdapter adapter = new ConvertCurrencyAdapter(this, android.R.layout.simple_spinner_item, items);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int pos, long listRow) {
+			public void onItemSelected(AdapterView<?> parent, View view, int pos, long listRow) {
 				// calculate and refresh
 				updateResult(_curSelectedRowId);
 			}
@@ -182,7 +187,7 @@ public class ConvertActivity extends Activity {
 		});
 
 		// init edit text
-		EditText editText = (EditText)findViewById(row.getEditTextId());
+		EditText editText = (EditText) findViewById(row.getEditTextId());
 		editText.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -203,38 +208,39 @@ public class ConvertActivity extends Activity {
 
 	/**
 	 * Do convert calculations and display results
-	 * @param rowId - the logical row which activated the update
+	 * 
+	 * @param rowId
+	 *            - the logical row which activated the update
 	 */
 	private void updateResult(int rowId) {
-		//Log.d(TAG, "Update Result, caller row is " + rowId);
+		// Log.d(TAG, "Update Result, caller row is " + rowId);
 
 		// find caller row
 		ConvertRow callerRow = null;
 
 		for (ConvertRow row : _rows) {
-			if ( row.getRowId() == rowId ) {
+			if (row.getRowId() == rowId) {
 				callerRow = row;
 				break;
 			}
 		}
 
-		if ( callerRow == null ) { // something went wrong !
-			//Log.e(TAG, "Failed to find caller row !");
+		if (callerRow == null) { // something went wrong !
+			// Log.e(TAG, "Failed to find caller row !");
 			return;
 		}
 
-		Spinner callerRowSpinner = (Spinner)findViewById(callerRow.getSpinnerId());
+		Spinner callerRowSpinner = (Spinner) findViewById(callerRow.getSpinnerId());
 		String callerRowCode = (String) callerRowSpinner.getItemAtPosition(callerRowSpinner.getSelectedItemPosition());
-		//Log.d(TAG, "Caller Row Code is " + callerRowCode);
+		// Log.d(TAG, "Caller Row Code is " + callerRowCode);
 
 		BigDecimal sum;
 		MathContext mc = new MathContext(Defs.SCALE_CALCULATIONS);
 
 		try {
-			sum = new BigDecimal( getResText(callerRow.getEditTextId()).toString(), mc );
-			//Log.d(TAG, "Sum is " + sum.toPlainString());
-		}
-		catch(NumberFormatException e) {
+			sum = new BigDecimal(getResText(callerRow.getEditTextId()).toString(), mc);
+			// Log.d(TAG, "Sum is " + sum.toPlainString());
+		} catch (NumberFormatException e) {
 			Log.e(TAG, "Failed to convert value from String!", e);
 			return; // invalid number
 		}
@@ -246,76 +252,96 @@ public class ConvertActivity extends Activity {
 
 			// update all rows (except the caller row)
 			for (ConvertRow row : _rows) {
-				if ( row.getRowId() != callerRow.getRowId() ) {
+				if (row.getRowId() != callerRow.getRowId()) {
 
-					switch(row.getRowType()) {
+					switch (row.getRowType()) {
 					case RowBGN:
-						//Log.d(TAG, "Updating RowBGN !");
+						// Log.d(TAG, "Updating RowBGN !");
 
 						// convert from caller row currency to BGN currency
 						currency = _myRates.getCurrencyByCode(callerRowCode);
 						rate = new BigDecimal(currency.getRate(), mc);
 						ratio = new BigDecimal(currency.getRatio(), mc);
 						try {
-							result = rate.divide(ratio, mc).multiply(sum, mc); //result = rate / ratio * sum;
-						}
-						catch(Exception e) {
-//							Log.d(TAG, e.toString());
+							result = rate.divide(ratio, mc).multiply(sum, mc); // result
+																				// =
+																				// rate
+																				// /
+																				// ratio
+																				// *
+																				// sum;
+						} catch (Exception e) {
+							// Log.d(TAG, e.toString());
 							result = BigDecimal.ZERO;
 						}
-						//Log.d(TAG, String.format("rate: %1$s, ratio: %2$s, result: %3$s, sum: %4$s", rate.toPlainString(), ratio.toPlainString(), result.toPlainString(), sum.toPlainString()));
-						setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
+						// Log.d(TAG,
+						// String.format("rate: %1$s, ratio: %2$s, result: %3$s, sum: %4$s",
+						// rate.toPlainString(), ratio.toPlainString(),
+						// result.toPlainString(), sum.toPlainString()));
+						setResText(row.getEditTextId(), NumberUtils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
 						break;
 
 					case RowOthers:
 
 						// get selected currency from row's spinner
-						Spinner spinner = (Spinner)findViewById(row.getSpinnerId());
+						Spinner spinner = (Spinner) findViewById(row.getSpinnerId());
 						String code = (String) spinner.getItemAtPosition(spinner.getSelectedItemPosition());
-						//Log.d(TAG, "Updating RowOthers - " + code);
+						// Log.d(TAG, "Updating RowOthers - " + code);
 
-						if ( callerRow.getRowType() == RowType.RowBGN ) { // simply convert from BGN currency to selected row currency
+						if (callerRow.getRowType() == RowType.RowBGN) { // simply
+																		// convert
+																		// from
+																		// BGN
+																		// currency
+																		// to
+																		// selected
+																		// row
+																		// currency
 							currency = _myRates.getCurrencyByCode(code);
 							rate = new BigDecimal(currency.getRate(), mc);
 							ratio = new BigDecimal(currency.getRatio(), mc);
 							try {
 								result = sum.divide(rate, mc).multiply(ratio, mc);
-							}
-							catch(Exception e) {
-//								Log.e(TAG, e.toString());
+							} catch (Exception e) {
+								// Log.e(TAG, e.toString());
 								result = BigDecimal.ZERO;
 							}
-							setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
-						}
-						else { // more complex calculations
+							setResText(row.getEditTextId(), NumberUtils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
+						} else { // more complex calculations
 
-							// Step 1 - Convert from caller row currency to BGN currency
+							// Step 1 - Convert from caller row currency to BGN
+							// currency
 							currency = _myRates.getCurrencyByCode(callerRowCode);
 							rate = new BigDecimal(currency.getRate(), mc);
 							ratio = new BigDecimal(currency.getRatio(), mc);
 							try {
 								result = rate.divide(ratio, mc).multiply(sum, mc);
-							}
-							catch(Exception e) {
-//								Log.e(TAG, e.toString());
+							} catch (Exception e) {
+								// Log.e(TAG, e.toString());
 								result = BigDecimal.ZERO;
 							}
-							//sum = result;
+							// sum = result;
 
-							// Step 2 - Convert from BGN currency to selected row currency
+							// Step 2 - Convert from BGN currency to selected
+							// row currency
 							currency = _myRates.getCurrencyByCode(code);
 							rate = new BigDecimal(currency.getRate(), mc);
 							ratio = new BigDecimal(currency.getRatio(), mc);
 							try {
-								result = result.multiply(ratio.divide(rate, mc), mc); //result = sum * ratio / rate;
-							}
-							catch(Exception e) {
-//								Log.e(TAG, e.toString());
+								result = result.multiply(ratio.divide(rate, mc), mc); // result
+																						// =
+																						// sum
+																						// *
+																						// ratio
+																						// /
+																						// rate;
+							} catch (Exception e) {
+								// Log.e(TAG, e.toString());
 								result = BigDecimal.ZERO;
 							}
 
 							// Step 3 - Display results
-							setResText(row.getEditTextId(), Utils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
+							setResText(row.getEditTextId(), NumberUtils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
 						}
 						break;
 					} // end switch
@@ -326,24 +352,23 @@ public class ConvertActivity extends Activity {
 		}
 	}
 
-
 	private void setResText(int id, CharSequence text) {
-		TextView tx = (TextView)findViewById(id);
-		if ( tx != null )
+		TextView tx = (TextView) findViewById(id);
+		if (tx != null)
 			tx.setText(text);
 	}
 
 	private CharSequence getResText(int id) {
-		TextView tx = (TextView)findViewById(id);
-		if ( tx != null )
+		TextView tx = (TextView) findViewById(id);
+		if (tx != null)
 			return tx.getText();
 
 		return null;
 	}
 
 	private void appendResText(int id, CharSequence text) {
-		TextView tx = (TextView)findViewById(id);
-		if ( tx != null )
+		TextView tx = (TextView) findViewById(id);
+		if (tx != null)
 			tx.setText(tx.getText().toString() + text);
 	}
 }
