@@ -26,7 +26,7 @@ package net.vexelon.bgrates.ui.activities;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.R.id;
 import net.vexelon.bgrates.R.layout;
-import net.vexelon.bgrates.storage.models.ExchangeRate;
+import net.vexelon.bgrates.db.models.old.ExchangeRate;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

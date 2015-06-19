@@ -29,8 +29,8 @@ import java.util.ArrayList;
 
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.storage.models.CurrencyInfo;
-import net.vexelon.bgrates.storage.models.ExchangeRate;
+import net.vexelon.bgrates.db.models.old.CurrencyInfo;
+import net.vexelon.bgrates.db.models.old.ExchangeRate;
 import net.vexelon.bgrates.ui.activities.ConvertRow.RowType;
 import net.vexelon.bgrates.utils.NumberUtils;
 import android.app.Activity;

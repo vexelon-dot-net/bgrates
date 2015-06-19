@@ -41,9 +41,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.storage.models.CurrencyInfo;
-import net.vexelon.bgrates.storage.models.ExchangeRate;
-import net.vexelon.bgrates.storage.models.HeaderInfo;
+import net.vexelon.bgrates.db.models.old.CurrencyInfo;
+import net.vexelon.bgrates.db.models.old.ExchangeRate;
+import net.vexelon.bgrates.db.models.old.HeaderInfo;
 import net.vexelon.bgrates.ui.UIUtils;
 import net.vexelon.bgrates.utils.IOUtils;
 import net.vexelon.bgrates.utils.XmlUtils;

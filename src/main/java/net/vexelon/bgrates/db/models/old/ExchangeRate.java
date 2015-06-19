@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.vexelon.bgrates.storage.models;
+package net.vexelon.bgrates.db.models.old;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.storage.models.CurrencyInfo.Tendency;
+import net.vexelon.bgrates.db.models.old.CurrencyInfo.Tendency;
 import android.os.Parcel;
 import android.os.Parcelable;
 

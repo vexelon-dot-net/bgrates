@@ -28,8 +28,8 @@ import java.util.List;
 
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.storage.models.CurrencyInfo;
-import net.vexelon.bgrates.storage.models.ExchangeRate;
+import net.vexelon.bgrates.db.models.old.CurrencyInfo;
+import net.vexelon.bgrates.db.models.old.ExchangeRate;
 import net.vexelon.bgrates.utils.NumberUtils;
 import android.content.Context;
 import android.view.LayoutInflater;
