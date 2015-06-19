@@ -1,3 +1,7 @@
+/**
+ * BGrates Build Script
+ */
+ 
 buildscript {
 	repositories {
 		jcenter()
