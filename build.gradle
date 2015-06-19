@@ -1,0 +1,98 @@
+buildscript {
+	repositories {
+		jcenter()
+		mavenCentral()
+	}
+    dependencies {
+    	classpath 'com.android.tools.build:gradle:1.2.+'
+	}
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'com.android.application'
+
+eclipse.project {
+	natures 'org.springsource.ide.eclipse.gradle.core.nature',
+			'com.android.ide.eclipse.adt.AndroidNature'
+			'org.eclipse.jdt.core.javanature'
+			
+   buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
+   buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
+   buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
+}
+eclipse.jdt {
+	sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+}
+
+android {
+	repositories {
+		jcenter()
+		mavenCentral()
+	}
+	
+    compileSdkVersion 19
+    buildToolsVersion "19.1"
+
+    defaultConfig {
+    	applicationId 'net.vexelon.bgrates'
+		minSdkVersion 15
+        targetSdkVersion 19
+        //versionCode 1
+        //versionName "1.0"
+    }
+	lintOptions {
+		abortOnError false
+	}
+    sourceSets {
+    	main {
+			manifest.srcFile 'AndroidManifest.xml'
+			res.srcDirs = ['res']
+			assets.srcDirs = ['assets']
+			java.srcDirs = ['src/main/java', 'src/main/test']
+            resources.srcDirs = ['src/main/java']
+            aidl.srcDirs = ['src/main/java']
+            renderscript.srcDirs = ['src/main/java']
+		}
+		//androidTest.setRoot('tests')
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    
+    testCompile 'junit:junit:4.+'
+}
+
+eclipse.classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
+
+eclipse.classpath.file {
+    beforeMerged { classpath ->
+    	classpath.entries.removeAll() { c -> 
+        	c.kind == 'src'
+    	}
+    }
+
+	withXml {
+	    def node = it.asNode()
+	
+	    node.appendNode('classpathentry kind="src" path="src/main/java"')
+	    node.appendNode('classpathentry kind="src" path="src/test/java"')
+	    node.appendNode('classpathentry kind="src" path="gen"')
+	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"')
+//	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"')
+//	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"')
+	    node.appendNode('classpathentry kind="output" path="bin/classes"')
+
+//	    node.children().removeAll() { c ->
+//	        def path = c.attribute('path')
+//	        path != null && ( path.contains('/com.android.support/support-v7') )
+//	    }
+	}
+}
