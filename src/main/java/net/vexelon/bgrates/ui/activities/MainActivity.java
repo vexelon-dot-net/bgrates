@@ -270,102 +270,95 @@ public class MainActivity extends Activity {
 							+ Defs.URI_CACHE_NAME);
 					// Log.i(TAG, "URL:" + _downloadUrlSuffix);
 					// DOWNLOAD //
-					if (!IOUtils.downloadFile(_context, _downloadUrlSuffix, cacheFile)) {
-						// _context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE)))
-						// {
+					IOUtils.downloadFile(_downloadUrlSuffix, cacheFile);
 
+					// Issue #1: EUR currency is not presented in the
+					// currency list
+					// Try to download index.htm page
+					File cacheFileHtml = new File(_context.getCacheDir().getAbsolutePath() + File.separator
+							+ Defs.URI_CACHE_NAME_INDEXHTM);
+					IOUtils.downloadFile(Defs.URL_BNB_INDEX, cacheFileHtml);
+					CurrencyInfo currency = parseEuro(cacheFileHtml);
+					if (currency == null || !injectCurrency(currency, cacheFile)) {
+						// save downloaded file and remove cache
+						Log.e(TAG, "Failed to load EUR currency rate!");
+					}
+					// -------------
+
+					ExchangeRate newRates = new ExchangeRate();
+
+					if (!parseRates(cacheFile, newRates)) {
 						// SHOW ERROR ALERT //
 						_context.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								UIUtils.showAlertDialog(_context, R.string.dlg_update_error_msg,
-										R.string.dlg_update_error_title);
+								UIUtils.showAlertDialog(_context, R.string.dlg_parse_error_msg,
+										R.string.dlg_parse_error_title);
 							}
 						});
 					} else {
 
-						// Issue #1: EUR currency is not presented in the
-						// currency list
-						// Try to download index.htm page
-						File cacheFileHtml = new File(_context.getCacheDir().getAbsolutePath() + File.separator
-								+ Defs.URI_CACHE_NAME_INDEXHTM);
-						if (IOUtils.downloadFile(_context, Defs.URL_BNB_INDEX, cacheFileHtml)) {
-							CurrencyInfo currency = parseEuro(cacheFileHtml);
-							if (currency == null || !injectCurrency(currency, cacheFile)) {
-								// save downloaded file and remove cache
-								Log.e(TAG, "Failed to load EUR currency rate!");
+						// check if the newly downloaded file is really
+						// newer than the current
+						// NOTE: currently force download is always "true",
+						// therefore this check should later be removed!
+						if (_forceDownload || !newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle())) {
+
+							// clear flag
+							_forceDownload = false;
+
+							// save current exchange rates file to storage
+							// as previous (only if timestamps differ)
+							Log.d(TAG, "[2] Current Rates data: " + _myRates.getTimeStamp() + " New rates date: "
+									+ newRates.getTimeStamp());
+
+							if (!newRates.getTimeStamp().equals(_myRates.getTimeStamp())) {
+								savePreviousRates();
+
+								// swap exchange rates objects and calculate
+								// tendencies
+								newRates.evaluateTendencies(_myRates);
+								_oldRates = _myRates;
+								_myRates = newRates;
+							} else {
+								// new language file => just evaluate
+								// against the old rates
+								newRates.evaluateTendencies(_oldRates);
+								_myRates = newRates;
 							}
-						}
-						// -------------
 
-						ExchangeRate newRates = new ExchangeRate();
+							// save downloaded file and remove cache
+							IOUtils.moveCacheFile(_context, cacheFile,
+									_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE));
 
-						if (!parseRates(cacheFile, newRates)) {
-							// SHOW ERROR ALERT //
+							// UPDATE VIEW //
+
 							_context.runOnUiThread(new Runnable() {
+
 								@Override
 								public void run() {
-									UIUtils.showAlertDialog(_context, R.string.dlg_parse_error_msg,
-											R.string.dlg_parse_error_title);
+									saveSettings(_myRates.getHeader().getTitle());
+									_context.setTitle(_myRates.getHeader().getTitle());
+									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout, _myRates
+											.getItems());
+									_listView.setAdapter(_adapter);
 								}
 							});
-						} else {
 
-							// check if the newly downloaded file is really
-							// newer than the current
-							// NOTE: currently force download is always "true",
-							// therefore this check should later be removed!
-							if (_forceDownload
-									|| !newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle())) {
-
-								// clear flag
-								_forceDownload = false;
-
-								// save current exchange rates file to storage
-								// as previous (only if timestamps differ)
-								Log.d(TAG, "[2] Current Rates data: " + _myRates.getTimeStamp() + " New rates date: "
-										+ newRates.getTimeStamp());
-
-								if (!newRates.getTimeStamp().equals(_myRates.getTimeStamp())) {
-									savePreviousRates();
-
-									// swap exchange rates objects and calculate
-									// tendencies
-									newRates.evaluateTendencies(_myRates);
-									_oldRates = _myRates;
-									_myRates = newRates;
-								} else {
-									// new language file => just evaluate
-									// against the old rates
-									newRates.evaluateTendencies(_oldRates);
-									_myRates = newRates;
-								}
-
-								// save downloaded file and remove cache
-								IOUtils.moveCacheFile(_context, cacheFile,
-										_context.getResources().getString(R.string.INTERNAL_STORAGE_CACHE));
-
-								// UPDATE VIEW //
-
-								_context.runOnUiThread(new Runnable() {
-
-									@Override
-									public void run() {
-										saveSettings(_myRates.getHeader().getTitle());
-										_context.setTitle(_myRates.getHeader().getTitle());
-										_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout,
-												_myRates.getItems());
-										_listView.setAdapter(_adapter);
-									}
-								});
-
-							}
 						}
 					}
 
 					Thread.sleep(1000);
 				} catch (Exception e) {
 					// Log.e(TAG, e.getMessage());
+					// SHOW ERROR ALERT //
+					_context.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							UIUtils.showAlertDialog(_context, R.string.dlg_update_error_msg,
+									R.string.dlg_update_error_title);
+						}
+					});
 				}
 				_progressDialog.dismiss();
 			};
