@@ -35,13 +35,13 @@ android {
 		mavenCentral()
 	}
 	
-    compileSdkVersion 19
-    buildToolsVersion "19.1"
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
 
     defaultConfig {
     	applicationId 'net.vexelon.bgrates'
 		minSdkVersion 15
-        targetSdkVersion 19
+        targetSdkVersion 22
         //versionCode 1
         //versionName "1.0"
     }
@@ -69,7 +69,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+   	compile 'com.android.support:appcompat-v7:22.+'
     
     testCompile 'junit:junit:4.+'
 }
@@ -90,13 +90,13 @@ eclipse.classpath.file {
 	    node.appendNode('classpathentry kind="src" path="src/test/java"')
 	    node.appendNode('classpathentry kind="src" path="gen"')
 	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"')
-//	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"')
-//	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"')
+	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"')
+	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"')
 	    node.appendNode('classpathentry kind="output" path="bin/classes"')
 
-//	    node.children().removeAll() { c ->
-//	        def path = c.attribute('path')
-//	        path != null && ( path.contains('/com.android.support/support-v7') )
-//	    }
+	    node.children().removeAll() { c ->
+	        def path = c.attribute('path')
+	        path != null && ( path.contains('support-v7') )
+	    }
 	}
 }
