@@ -43,8 +43,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.old.CurrencyInfo;
-import net.vexelon.bgrates.db.models.old.ExchangeRate;
+import net.vexelon.bgrates.db.models.CurrencyInfo;
+import net.vexelon.bgrates.db.models.ExchangeRates;
 import net.vexelon.bgrates.ui.components.ConvertCurrencyAdapter;
 import net.vexelon.bgrates.ui.fragments.ConvertRow.RowType;
 import net.vexelon.bgrates.utils.NumberUtils;
@@ -52,7 +52,7 @@ import net.vexelon.bgrates.utils.NumberUtils;
 public class ConvertFragment extends AbstractFragment {
 
 	private final static String TAG = Defs.LOG_TAG;
-	private ExchangeRate _myRates = null;
+	private ExchangeRates _myRates = null;
 	private ArrayList<ConvertRow> _rows = null;
 	private int[] _visibleCurrencies = null;
 	private int _curSelectedRowId = -1;

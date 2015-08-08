@@ -28,8 +28,8 @@ import java.util.List;
 
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.old.CurrencyInfo;
-import net.vexelon.bgrates.db.models.old.ExchangeRate;
+import net.vexelon.bgrates.db.models.CurrencyInfo;
+import net.vexelon.bgrates.db.models.ExchangeRates;
 import net.vexelon.bgrates.utils.NumberUtils;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -77,7 +77,7 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 
 			// country ID icon
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
-			int imgId = ExchangeRate.getResourceFromCode(ci);
+			int imgId = ExchangeRates.getResourceFromCode(ci);
 			if (imgId != -1) {
 				icon.setImageResource(imgId);
 				// icon.setScaleType(ScaleType.FIT_XY);
@@ -91,7 +91,7 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 
 			// add tendency icon
 			ImageView tendencyIcon = (ImageView) v.findViewById(R.id.tendency);
-			tendencyIcon.setImageResource(ExchangeRate.getResourceFromTendency(ci.getTendency()));
+			tendencyIcon.setImageResource(ExchangeRates.getResourceFromTendency(ci.getTendency()));
 		}
 
 		return v;

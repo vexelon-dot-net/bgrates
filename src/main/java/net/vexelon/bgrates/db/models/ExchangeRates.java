@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.vexelon.bgrates.db.models.old;
+package net.vexelon.bgrates.db.models;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,11 +31,11 @@ import java.util.Hashtable;
 import java.util.List;
 
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.old.CurrencyInfo.Tendency;
+import net.vexelon.bgrates.db.models.CurrencyInfo.Tendency;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ExchangeRate implements Parcelable {
+public class ExchangeRates implements Parcelable {
 
 	private final static int DEFAULT_SIZE = 30;
 
@@ -84,7 +84,7 @@ public class ExchangeRate implements Parcelable {
 		_flagIds.put("eu", R.drawable.eu);
 	}
 
-	public ExchangeRate() {
+	public ExchangeRates() {
 		_currencies = new ArrayList<CurrencyInfo>(DEFAULT_SIZE);
 		_currencyCodesCache = new ArrayList<String>(DEFAULT_SIZE);
 	}
@@ -105,7 +105,7 @@ public class ExchangeRate implements Parcelable {
 		return result;
 	}
 
-	public void evaluateTendencies(ExchangeRate olderRates) {
+	public void evaluateTendencies(ExchangeRates olderRates) {
 		for (CurrencyInfo currency : _currencies) {
 			CurrencyInfo oldCurrency = olderRates.getCurrencyByCode(currency.getCode());
 			if (oldCurrency != null) {
@@ -213,7 +213,7 @@ public class ExchangeRate implements Parcelable {
 
 	// // Parcelable implementation ////
 
-	public ExchangeRate(Parcel in) {
+	public ExchangeRates(Parcel in) {
 		_header = in.readParcelable(HeaderInfo.class.getClassLoader());
 
 		_currencies = new ArrayList<CurrencyInfo>(DEFAULT_SIZE);
@@ -233,16 +233,16 @@ public class ExchangeRate implements Parcelable {
 		in.readList(_currencyCodesCache, null);
 	}
 
-	public static final Parcelable.Creator<ExchangeRate> CREATOR = new Creator<ExchangeRate>() {
+	public static final Parcelable.Creator<ExchangeRates> CREATOR = new Creator<ExchangeRates>() {
 
 		@Override
-		public ExchangeRate[] newArray(int size) {
-			return new ExchangeRate[size];
+		public ExchangeRates[] newArray(int size) {
+			return new ExchangeRates[size];
 		}
 
 		@Override
-		public ExchangeRate createFromParcel(Parcel source) {
-			return new ExchangeRate(source);
+		public ExchangeRates createFromParcel(Parcel source) {
+			return new ExchangeRates(source);
 		}
 	};
 

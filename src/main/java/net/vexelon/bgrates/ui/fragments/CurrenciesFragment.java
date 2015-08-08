@@ -41,9 +41,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.old.CurrencyInfo;
-import net.vexelon.bgrates.db.models.old.ExchangeRate;
-import net.vexelon.bgrates.db.models.old.HeaderInfo;
+import net.vexelon.bgrates.db.models.CurrencyInfo;
+import net.vexelon.bgrates.db.models.ExchangeRates;
+import net.vexelon.bgrates.db.models.HeaderInfo;
 import net.vexelon.bgrates.ui.UIUtils;
 import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
 
@@ -63,7 +63,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		// XXX: Refactor code below
 
 		// load locally stored raw resource
-		ExchangeRate rates = new ExchangeRate();
+		ExchangeRates rates = new ExchangeRates();
 		// Default - try to load locally stored raw resource
 		InputStream is = this.getResources().openRawResource(R.raw.exchangerates);
 		if (!parseRates(is, rates)) {
@@ -118,7 +118,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		// });
 	}
 
-	private boolean parseRates(String internalStoragePath, ExchangeRate rates) {
+	private boolean parseRates(String internalStoragePath, ExchangeRates rates) {
 
 		FileInputStream fis = null;
 		try {
@@ -130,7 +130,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		return false;
 	}
 
-	private boolean parseRates(File xmlFile, ExchangeRate rates) {
+	private boolean parseRates(File xmlFile, ExchangeRates rates) {
 
 		FileInputStream fis = null;
 		try {
@@ -142,7 +142,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		return false;
 	}
 
-	private boolean parseRates(InputStream fis, ExchangeRate rates) {
+	private boolean parseRates(InputStream fis, ExchangeRates rates) {
 		// Log.v(TAG, "@parseRates");
 
 		boolean ret = false;

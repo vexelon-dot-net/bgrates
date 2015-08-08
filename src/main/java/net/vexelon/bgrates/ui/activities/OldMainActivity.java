@@ -65,9 +65,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.old.CurrencyInfo;
-import net.vexelon.bgrates.db.models.old.ExchangeRate;
-import net.vexelon.bgrates.db.models.old.HeaderInfo;
+import net.vexelon.bgrates.db.models.CurrencyInfo;
+import net.vexelon.bgrates.db.models.ExchangeRates;
+import net.vexelon.bgrates.db.models.HeaderInfo;
 import net.vexelon.bgrates.ui.UIUtils;
 import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
 import net.vexelon.bgrates.utils.IOUtils;
@@ -85,7 +85,7 @@ public class OldMainActivity extends Activity {
 	private ListView _listView;
 	private ProgressDialog _progressDialog = null;
 	private CurrencyListAdapter _adapter;
-	private ExchangeRate _myRates = null, _oldRates = null;
+	private ExchangeRates _myRates = null, _oldRates = null;
 	private String _downloadUrlSuffix;
 	private boolean _forceDownload = false;
 
@@ -173,7 +173,7 @@ public class OldMainActivity extends Activity {
 		// Log.v(TAG, "@init()");
 
 		// attempt to load latest stored exchange rates file
-		_myRates = new ExchangeRate();
+		_myRates = new ExchangeRates();
 
 		if (!parseRates(getResString(R.string.INTERNAL_STORAGE_CACHE), _myRates)) {
 
@@ -186,7 +186,7 @@ public class OldMainActivity extends Activity {
 		}
 
 		// attempt to load stored previous rates file
-		_oldRates = new ExchangeRate();
+		_oldRates = new ExchangeRates();
 
 		if (!parseRates(getResString(R.string.PREVIOUS_INTERNAL_STORAGE_CACHE), _oldRates)) {
 			// Default - try to load locally stored raw resource
@@ -243,14 +243,14 @@ public class OldMainActivity extends Activity {
 							// oldCurrencyRate.getRate(),
 							// ci.getExtraInfo(), ci.getRatio(), ci.getRate() );
 							Intent intent = new Intent(_context, RateInfoActivity.class);
-							intent.putExtra(Defs.INTENT_FLAG_ID, ExchangeRate.getResourceFromCode(ci));
+							intent.putExtra(Defs.INTENT_FLAG_ID, ExchangeRates.getResourceFromCode(ci));
 							intent.putExtra(Defs.INTENT_OLD_RATEINFO,
 									String.format("%s    %s  %s", oldCurrencyRate.getExtraInfo(),
 											oldCurrencyRate.getRatio(), oldCurrencyRate.getRate()));
 							intent.putExtra(Defs.INTENT_NEW_RATEINFO,
 									String.format("%s    %s  %s", ci.getExtraInfo(), ci.getRatio(), ci.getRate()));
 							intent.putExtra(Defs.INTENT_NEW_RATEINFO_TENDENCY_ICONID,
-									ExchangeRate.getResourceFromTendency(ci.getTendency()));
+									ExchangeRates.getResourceFromTendency(ci.getTendency()));
 							startActivity(intent);
 						}
 					} else {
@@ -291,7 +291,7 @@ public class OldMainActivity extends Activity {
 					}
 					// -------------
 
-					ExchangeRate newRates = new ExchangeRate();
+					ExchangeRates newRates = new ExchangeRates();
 
 					if (!parseRates(cacheFile, newRates)) {
 						// SHOW ERROR ALERT //
@@ -457,7 +457,7 @@ public class OldMainActivity extends Activity {
 		return lastUpdateTime.length() == 0 || lastUpdateTime.compareTo(now) < 0;
 	}
 
-	private boolean parseRates(String internalStoragePath, ExchangeRate rates) {
+	private boolean parseRates(String internalStoragePath, ExchangeRates rates) {
 
 		FileInputStream fis = null;
 		try {
@@ -469,7 +469,7 @@ public class OldMainActivity extends Activity {
 		return false;
 	}
 
-	private boolean parseRates(File xmlFile, ExchangeRate rates) {
+	private boolean parseRates(File xmlFile, ExchangeRates rates) {
 
 		FileInputStream fis = null;
 		try {
@@ -481,7 +481,7 @@ public class OldMainActivity extends Activity {
 		return false;
 	}
 
-	private boolean parseRates(InputStream fis, ExchangeRate rates) {
+	private boolean parseRates(InputStream fis, ExchangeRates rates) {
 		// Log.v(TAG, "@parseRates");
 
 		boolean ret = false;

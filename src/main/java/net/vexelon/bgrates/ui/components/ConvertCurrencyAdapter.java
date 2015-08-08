@@ -24,7 +24,7 @@
 package net.vexelon.bgrates.ui.components;
 
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.old.ExchangeRate;
+import net.vexelon.bgrates.db.models.ExchangeRates;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +55,7 @@ public class ConvertCurrencyAdapter extends ArrayAdapter<String> {
 
 		// country ID icon		
 		ImageView icon = (ImageView) v.findViewById(R.id.IconConvert);
-		int imgId = ExchangeRate.getResourceFromCode(code);
+		int imgId = ExchangeRates.getResourceFromCode(code);
 		if ( imgId != -1 ) {
 			icon.setImageResource(imgId);		
 		}
