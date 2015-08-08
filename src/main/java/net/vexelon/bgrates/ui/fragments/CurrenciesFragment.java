@@ -29,6 +29,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -53,6 +55,13 @@ public class CurrenciesFragment extends AbstractFragment {
 		init(rootView);
 		// reloadRates();
 		return rootView;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// add refresh currencies menu option
+		inflater.inflate(R.menu.currencies, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	private void init(View view) {
