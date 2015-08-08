@@ -88,6 +88,8 @@ public class AboutFragment extends AbstractFragment {
 		sb.append("\n");
 		sb.append(getResString(R.string.about_flag_icons_info));
 		sb.append("\n");
+		sb.append("Copyright (c) 2013 Aha-Soft. http://www.aha-soft.com/free-icons/free-yellow-button-icons/");
+		sb.append("\n");
 		sb.append("Copyright (CC BY-ND 3.0) Visual Pharm. http://icons8.com");
 		sb.append("\n");
 		this.setText(view, R.id.about_row2, sb.toString());

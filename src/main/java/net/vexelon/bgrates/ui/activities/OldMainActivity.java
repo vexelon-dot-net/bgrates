@@ -113,8 +113,10 @@ public class OldMainActivity extends Activity {
 		menu.add(0, Defs.MENU_EN_RATES, 0, R.string.menu_en_rates).setIcon(R.drawable.gb);
 		// menu.add(1, Defs.MENU_REFRESH, 10,
 		// R.string.menu_refresh).setIcon(R.drawable.ic_menu_refresh);
-		menu.add(1, Defs.MENU_CONVERT, 10, R.string.menu_convert).setIcon(R.drawable.exchange);
-		menu.add(1, Defs.MENU_ABOUT, 15, R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
+		// menu.add(1, Defs.MENU_CONVERT, 10,
+		// R.string.menu_convert).setIcon(R.drawable.exchange);
+		// menu.add(1, Defs.MENU_ABOUT, 15,
+		// R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
 		return true;
 	}
 
@@ -205,9 +207,9 @@ public class OldMainActivity extends Activity {
 		if (isUpdateRequired()) {
 
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(_context);
-			alertBuilder.setTitle(_context.getResources().getString(R.string.dlg_lastupdate_title))
-					.setMessage(_context.getResources().getString(R.string.dlg_lastupdate_msg))
-					.setIcon(R.drawable.help);
+			// alertBuilder.setTitle(_context.getResources().getString(R.string.dlg_lastupdate_title))
+			// .setMessage(_context.getResources().getString(R.string.dlg_lastupdate_msg))
+			// .setIcon(R.drawable.help);
 
 			alertBuilder.setPositiveButton(getResString(R.string.dlg_yes), new OnClickListener() {
 				@Override
