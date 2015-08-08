@@ -30,5 +30,13 @@ To build the project run:
 
     gradle clean build
 
+To install a debug build run:
+
+    gradle installDebug
+
+To check what other tasks are available run:
+
+    gradle tasks
+
 # License
 [MIT License](LICENSE)
