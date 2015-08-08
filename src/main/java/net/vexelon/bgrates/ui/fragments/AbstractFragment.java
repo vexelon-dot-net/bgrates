@@ -23,8 +23,29 @@
  */
 package net.vexelon.bgrates.ui.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Fragment;
+import net.vexelon.bgrates.ui.NotificationsListener;
+import net.vexelon.bgrates.ui.Notifications;
 
 public class AbstractFragment extends Fragment {
+
+	protected List<NotificationsListener> listeners = new ArrayList<NotificationsListener>();
+
+	public void addListener(NotificationsListener listner) {
+		listeners.add(listner);
+	}
+
+	public void removeListener(NotificationsListener listener) {
+		listeners.remove(listener);
+	}
+
+	public void notifyListeners(Notifications notification) {
+		for (NotificationsListener listener : listeners) {
+			listener.onNotification(notification);
+		}
+	}
 
 }

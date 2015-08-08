@@ -1,7 +1,7 @@
 /*
  * The MIT License
  * 
- * Copyright (c) 2010 Petar Petrov
+ * Copyright (c) 2015 Petar Petrov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,8 +73,8 @@ public class UIUtils {
 	 * @return
 	 */
 	public static AlertDialog createAlertDialog(Context context, int messageResId, int titleResId) {
-		return createAlertDialog(context, context.getResources().getString(messageResId), context.getResources()
-				.getString(titleResId));
+		return createAlertDialog(context, context.getResources().getString(messageResId),
+				context.getResources().getString(titleResId));
 	}
 
 	/**

@@ -36,10 +36,13 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.ui.Notifications;
+import net.vexelon.bgrates.ui.NotificationsListener;
 import net.vexelon.bgrates.ui.fragments.AboutFragment;
+import net.vexelon.bgrates.ui.fragments.AbstractFragment;
 import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
 
-public class MainActivity extends Activity implements ActionBar.TabListener {
+public class MainActivity extends Activity implements ActionBar.TabListener, NotificationsListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -117,6 +120,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			return true;
 		} else if (id == R.id.action_refresh) {
 			setRefreshActionButtonState(true); // XXX
+			Fragment fragment = getCurrentFragment();
+			if (fragment instanceof CurrenciesFragment) {
+				((CurrenciesFragment) fragment).updateRates();
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -136,17 +143,32 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 	}
 
-	public void setRefreshActionButtonState(final boolean refreshing) {
+	@Override
+	public void onNotification(Notifications event) {
+		switch (event) {
+		case UPDATE_RATES_DONE:
+			setRefreshActionButtonState(false);
+			break;
+		}
+
+	}
+
+	private void setRefreshActionButtonState(final boolean isRefreshing) {
 		if (mMenu != null) {
 			final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
 			if (refreshItem != null) {
-				if (refreshing) {
+				if (isRefreshing) {
 					refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
 				} else {
 					refreshItem.setActionView(null);
 				}
 			}
 		}
+	}
+
+	private Fragment getCurrentFragment() {
+		String fragmentName = "android:switcher:" + mViewPager.getId() + ":" + mViewPager.getCurrentItem();
+		return getFragmentManager().findFragmentByTag(fragmentName);
 	}
 
 	/**
@@ -164,7 +186,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a PlaceholderFragment (defined as a static inner class
 			// below).
-			return PlaceholderFragment.newInstance(position + 1);
+			Fragment fragment = PlaceholderFragment.newInstance(position + 1);
+			((AbstractFragment) fragment).addListener(MainActivity.this);
+			return fragment;
 		}
 
 		@Override
@@ -203,7 +227,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		 * number.
 		 */
 		public static Fragment newInstance(int sectionNumber) {
-			Fragment fragment = null;
+			AbstractFragment fragment = null;
 			switch (sectionNumber) {
 			case 1:
 				fragment = new CurrenciesFragment();
