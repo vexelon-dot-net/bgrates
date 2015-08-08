@@ -118,13 +118,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			// TODO:
 			return true;
-		} else if (id == R.id.action_refresh) {
-			setRefreshActionButtonState(true); // XXX
-			Fragment fragment = getCurrentFragment();
-			if (fragment instanceof CurrenciesFragment) {
-				((CurrenciesFragment) fragment).updateRates();
-			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -148,23 +143,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 	public void onNotification(Notifications event) {
 		switch (event) {
 		case UPDATE_RATES_DONE:
-			setRefreshActionButtonState(false);
+			// setRefreshActionButtonState(false);
 			break;
 		}
 
-	}
-
-	private void setRefreshActionButtonState(final boolean isRefreshing) {
-		if (mMenu != null) {
-			final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
-			if (refreshItem != null) {
-				if (isRefreshing) {
-					refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
-				} else {
-					refreshItem.setActionView(null);
-				}
-			}
-		}
 	}
 
 	private Fragment getCurrentFragment() {

@@ -28,11 +28,16 @@ import java.util.List;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.ui.Notifications;
 import net.vexelon.bgrates.ui.NotificationsListener;
 
 public class AbstractFragment extends Fragment {
 
+	protected Menu mMenu;
 	protected List<NotificationsListener> listeners = new ArrayList<NotificationsListener>();
 
 	@Override
@@ -41,12 +46,11 @@ public class AbstractFragment extends Fragment {
 		setHasOptionsMenu(true);
 	}
 
-	// @Override
-	// public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	// // default menu
-	// inflater.inflate(R.menu.main, menu);
-	// super.onCreateOptionsMenu(menu, inflater);
-	// }
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		mMenu = menu;
+		super.onCreateOptionsMenu(menu, inflater);
+	}
 
 	public void addListener(NotificationsListener listner) {
 		listeners.add(listner);
@@ -59,6 +63,19 @@ public class AbstractFragment extends Fragment {
 	public void notifyListeners(Notifications notification) {
 		for (NotificationsListener listener : listeners) {
 			listener.onNotification(notification);
+		}
+	}
+
+	protected void setRefreshActionButtonState(final boolean isRefreshing) {
+		if (mMenu != null) {
+			final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+			if (refreshItem != null) {
+				if (isRefreshing) {
+					refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
+				} else {
+					refreshItem.setActionView(null);
+				}
+			}
 		}
 	}
 

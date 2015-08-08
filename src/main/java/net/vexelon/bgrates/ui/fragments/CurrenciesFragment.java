@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -39,7 +40,6 @@ import net.vexelon.bgrates.db.models.ExchangeRates;
 import net.vexelon.bgrates.remote.LocalRawSource;
 import net.vexelon.bgrates.remote.Source;
 import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.Notifications;
 import net.vexelon.bgrates.ui.UIUtils;
 import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
 
@@ -60,6 +60,17 @@ public class CurrenciesFragment extends AbstractFragment {
 		// add refresh currencies menu option
 		inflater.inflate(R.menu.currencies, menu);
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.action_refresh) {
+			updateRates();
+			setRefreshActionButtonState(true);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void init(View view) {
@@ -98,7 +109,8 @@ public class CurrenciesFragment extends AbstractFragment {
 
 		@Override
 		protected void onPostExecute(ExchangeRates result) {
-			notifyListeners(Notifications.UPDATE_RATES_DONE);
+			// notifyListeners(Notifications.UPDATE_RATES_DONE);
+			setRefreshActionButtonState(false);
 			if (updateOK) {
 				// populate ListView UI
 				CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout,
