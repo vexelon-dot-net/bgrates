@@ -40,6 +40,7 @@ import net.vexelon.bgrates.ui.Notifications;
 import net.vexelon.bgrates.ui.NotificationsListener;
 import net.vexelon.bgrates.ui.fragments.AboutFragment;
 import net.vexelon.bgrates.ui.fragments.AbstractFragment;
+import net.vexelon.bgrates.ui.fragments.ConvertFragment;
 import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener, NotificationsListener {
@@ -233,7 +234,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 				fragment = new CurrenciesFragment();
 				break;
 			case 2:
-				fragment = new CurrenciesFragment(); // ConvertFragment();
+				fragment = new ConvertFragment();
 				break;
 			case 3:
 				fragment = new AboutFragment();

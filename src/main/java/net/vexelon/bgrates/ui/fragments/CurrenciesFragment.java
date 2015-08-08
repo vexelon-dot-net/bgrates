@@ -24,7 +24,6 @@
 package net.vexelon.bgrates.ui.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,14 +45,13 @@ import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
 
 public class CurrenciesFragment extends AbstractFragment {
 
-	private Context context;
 	private ListView listView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		init(rootView);
-		// reloadRates();
+		updateRates();
 		return rootView;
 	}
 
@@ -65,13 +63,13 @@ public class CurrenciesFragment extends AbstractFragment {
 	}
 
 	private void init(View view) {
-		context = getActivity();
 		listView = (ListView) view.findViewById(R.id.ListView01);
 	}
 
+	/**
+	 * Reloads currencies from a remote source.
+	 */
 	public void updateRates() {
-		// XXX: Refactor code below
-		// load locally stored raw resource
 		new UpdateRatesTask().execute();
 	}
 
@@ -86,6 +84,7 @@ public class CurrenciesFragment extends AbstractFragment {
 
 		@Override
 		protected ExchangeRates doInBackground(Void... params) {
+			// TODO: Invoke remote source ...
 			ExchangeRates rates = null;
 			try {
 				Source source = new LocalRawSource(getActivity());
