@@ -55,7 +55,7 @@ public class AboutFragment extends AbstractFragment {
 			// Log.e(TAG, e.getMessage());
 		}
 
-		StringBuilder sb = new StringBuilder(500);
+		StringBuilder sb = new StringBuilder();
 		sb.append(getResString(R.string.app_name));
 		sb.append("\n");
 		sb.append(getResString(R.string.about_tagline));
@@ -65,9 +65,17 @@ public class AboutFragment extends AbstractFragment {
 			sb.append(pinfo.versionName);
 			sb.append("\n");
 		}
+		this.setText(view, R.id.about_row1, sb.toString());
+		Linkify.addLinks((TextView) view.findViewById(R.id.about_row1), Linkify.ALL);
+
+		sb = new StringBuilder();
 		sb.append(getResString(R.string.about_author));
 		sb.append("\n");
-		sb.append("http://code.google.com/p/bgrates/");
+		sb.append("https://github.com/petarov/bgrates");
+		sb.append("\n");
+		sb.append(getResString(R.string.about_logo_author));
+		sb.append("\n");
+		sb.append("http://stremena.com");
 		sb.append("\n");
 		sb.append("\n");
 		sb.append(getResString(R.string.about_bnb_info));
@@ -80,16 +88,10 @@ public class AboutFragment extends AbstractFragment {
 		sb.append("\n");
 		sb.append(getResString(R.string.about_flag_icons_info));
 		sb.append("\n");
-		sb.append("Copyright (c) 2013 Go Squared Ltd. http://www.gosquared.com/");
+		sb.append("Copyright (CC BY-ND 3.0) Visual Pharm. http://icons8.com");
 		sb.append("\n");
-		sb.append("Copyright (CC BY-ND 3.0) Visual Pharm. http://icons8.com/");
-		sb.append("\n");
-		sb.append("Copyright (c) 2013 Aha-Soft. http://www.aha-soft.com/free-icons/free-yellow-button-icons/");
-		sb.append("\n");
-
-		this.setText(view, R.id.about_apptitle, sb.toString());
-		Linkify.addLinks((TextView) view.findViewById(R.id.about_apptitle), Linkify.ALL);
-
+		this.setText(view, R.id.about_row2, sb.toString());
+		Linkify.addLinks((TextView) view.findViewById(R.id.about_row2), Linkify.ALL);
 	}
 
 	void setText(View view, int id, String text) {

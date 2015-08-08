@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="FontListCode" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#D3D3D3</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
-<style name="FontListCode" parent="@android:style/TextAppearance"><item name="android:textColor">#D3D3D3</item><item name="android:textSize">16sp</item>
-<item name="android:textStyle">bold</item>
+    <style name="FontList" parent="@android:style/TextAppearance">
+        <item name="android:textSize">18sp</item>
+    </style>
 
+    <style name="FontListRatioRate" parent="@android:style/TextAppearance">
+        <item name="android:textSize">16sp</item>
+    </style>
 
+    <style name="FontListRateDecimals" parent="@android:style/TextAppearance">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+    </style>
 
-</style><style name="FontList" parent="@android:style/TextAppearance"><item name="android:textSize">18sp</item>
+    <string name="app_name">BGrates M-Tel</string>
+    <string name="app_name_pure">BGrates</string>
+    <string name="perm_inet_label">Позволяване на приложението да достъпва интернет, за да сваля необходими файлове и ресурси.</string>
+    <string name="perm_inet_desc">Позволяване на приложението да тегли списък с валутни курсова, за да обнови информацията която показва.</string>
+    <string name="last_update">Последно обновено</string>
+    <string name="URL_BNB_RATES_SUFFIX">BG</string>
+    <string name="menu_refresh">Обнови курсове</string>
+    <string name="menu_about">Относно</string>
+    <string name="dlg_update_title">Сваляне...</string>
+    <string name="dlg_update_msg">Сваляне на последните курсове. Моля изчакайте ...</string>
+    <string name="dlg_update_error_title">Грешка при сваляне</string>
+    <string name="dlg_update_error_msg">Грешка при сваляне на файла с последните обменни курсове ! Моля, проверете връзката си към интернет.</string>
+    <string name="dlg_parse_error_title">Грешка при четене</string>
+    <string name="dlg_parse_error_msg">Грешка при четене на файла с обменните курсове!</string>
+    <string name="INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg</string>
+    <string name="menu_bg_rates">Обнови</string>
+    <string name="menu_en_rates">Update</string>
+    <string name="about_tagline">Обменни курсове към Български лев</string>
+    <string name="about_version">вер.</string>
+    <string name="about_bnb_info">Обменните курсове се предоставят и обновяват от сайта на Българска Национална Банка.</string>
+    <string name="about_bnb_info_2">Обменните валутни курсове на чуждестранните валути се изчисляват на основата на фиксирания курс на лева спрямо еврото, като за източник се използват публикуваните от Европейската централна банка курсове на еврото към същите валути за съответния ден.</string>
+    <string name="about_author">Автори - Петър Петров, CECO</string>
+    <string name="about_logo_author">Графично Лого - Стремена Тузсузова</string>
+    <string name="about_flag_icons_info">Безплатни икони от:</string>
+    <string name="dlg_lastupdate_title">Обновяване</string>
+    <string name="dlg_lastupdate_msg">Текущите валутни курсове са от предходен ден. Обнови сега ?</string>
+    <string name="dlg_yes">Да</string>
+    <string name="dlg_no">Не</string>
+    <string name="bg_currency_name">Лв.</string>
+    <string name="menu_convert">Преобразуване</string>
+    <string name="conv_hint_msg">Преобразуване на валути</string>
+    <string name="PREVIOUS_INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg_previous</string>
+    <string name="text_selectcurrency">Изберете валута:</string>
 
+    <style name="FontStyleConvert" parent="@android:style/TextAppearance">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#606060</item>
+    </style>
 
+    <string name="title_section1">Обменни курсове</string>
+    <string name="title_section2">Преобразуване</string>
+    <string name="title_section3">Относно</string>
+    <string name="action_refresh">Обнови</string>
+    <string name="action_settings">Настройки</string>
 
-
-</style><style name="FontListRatioRate" parent="@android:style/TextAppearance"><item name="android:textSize">16sp</item>
-
-</style><style parent="@android:style/TextAppearance" name="FontListRateDecimals"><item name="android:textSize">16sp</item>
-<item name="android:textColor">#808080</item>
-
-</style>
-
-<string name="app_name">BGrates M-Tel</string>
-<string name="app_name_pure">BGrates</string>
-<string name="perm_inet_label">Позволяване на приложението да достъпва интернет, за да сваля необходими файлове и ресурси.</string>
-<string name="perm_inet_desc">Позволяване на приложението да тегли списък с валутни курсова, за да обнови информацията която показва.</string>
-
-
-<string name="last_update">Последно обновено</string>
-<string name="URL_BNB_RATES_SUFFIX">BG</string>
-<string name="menu_refresh">Обнови курсове</string>
-<string name="menu_about">Относно</string>
-<string name="dlg_update_title">Сваляне...</string>
-<string name="dlg_update_msg">Сваляне на последните курсове. Моля изчакайте ...</string>
-<string name="dlg_update_error_title">Грешка при сваляне</string>
-<string name="dlg_update_error_msg">Грешка при сваляне на файла с последните обменни курсове ! Моля, проверете връзката си към интернет.</string>
-<string name="dlg_parse_error_title">Грешка при четене</string>
-<string name="dlg_parse_error_msg">Грешка при четене на файла с обменните курсове!</string>
-<string name="INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg</string>
-<string name="menu_bg_rates">Обнови</string>
-<string name="menu_en_rates">Update</string>
-<string name="about_tagline">Обменни курсове към Български лев</string>
-<string name="about_version">вер.</string>
-<string name="about_bnb_info">Обменните курсове се предоставят и обновяват от сайта на Българска Национална Банка.</string>
-<string name="about_bnb_info_2">Обменните валутни курсове на чуждестранните валути се изчисляват на основата на фиксирания курс на лева спрямо еврото, като за източник се използват публикуваните от Европейската централна банка курсове на еврото към същите валути за съответния ден.</string><string name="about_author">от Петър Петров</string>
-<string name="about_flag_icons_info">Безплатни икони от:</string>
-<string name="dlg_lastupdate_title">Обновяване</string>
-<string name="dlg_lastupdate_msg">Текущите валутни курсове са от предходен ден. Обнови сега ?</string>
-<string name="dlg_yes">Да</string>
-<string name="dlg_no">Не</string>
-<string name="bg_currency_name">Лв.</string>
-<string name="menu_convert">Преобразуване</string>
-<string name="conv_hint_msg">Преобразуване на валути</string>
-<string name="PREVIOUS_INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg_previous</string>
-<string name="text_selectcurrency">Изберете валута:</string><style name="FontStyleConvert" parent="@android:style/TextAppearance"><item name="android:textSize">18sp</item><item name="android:textColor">#606060</item>
-</style>
-
-<string name="title_section1">Обменни курсове</string>
-<string name="title_section2">Преобразуване</string>
-<string name="title_section3">Относно</string>
-<string name="action_refresh">Обнови</string>
-<string name="action_settings">Настройки</string>
-
-    
 </resources>

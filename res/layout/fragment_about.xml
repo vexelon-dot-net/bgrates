@@ -12,16 +12,26 @@
 	android:layout_height="fill_parent"
 	android:fillViewport="true"
 	>  
-	
 <LinearLayout
 	android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-	
 <ImageView android:id="@+id/about_logo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal"></ImageView>
-<TextView android:text="@+id/TextView01" style="@style/FontList" android:id="@+id/about_apptitle" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_horizontal"></TextView>
+<TextView style="@style/FontList" 
+    	android:id="@+id/about_row1" 
+    	android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content" 
+    	android:gravity="center_horizontal">
+</TextView>
+<TextView style="@style/FontList" 
+    	android:id="@+id/about_row2" 
+    	android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content"
+    	android:paddingLeft="10sp"
+    	android:paddingRight="10sp"
+    	android:gravity="left">
+</TextView>
 </LinearLayout>
-
 </ScrollView>
 
 </LinearLayout>

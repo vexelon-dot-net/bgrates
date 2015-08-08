@@ -30,7 +30,8 @@
     <string name="menu_en_rates">Update</string>
     <string name="about_tagline">Bulgarian Lev based exchange rates</string>
     <string name="about_version">v</string>
-    <string name="about_author">by Petar Petrov</string>
+    <string name="about_author">Authors - Petar Petrov, CECO</string>
+    <string name="about_logo_author">Logo - Stremena Tuzsuzova</string>
     <string name="about_bnb_info">Exchange rate information is updated from the web site of the Bulgarian National Bank.</string>
     <string name="about_bnb_info_2">The exchange rates of currencies are calculated on the basis of the fixed exchange rate of the Bulgarian lev to the euro, and the information source is the exchange rates of the euro against these currencies published by the European Central Bank</string>
     <string name="about_flag_icons_info">Icons and images by:</string>
