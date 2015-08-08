@@ -103,8 +103,8 @@ public class AboutFragment extends AbstractFragment {
 		}
 	}
 
-	String getResString(int id) {
-		return this.getResources().getString(id);
+	String getResString(int resId) {
+		return getActivity().getString(resId);
 	}
 
 }
