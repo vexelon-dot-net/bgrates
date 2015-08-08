@@ -1,18 +1,18 @@
 /*
  * The MIT License
- *
- * Copyright (c) 2010 Petar Petrov
- *
+ * 
+ * Copyright (c) 2015 Petar Petrov
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,33 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.vexelon.bgrates.ui.activities;
+package net.vexelon.bgrates.ui.fragments;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.old.CurrencyInfo;
-import net.vexelon.bgrates.db.models.old.ExchangeRate;
-import net.vexelon.bgrates.ui.activities.ConvertRow.RowType;
-import net.vexelon.bgrates.utils.NumberUtils;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.old.CurrencyInfo;
+import net.vexelon.bgrates.db.models.old.ExchangeRate;
+import net.vexelon.bgrates.ui.components.ConvertCurrencyAdapter;
+import net.vexelon.bgrates.ui.fragments.ConvertRow.RowType;
+import net.vexelon.bgrates.utils.NumberUtils;
 
-public class ConvertActivity extends Activity {
+public class ConvertFragment extends AbstractFragment {
 
 	private final static String TAG = Defs.LOG_TAG;
 	private ExchangeRate _myRates = null;
@@ -56,13 +58,15 @@ public class ConvertActivity extends Activity {
 	private int _curSelectedRowId = -1;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_convert, container, false);
+		init(rootView);
+		return rootView;
+	}
 
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.convert);
-
+	private void init(View view) {
 		// read rates from intent bundle
-		_myRates = getIntent().getParcelableExtra(Defs.INT_EXCHANGERATES);
+		_myRates = getActivity().getIntent().getParcelableExtra(Defs.INT_EXCHANGERATES);
 
 		_rows = new ArrayList<ConvertRow>(Defs.MAX_CONVERT_ROWS);
 		_rows.add(new ConvertRow(R.id.Spinner4, R.id.EditText4, RowType.RowOthers));
@@ -85,7 +89,7 @@ public class ConvertActivity extends Activity {
 			// public void run() {
 			int i = 0;
 			for (ConvertRow row : _rows) {
-				final Spinner spinner = (Spinner) findViewById(row.getSpinnerId());
+				final Spinner spinner = (Spinner) view.findViewById(row.getSpinnerId());
 				spinner.setSelection(_visibleCurrencies[i++]);
 			}
 			// }
@@ -93,18 +97,11 @@ public class ConvertActivity extends Activity {
 		}
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-
-		saveSettings();
-	}
-
 	/**
 	 * Read previously selected currencies for convert
 	 */
 	private void loadSettings() {
-		SharedPreferences prefs = this.getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
+		SharedPreferences prefs = getActivity().getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
 
 		int count = prefs.getInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT, Defs.MAX_CONVERT_ROWS);
 		_visibleCurrencies = new int[count];
@@ -119,13 +116,13 @@ public class ConvertActivity extends Activity {
 	 * Write currently selected currencies for convert
 	 */
 	private void saveSettings() {
-		SharedPreferences prefs = this.getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
+		SharedPreferences prefs = getActivity().getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
 		SharedPreferences.Editor editor = prefs.edit();
 
 		editor.putInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT, Defs.MAX_CONVERT_ROWS);
 		int i = 0;
 		for (ConvertRow row : _rows) {
-			Spinner spinner = (Spinner) findViewById(row.getSpinnerId());
+			Spinner spinner = (Spinner) getActivity().findViewById(row.getSpinnerId());
 			String key = Defs.CONV_PREFS_KEY_ITEM + i++;
 			editor.putInt(key, spinner.getSelectedItemPosition());
 		}
@@ -166,10 +163,11 @@ public class ConvertActivity extends Activity {
 		final int thisRowId = row.getRowId();
 		// Log.d(TAG, "Creating row " + thisRowId);
 
-		Spinner spinner = (Spinner) findViewById(row.getSpinnerId());
+		Spinner spinner = (Spinner) getActivity().findViewById(row.getSpinnerId());
 		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 		// this, android.R.layout.simple_spinner_item, items );
-		ConvertCurrencyAdapter adapter = new ConvertCurrencyAdapter(this, android.R.layout.simple_spinner_item, items);
+		ConvertCurrencyAdapter adapter = new ConvertCurrencyAdapter(getActivity(), android.R.layout.simple_spinner_item,
+				items);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 
@@ -187,7 +185,7 @@ public class ConvertActivity extends Activity {
 		});
 
 		// init edit text
-		EditText editText = (EditText) findViewById(row.getEditTextId());
+		EditText editText = (EditText) getActivity().findViewById(row.getEditTextId());
 		editText.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -230,7 +228,7 @@ public class ConvertActivity extends Activity {
 			return;
 		}
 
-		Spinner callerRowSpinner = (Spinner) findViewById(callerRow.getSpinnerId());
+		Spinner callerRowSpinner = (Spinner) getActivity().findViewById(callerRow.getSpinnerId());
 		String callerRowCode = (String) callerRowSpinner.getItemAtPosition(callerRowSpinner.getSelectedItemPosition());
 		// Log.d(TAG, "Caller Row Code is " + callerRowCode);
 
@@ -275,7 +273,8 @@ public class ConvertActivity extends Activity {
 							result = BigDecimal.ZERO;
 						}
 						// Log.d(TAG,
-						// String.format("rate: %1$s, ratio: %2$s, result: %3$s, sum: %4$s",
+						// String.format("rate: %1$s, ratio: %2$s, result: %3$s,
+						// sum: %4$s",
 						// rate.toPlainString(), ratio.toPlainString(),
 						// result.toPlainString(), sum.toPlainString()));
 						setResText(row.getEditTextId(), NumberUtils.scaleNumber(result, Defs.SCALE_SHOW_SHORT));
@@ -284,7 +283,7 @@ public class ConvertActivity extends Activity {
 					case RowOthers:
 
 						// get selected currency from row's spinner
-						Spinner spinner = (Spinner) findViewById(row.getSpinnerId());
+						Spinner spinner = (Spinner) getActivity().findViewById(row.getSpinnerId());
 						String code = (String) spinner.getItemAtPosition(spinner.getSelectedItemPosition());
 						// Log.d(TAG, "Updating RowOthers - " + code);
 
@@ -353,13 +352,13 @@ public class ConvertActivity extends Activity {
 	}
 
 	private void setResText(int id, CharSequence text) {
-		TextView tx = (TextView) findViewById(id);
+		TextView tx = (TextView) getActivity().findViewById(id);
 		if (tx != null)
 			tx.setText(text);
 	}
 
 	private CharSequence getResText(int id) {
-		TextView tx = (TextView) findViewById(id);
+		TextView tx = (TextView) getActivity().findViewById(id);
 		if (tx != null)
 			return tx.getText();
 
@@ -367,8 +366,9 @@ public class ConvertActivity extends Activity {
 	}
 
 	private void appendResText(int id, CharSequence text) {
-		TextView tx = (TextView) findViewById(id);
+		TextView tx = (TextView) getActivity().findViewById(id);
 		if (tx != null)
 			tx.setText(tx.getText().toString() + text);
 	}
+
 }

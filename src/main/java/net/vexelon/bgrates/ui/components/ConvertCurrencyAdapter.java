@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.vexelon.bgrates.ui.activities;
+package net.vexelon.bgrates.ui.components;
 
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.R.id;

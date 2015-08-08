@@ -39,15 +39,6 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.old.CurrencyInfo;
-import net.vexelon.bgrates.db.models.old.ExchangeRate;
-import net.vexelon.bgrates.db.models.old.HeaderInfo;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.utils.IOUtils;
-import net.vexelon.bgrates.utils.XmlUtils;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -72,8 +63,22 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.old.CurrencyInfo;
+import net.vexelon.bgrates.db.models.old.ExchangeRate;
+import net.vexelon.bgrates.db.models.old.HeaderInfo;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.IOUtils;
+import net.vexelon.bgrates.utils.XmlUtils;
 
-public class MainActivity extends Activity {
+/**
+ * XXX Obsolete code that needs to be deleted!
+ * Currently here only for reference.
+ *
+ */
+public class OldMainActivity extends Activity {
 
 	private final static String TAG = Defs.LOG_TAG;
 	private Activity _context = null;
@@ -91,7 +96,7 @@ public class MainActivity extends Activity {
 		_context = this;
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		// setContentView(R.layout.main);
 
 		_listView = (ListView) findViewById(R.id.ListView01);
 		_downloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, getResString(R.string.URL_BNB_RATES_SUFFIX));
@@ -137,8 +142,8 @@ public class MainActivity extends Activity {
 			refresh();
 			break;
 		case Defs.MENU_ABOUT:
-			intent = new Intent(this, AboutActivity.class);
-			startActivity(intent);
+			// intent = new Intent(this, AboutActivity.class);
+			// startActivity(intent);
 			break;
 		case Defs.MENU_BG_RATES:
 			newDownloadUrlSuffix = String.format(Defs.URL_BNB_FORMAT, Defs.URL_BNB_SUFFIX_BG);
@@ -153,9 +158,9 @@ public class MainActivity extends Activity {
 			refresh();
 			break;
 		case Defs.MENU_CONVERT:
-			intent = new Intent(this, ConvertActivity.class);
-			intent.putExtra(Defs.INT_EXCHANGERATES, _myRates);
-			startActivity(intent);
+			// intent = new Intent(this, ConvertActivity.class);
+			// intent.putExtra(Defs.INT_EXCHANGERATES, _myRates);
+			// startActivity(intent);
 			break;
 		}
 
@@ -237,8 +242,7 @@ public class MainActivity extends Activity {
 							// ci.getExtraInfo(), ci.getRatio(), ci.getRate() );
 							Intent intent = new Intent(_context, RateInfoActivity.class);
 							intent.putExtra(Defs.INTENT_FLAG_ID, ExchangeRate.getResourceFromCode(ci));
-							intent.putExtra(
-									Defs.INTENT_OLD_RATEINFO,
+							intent.putExtra(Defs.INTENT_OLD_RATEINFO,
 									String.format("%s    %s  %s", oldCurrencyRate.getExtraInfo(),
 											oldCurrencyRate.getRatio(), oldCurrencyRate.getRate()));
 							intent.putExtra(Defs.INTENT_NEW_RATEINFO,
@@ -266,8 +270,8 @@ public class MainActivity extends Activity {
 			public void run() {
 				try {
 
-					File cacheFile = new File(_context.getCacheDir().getAbsolutePath() + File.separator
-							+ Defs.URI_CACHE_NAME);
+					File cacheFile = new File(
+							_context.getCacheDir().getAbsolutePath() + File.separator + Defs.URI_CACHE_NAME);
 					// Log.i(TAG, "URL:" + _downloadUrlSuffix);
 					// DOWNLOAD //
 					IOUtils.downloadFile(_downloadUrlSuffix, cacheFile);
@@ -275,8 +279,8 @@ public class MainActivity extends Activity {
 					// Issue #1: EUR currency is not presented in the
 					// currency list
 					// Try to download index.htm page
-					File cacheFileHtml = new File(_context.getCacheDir().getAbsolutePath() + File.separator
-							+ Defs.URI_CACHE_NAME_INDEXHTM);
+					File cacheFileHtml = new File(
+							_context.getCacheDir().getAbsolutePath() + File.separator + Defs.URI_CACHE_NAME_INDEXHTM);
 					IOUtils.downloadFile(Defs.URL_BNB_INDEX, cacheFileHtml);
 					CurrencyInfo currency = parseEuro(cacheFileHtml);
 					if (currency == null || !injectCurrency(currency, cacheFile)) {
@@ -302,7 +306,8 @@ public class MainActivity extends Activity {
 						// newer than the current
 						// NOTE: currently force download is always "true",
 						// therefore this check should later be removed!
-						if (_forceDownload || !newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle())) {
+						if (_forceDownload
+								|| !newRates.getHeader().getTitle().equals(_myRates.getHeader().getTitle())) {
 
 							// clear flag
 							_forceDownload = false;
@@ -339,8 +344,8 @@ public class MainActivity extends Activity {
 								public void run() {
 									saveSettings(_myRates.getHeader().getTitle());
 									_context.setTitle(_myRates.getHeader().getTitle());
-									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout, _myRates
-											.getItems());
+									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout,
+											_myRates.getItems());
 									_listView.setAdapter(_adapter);
 								}
 							});
