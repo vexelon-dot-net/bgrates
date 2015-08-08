@@ -9,4 +9,5 @@ local.properties
 .gradle
 build
 # Others
-libs/android-support-v13.jar
+libs/android-support-*.jar
+libs/*-appcompat.jar

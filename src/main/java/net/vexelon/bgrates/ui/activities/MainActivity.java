@@ -66,6 +66,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setDisplayUseLogoEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setTitle(R.string.app_name_pure);
+		actionBar.setLogo(R.drawable.icon);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
