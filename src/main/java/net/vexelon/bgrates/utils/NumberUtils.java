@@ -26,10 +26,11 @@ package net.vexelon.bgrates.utils;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
 import java.util.Random;
 
-import net.vexelon.bgrates.Defs;
 import android.util.Log;
+import net.vexelon.bgrates.Defs;
 
 public class NumberUtils {
 
@@ -42,9 +43,9 @@ public class NumberUtils {
 	 * @return
 	 */
 	public static int getRandomInt(int max) {
-		if (_random == null)
-			_random = new Random(System.currentTimeMillis());
-
+		if (_random == null) {
+			_random = new SecureRandom();
+		}
 		return _random.nextInt(max);
 	}
 
