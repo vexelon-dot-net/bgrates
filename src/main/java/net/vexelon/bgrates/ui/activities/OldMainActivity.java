@@ -244,7 +244,8 @@ public class OldMainActivity extends Activity {
 							// oldCurrencyRate.getRate(),
 							// ci.getExtraInfo(), ci.getRatio(), ci.getRate() );
 							Intent intent = new Intent(_context, RateInfoActivity.class);
-							intent.putExtra(Defs.INTENT_FLAG_ID, ExchangeRates.getResourceFromCode(ci));
+							// intent.putExtra(Defs.INTENT_FLAG_ID,
+							// ExchangeRates.getResourceFromCode(ci));
 							intent.putExtra(Defs.INTENT_OLD_RATEINFO,
 									String.format("%s    %s  %s", oldCurrencyRate.getExtraInfo(),
 											oldCurrencyRate.getRatio(), oldCurrencyRate.getRate()));

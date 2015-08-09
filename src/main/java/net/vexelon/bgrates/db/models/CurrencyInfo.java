@@ -26,15 +26,13 @@ package net.vexelon.bgrates.db.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@Deprecated
 public class CurrencyInfo implements Parcelable {
-	
+
 	public enum Tendency {
-		TendencyUnknown,
-		TendencyEqual,
-		TendencyUp,
-		TendencyDown,
+		TendencyUnknown, TendencyEqual, TendencyUp, TendencyDown,
 	}
-	
+
 	private String name = "";
 	private String code = "";
 	private String ratio = "0";
@@ -42,13 +40,13 @@ public class CurrencyInfo implements Parcelable {
 	private String reverseRate = "0";
 	private String extraInfo = "";
 	private Tendency tendency = Tendency.TendencyUnknown;
-	
+
 	public CurrencyInfo() {
-		
+
 	}
-	
+
 	public String getCountryCode() {
-		return this.code.toLowerCase().substring(0, 2); 
+		return this.code.toLowerCase().substring(0, 2);
 	}
 
 	public String getName() {
@@ -98,17 +96,17 @@ public class CurrencyInfo implements Parcelable {
 	public void setExtraInfo(String extraInfo) {
 		this.extraInfo = extraInfo;
 	}
-	
+
 	public Tendency getTendency() {
 		return tendency;
 	}
 
 	public void setTendency(Tendency tendency) {
 		this.tendency = tendency;
-	}	
-	
-	//// Parcelable implementation ////	
-	
+	}
+
+	//// Parcelable implementation ////
+
 	public static final Parcelable.Creator<CurrencyInfo> CREATOR = new Parcelable.Creator<CurrencyInfo>() {
 		public CurrencyInfo createFromParcel(Parcel in) {
 			return new CurrencyInfo(in);
@@ -117,8 +115,8 @@ public class CurrencyInfo implements Parcelable {
 		public CurrencyInfo[] newArray(int size) {
 			return new CurrencyInfo[size];
 		}
-	};		
-	
+	};
+
 	public CurrencyInfo(Parcel in) {
 		this.name = in.readString();
 		this.code = in.readString();
@@ -126,15 +124,15 @@ public class CurrencyInfo implements Parcelable {
 		this.rate = in.readString();
 		this.reverseRate = in.readString();
 		this.extraInfo = in.readString();
-		this.tendency = (Tendency)in.readValue(Tendency.class.getClassLoader());
-	}	
-	
+		this.tendency = (Tendency) in.readValue(Tendency.class.getClassLoader());
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(name);

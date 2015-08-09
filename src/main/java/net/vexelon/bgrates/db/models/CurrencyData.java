@@ -46,11 +46,11 @@ public class CurrencyData {
 		this.ratio = ratio;
 	}
 
-	public float getReverserate() {
+	public float getReverseRate() {
 		return reverserate;
 	}
 
-	public void setReverserate(float reverserate) {
+	public void setReverseRate(float reverserate) {
 		this.reverserate = reverserate;
 	}
 

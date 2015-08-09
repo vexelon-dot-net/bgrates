@@ -23,8 +23,6 @@
  */
 package net.vexelon.bgrates.ui.components;
 
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.ExchangeRates;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,43 +30,45 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.ui.UIFlags;
 
 public class ConvertCurrencyAdapter extends ArrayAdapter<String> {
-	
+
 	private String[] _items = null;
-	
+
 	public ConvertCurrencyAdapter(Context context, int textViewResId, String[] items) {
 		super(context, textViewResId, items);
 		this._items = items;
 	}
-	
+
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
-		if ( v == null ) {
+		if (v == null) {
 			LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = li.inflate(R.layout.convert_row_layout, null);
 		}
-		
+
 		// set texts
 		String code = _items[position];
 
-		// country ID icon		
+		// country ID icon
 		ImageView icon = (ImageView) v.findViewById(R.id.IconConvert);
-		int imgId = ExchangeRates.getResourceFromCode(code);
-		if ( imgId != -1 ) {
-			icon.setImageResource(imgId);		
+		int imgId = UIFlags.getResourceFromCode(code);
+		if (imgId != -1) {
+			icon.setImageResource(imgId);
 		}
-		
+
 		setResText(v, R.id.TextConvertCode, code);
-		
+
 		return v;
 	}
-	
+
 	private void setResText(View v, int id, CharSequence text) {
-		TextView tx = (TextView)v.findViewById(id);
-		if ( tx != null )
+		TextView tx = (TextView) v.findViewById(id);
+		if (tx != null)
 			tx.setText(text);
-	}	
-	
+	}
+
 }

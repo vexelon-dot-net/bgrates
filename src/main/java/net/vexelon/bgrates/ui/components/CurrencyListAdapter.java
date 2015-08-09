@@ -31,10 +31,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.ui.UIFlags;
 import net.vexelon.bgrates.utils.NumberUtils;
 
 public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
@@ -74,19 +76,20 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 			// );
 
 			// country ID icon
-			// ImageView icon = (ImageView) v.findViewById(R.id.icon);
-			// int imgId = ExchangeRates.getResourceFromCode(ci);
-			// if (imgId != -1) {
-			// icon.setImageResource(imgId);
-			// // icon.setScaleType(ScaleType.FIT_XY);
-			// // icon.setAdjustViewBounds(true);
-			// // android.widget.RelativeLayout.LayoutParams lp = new
-			// // RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-			// // LayoutParams.WRAP_CONTENT);
-			// //
-			// lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT|RelativeLayout.CENTER_VERTICAL);
-			// // icon.setLayoutParams(lp);
-			// }
+			ImageView icon = (ImageView) v.findViewById(R.id.icon);
+			int imgId = UIFlags.getResourceFromCode(ci.getCode());
+			if (imgId != -1) {
+				icon.setImageResource(imgId);
+				// icon.setScaleType(ScaleType.FIT_XY);
+				// icon.setAdjustViewBounds(true);
+				// android.widget.RelativeLayout.LayoutParams lp = new
+				// RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+				// LayoutParams.WRAP_CONTENT);
+				//
+				// lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT |
+				// RelativeLayout.CENTER_VERTICAL);
+				// icon.setLayoutParams(lp);
+			}
 
 			// add tendency icon
 			// ImageView tendencyIcon = (ImageView)

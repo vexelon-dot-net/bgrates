@@ -84,7 +84,7 @@ public class LocalRawSource implements Source {
 						} else if (tagName.equals(Defs.XML_TAG_RATE)) {
 							curData.setRate(Float.parseFloat(xpp.nextText()));
 						} else if (tagName.equals(Defs.XML_TAG_REVERSERATE)) {
-							curData.setReverserate(Float.parseFloat(xpp.nextText()));
+							curData.setReverseRate(Float.parseFloat(xpp.nextText()));
 						}
 						// Bugfix for <EXTRAINFO> XML tag
 						// This tag seems to no longer exist per currency ROW in
