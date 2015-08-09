@@ -23,6 +23,9 @@
  */
 package net.vexelon.bgrates.remote;
 
+import java.util.List;
+
+import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.db.models.ExchangeRates;
 
 public interface Source {
@@ -34,6 +37,6 @@ public interface Source {
 	 * @return {@link ExchangeRates}
 	 * @throws SourceException
 	 */
-	ExchangeRates fetchRates() throws SourceException;
+	List<CurrencyData> fetchRates() throws SourceException;
 
 }
