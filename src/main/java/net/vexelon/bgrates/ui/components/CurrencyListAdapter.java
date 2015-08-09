@@ -26,24 +26,22 @@ package net.vexelon.bgrates.ui.components;
 import java.math.BigDecimal;
 import java.util.List;
 
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.CurrencyInfo;
-import net.vexelon.bgrates.db.models.ExchangeRates;
-import net.vexelon.bgrates.utils.NumberUtils;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.utils.NumberUtils;
 
-public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
+public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 
-	private List<CurrencyInfo> _items;
+	private List<CurrencyData> _items;
 
-	public CurrencyListAdapter(Context context, int textViewResId, List<CurrencyInfo> items) {
+	public CurrencyListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
 		super(context, textViewResId, items);
 		this._items = items;
 	}
@@ -58,12 +56,12 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 		}
 
 		// set texts
-		CurrencyInfo ci = _items.get(position);
+		CurrencyData ci = _items.get(position);
 		if (ci != null) {
 
 			setResText(v, R.id.name, ci.getName());
 			setResText(v, R.id.code, ci.getCode());
-			setResText(v, R.id.ratio, ci.getRatio());
+			setResText(v, R.id.ratio, Integer.toString(ci.getRatio()));
 
 			BigDecimal rate = new BigDecimal(ci.getRate());
 			String rateFull = NumberUtils.scaleNumber(rate, Defs.SCALE_SHOW_LONG);
@@ -76,22 +74,24 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyInfo> {
 			// );
 
 			// country ID icon
-			ImageView icon = (ImageView) v.findViewById(R.id.icon);
-			int imgId = ExchangeRates.getResourceFromCode(ci);
-			if (imgId != -1) {
-				icon.setImageResource(imgId);
-				// icon.setScaleType(ScaleType.FIT_XY);
-				// icon.setAdjustViewBounds(true);
-				// android.widget.RelativeLayout.LayoutParams lp = new
-				// RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-				// LayoutParams.WRAP_CONTENT);
-				// lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT|RelativeLayout.CENTER_VERTICAL);
-				// icon.setLayoutParams(lp);
-			}
+			// ImageView icon = (ImageView) v.findViewById(R.id.icon);
+			// int imgId = ExchangeRates.getResourceFromCode(ci);
+			// if (imgId != -1) {
+			// icon.setImageResource(imgId);
+			// // icon.setScaleType(ScaleType.FIT_XY);
+			// // icon.setAdjustViewBounds(true);
+			// // android.widget.RelativeLayout.LayoutParams lp = new
+			// // RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+			// // LayoutParams.WRAP_CONTENT);
+			// //
+			// lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT|RelativeLayout.CENTER_VERTICAL);
+			// // icon.setLayoutParams(lp);
+			// }
 
 			// add tendency icon
-			ImageView tendencyIcon = (ImageView) v.findViewById(R.id.tendency);
-			tendencyIcon.setImageResource(ExchangeRates.getResourceFromTendency(ci.getTendency()));
+			// ImageView tendencyIcon = (ImageView)
+			// v.findViewById(R.id.tendency);
+			// tendencyIcon.setImageResource(ExchangeRates.getResourceFromTendency(ci.getTendency()));
 		}
 
 		return v;

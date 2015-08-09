@@ -26,15 +26,14 @@ package net.vexelon.bgrates.remote;
 import java.util.List;
 
 import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.db.models.ExchangeRates;
 
 public interface Source {
 
 	/**
 	 * Fetches exchange rates from the underlying source and serves back a ready
-	 * to consume {@link ExchangeRates} instance.
+	 * to consume {@link CurrencyData} list instance.
 	 * 
-	 * @return {@link ExchangeRates}
+	 * @return {@link List}
 	 * @throws SourceException
 	 */
 	List<CurrencyData> fetchRates() throws SourceException;

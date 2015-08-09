@@ -222,7 +222,8 @@ public class OldMainActivity extends Activity {
 		}
 
 		// populate ListView UI
-		_adapter = new CurrencyListAdapter(this, R.layout.currency_row_layout, _myRates.getItems());
+		// _adapter = new CurrencyListAdapter(this,
+		// R.layout.currency_row_layout, _myRates.getItems());
 
 		_listView.setAdapter(_adapter);
 		_listView.setOnItemClickListener(new OnItemClickListener() {
@@ -346,8 +347,10 @@ public class OldMainActivity extends Activity {
 								public void run() {
 									saveSettings(_myRates.getHeader().getTitle());
 									_context.setTitle(_myRates.getHeader().getTitle());
-									_adapter = new CurrencyListAdapter(_context, R.layout.currency_row_layout,
-											_myRates.getItems());
+									// _adapter = new
+									// CurrencyListAdapter(_context,
+									// R.layout.currency_row_layout,
+									// _myRates.getItems());
 									_listView.setAdapter(_adapter);
 								}
 							});

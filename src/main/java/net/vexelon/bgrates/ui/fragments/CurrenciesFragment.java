@@ -23,6 +23,10 @@
  */
 package net.vexelon.bgrates.ui.fragments;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,7 +40,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.ExchangeRates;
+import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.remote.LocalRawSource;
 import net.vexelon.bgrates.remote.Source;
 import net.vexelon.bgrates.remote.SourceException;
@@ -84,7 +88,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		new UpdateRatesTask().execute();
 	}
 
-	private class UpdateRatesTask extends AsyncTask<Void, Void, ExchangeRates> {
+	private class UpdateRatesTask extends AsyncTask<Void, Void, List<CurrencyData>> {
 
 		private Activity activity;
 		private boolean updateOK = false;
@@ -94,28 +98,25 @@ public class CurrenciesFragment extends AbstractFragment {
 		}
 
 		@Override
-		protected ExchangeRates doInBackground(Void... params) {
+		protected List<CurrencyData> doInBackground(Void... params) {
 			// TODO: Invoke remote source ...
-			ExchangeRates rates = null;
+			List<CurrencyData> ratesList = Lists.newArrayList();
 			try {
 				Source source = new LocalRawSource(getActivity());
-				rates = source.fetchRates();
+				ratesList = source.fetchRates();
 				updateOK = true;
 			} catch (SourceException e) {
 				Log.e(Defs.LOG_TAG, "Error loading rates from RAW file!", e);
 			}
-			return rates;
+			return ratesList;
 		}
 
 		@Override
-		protected void onPostExecute(ExchangeRates result) {
+		protected void onPostExecute(List<CurrencyData> result) {
 			// notifyListeners(Notifications.UPDATE_RATES_DONE);
 			setRefreshActionButtonState(false);
 			if (updateOK) {
-				// populate ListView UI
-				CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout,
-						result.getItems());
-
+				CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, result);
 				listView.setAdapter(adapter);
 				// lv.setOnItemClickListener(new OnItemClickListener() {
 				// @Override

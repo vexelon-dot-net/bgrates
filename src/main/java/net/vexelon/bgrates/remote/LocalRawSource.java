@@ -2,15 +2,17 @@ package net.vexelon.bgrates.remote;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import com.google.common.collect.Lists;
+
 import android.app.Activity;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.CurrencyInfo;
-import net.vexelon.bgrates.db.models.ExchangeRates;
+import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.db.models.HeaderInfo;
 
 /**
@@ -26,14 +28,14 @@ public class LocalRawSource implements Source {
 	}
 
 	@Override
-	public ExchangeRates fetchRates() throws SourceException {
+	public List<CurrencyData> fetchRates() throws SourceException {
 		// try to load locally stored raw resource
 		InputStream is = activity.getResources().openRawResource(R.raw.exchangerates);
 		return loadRates(is);
 	}
 
-	private ExchangeRates loadRates(InputStream fis) throws SourceException {
-		ExchangeRates rates = new ExchangeRates();
+	private List<CurrencyData> loadRates(InputStream fis) throws SourceException {
+		List<CurrencyData> rates = Lists.newArrayList();
 		try {
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 			factory.setNamespaceAware(false);
@@ -43,8 +45,9 @@ public class LocalRawSource implements Source {
 
 			int eventType = xpp.getEventType();
 			boolean parsingRow = false, parsingHeader = false;
-			CurrencyInfo curInfo = null;
+			CurrencyData curData = null;
 			HeaderInfo headerInfo = null;
+			boolean isHeaderAvailable = false;
 
 			while (eventType != XmlPullParser.END_DOCUMENT) {
 
@@ -63,37 +66,37 @@ public class LocalRawSource implements Source {
 					// Log.d(TAG, "Reading TAG=" + tagName);
 
 					// parse ROW
-					if (tagName.equals(Defs.XML_TAG_ROW) && rates.isHeaderAvailable()) {
+					if (tagName.equals(Defs.XML_TAG_ROW) && isHeaderAvailable) {
 						parsingRow = true;
-						curInfo = new CurrencyInfo();
-					} else if (tagName.equals(Defs.XML_TAG_ROW) && !rates.isHeaderAvailable()) {
+						curData = new CurrencyData();
+					} else if (tagName.equals(Defs.XML_TAG_ROW) && !isHeaderAvailable) {
 						parsingHeader = true;
 						headerInfo = new HeaderInfo();
 					}
 
 					if (parsingRow) {
 						if (tagName.equals(Defs.XML_TAG_NAME)) {
-							curInfo.setName(xpp.nextText());
+							curData.setName(xpp.nextText());
 						} else if (tagName.equals(Defs.XML_TAG_CODE)) {
-							curInfo.setCode(xpp.nextText());
+							curData.setCode(xpp.nextText());
 						} else if (tagName.equals(Defs.XML_TAG_RATIO)) {
-							curInfo.setRatio(xpp.nextText());
+							curData.setRatio(Integer.parseInt(xpp.nextText()));
 						} else if (tagName.equals(Defs.XML_TAG_RATE)) {
-							curInfo.setRate(xpp.nextText());
+							curData.setRate(Float.parseFloat(xpp.nextText()));
 						} else if (tagName.equals(Defs.XML_TAG_REVERSERATE)) {
-							curInfo.setReverseRate(xpp.nextText());
+							curData.setReverserate(Float.parseFloat(xpp.nextText()));
 						}
 						// Bugfix for <EXTRAINFO> XML tag
 						// This tag seems to no longer exist per currency ROW in
 						// the XML source
 						// Instead the info is now added in a <CURR_DATE> tag
 						else if (tagName.equals(Defs.XML_TAG_CURR_DATE)) {
-							curInfo.setExtraInfo(xpp.nextText());
+							curData.setExtraInfo(xpp.nextText());
 						}
 						// keep <EXTRAINFO> just in case <CURR_DATE> cannot be
 						// found for some reason
 						else if (tagName.equals(Defs.XML_TAG_EXTRAINFO)) {
-							curInfo.setExtraInfo(xpp.nextText());
+							curData.setExtraInfo(xpp.nextText());
 						}
 					} else if (parsingHeader) {
 						if (tagName.equals(Defs.XML_TAG_NAME)) {
@@ -122,11 +125,12 @@ public class LocalRawSource implements Source {
 
 					if (tagName.equals(Defs.XML_TAG_ROW) && parsingRow) {
 						parsingRow = false;
-						rates.add(curInfo);
+						rates.add(curData);
 					} else if (tagName.equals(Defs.XML_TAG_ROW) && parsingHeader) {
 						// Log.v(TAG, "Adding currency header info ...");
 						parsingHeader = false;
-						rates.addHeader(headerInfo);
+						isHeaderAvailable = true;
+						// rates.addHeader(headerInfo);
 					}
 					break;
 				}
