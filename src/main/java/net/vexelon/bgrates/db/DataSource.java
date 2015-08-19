@@ -26,7 +26,7 @@ package net.vexelon.bgrates.db;
 import java.util.Date;
 import java.util.List;
 
-import net.vexelon.bgrates.db.models.ExchangeRates;
+import net.vexelon.bgrates.db.models.CurrencyData;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
@@ -47,21 +47,21 @@ public interface DataSource {
 	/**
 	 * Fetches the latest exchange rates from the underlying data source.
 	 * 
-	 * @return {@link ExchangeRates} or <code>null</code>, if no rates are
+	 * @return {@link List} or <code>null</code>, if no rates are
 	 *         available.
 	 * @throws DataSourceException
 	 */
-	ExchangeRates getRates() throws DataSourceException;
+	List<CurrencyData> getRates() throws DataSourceException;
 
 	/**
 	 * Fetches exchange rates for a given date.
 	 * 
 	 * @param date
-	 * @return {@link ExchangeRates} or <code>null</code>, if no rates are
+	 * @return {@link List} or <code>null</code>, if no rates are
 	 *         available for the given date.
 	 * @throws DataSourceException
 	 */
-	ExchangeRates getRates(Date date) throws DataSourceException;
+	List<CurrencyData> getRates(Date date) throws DataSourceException;
 
 	/**
 	 * Adds exchange rates data for given download {@link Date}.
@@ -70,6 +70,6 @@ public interface DataSource {
 	 * @param rates
 	 * @throws DataSourceException
 	 */
-	void addRates(Date date, ExchangeRates rates) throws DataSourceException;
+	void addRates(Date date, List<CurrencyData> rates) throws DataSourceException;
 
 }
