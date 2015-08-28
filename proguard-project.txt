@@ -24,3 +24,6 @@
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
+
+-dontwarn javax.annotation.**
+-dontwarn sun.misc.**
