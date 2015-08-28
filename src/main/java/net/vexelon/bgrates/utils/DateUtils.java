@@ -23,16 +23,27 @@
  */
 package net.vexelon.bgrates.utils;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import android.content.Context;
+
 public class DateUtils {
 
 	public static final long MILLIS_PER_DAY = (24 * 60 * 60 * 1000);
 
-	protected static Calendar CALENDAR = Calendar.getInstance();
+	protected static final Calendar CALENDAR = Calendar.getInstance();
+	protected static DateFormat DT_FORMAT = null;
+
+	private static void initDateFormat(Context context) {
+		if (DT_FORMAT == null) {
+			DT_FORMAT = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT,
+					context.getResources().getConfiguration().locale);
+		}
+	}
 
 	/**
 	 * Millisecond representation of the given time
@@ -160,6 +171,11 @@ public class DateUtils {
 	 */
 	public static Date startOfToday() {
 		return startOfDay(new Date());
+	}
+
+	public static String toString(Context context, Date date) {
+		initDateFormat(context);
+		return DT_FORMAT.format(date);
 	}
 
 }
