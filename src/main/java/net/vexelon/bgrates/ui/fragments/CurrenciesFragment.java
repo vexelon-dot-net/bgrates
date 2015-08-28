@@ -48,7 +48,7 @@ import net.vexelon.bgrates.remote.Source;
 import net.vexelon.bgrates.remote.SourceException;
 import net.vexelon.bgrates.ui.UIUtils;
 import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
-import net.vexelon.bgrates.utils.DateUtils;
+import net.vexelon.bgrates.utils.DateTimeUtils;
 
 public class CurrenciesFragment extends AbstractFragment {
 
@@ -122,7 +122,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, result);
 				listView.setAdapter(adapter);
 				TextView tv = (TextView) activity.findViewById(R.id.tvLastUpdate);
-				tv.setText(DateUtils.toString(activity, new Date()));
+				tv.setText(DateTimeUtils.toString(activity, new Date()));
 
 				// lv.setOnItemClickListener(new OnItemClickListener() {
 				// @Override

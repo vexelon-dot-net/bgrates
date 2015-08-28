@@ -31,7 +31,7 @@ import java.util.TimeZone;
 
 import android.content.Context;
 
-public class DateUtils {
+public class DateTimeUtils {
 
 	public static final long MILLIS_PER_DAY = (24 * 60 * 60 * 1000);
 
