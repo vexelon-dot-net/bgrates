@@ -110,7 +110,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				ratesList = source.fetchRates();
 				updateOK = true;
 			} catch (SourceException e) {
-				Log.e(Defs.LOG_TAG, "Error loading rates from RAW file!", e);
+				Log.e(Defs.LOG_TAG, "Error loading rates from BNB file!", e);
 			}
 			return ratesList;
 		}
