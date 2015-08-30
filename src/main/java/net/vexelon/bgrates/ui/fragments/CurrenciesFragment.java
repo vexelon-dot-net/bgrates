@@ -26,15 +26,8 @@ package net.vexelon.bgrates.ui.fragments;
 import java.util.Date;
 import java.util.List;
 
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.remote.BNBSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
-import net.vexelon.bgrates.utils.DateTimeUtils;
+import com.google.common.collect.Lists;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,12 +40,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.google.common.collect.Lists;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.remote.BNBSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.DateTimeUtils;
 
 public class CurrenciesFragment extends AbstractFragment {
 
-	private ListView listView;
+	private ListView listView1;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class CurrenciesFragment extends AbstractFragment {
 	}
 
 	private void init(View view) {
-		listView = (ListView) view.findViewById(R.id.ListView01);
+		listView1 = (ListView) view.findViewById(R.id.ListView01);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class CurrenciesFragment extends AbstractFragment {
 			setRefreshActionButtonState(false);
 			if (updateOK) {
 				CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, result);
-				listView.setAdapter(adapter);
+				listView1.setAdapter(adapter);
 				TextView tv = (TextView) activity.findViewById(R.id.tvLastUpdate);
 				tv.setText(DateTimeUtils.toString(activity, new Date()));
 
