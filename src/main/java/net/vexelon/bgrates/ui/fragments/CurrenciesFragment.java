@@ -25,8 +25,14 @@ package net.vexelon.bgrates.ui.fragments;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.remote.BNBSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,14 +44,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.remote.LocalRawSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+
+import com.google.common.collect.Lists;
 
 public class CurrenciesFragment extends AbstractFragment {
 
@@ -102,7 +102,8 @@ public class CurrenciesFragment extends AbstractFragment {
 			// TODO: Invoke remote source ...
 			List<CurrencyData> ratesList = Lists.newArrayList();
 			try {
-				Source source = new LocalRawSource(getActivity());
+				// Source source = new LocalRawSource(getActivity());
+				Source source = new BNBSource();
 				ratesList = source.fetchRates();
 				updateOK = true;
 			} catch (SourceException e) {

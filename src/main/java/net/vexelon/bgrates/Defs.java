@@ -34,6 +34,29 @@ public class Defs {
 	public final static String CONV_PREFS_KEY_CONVITEMS_COUNT = "ConvertItemsCount";
 	public final static String CONV_PREFS_KEY_ITEM = "ConvertItem_";
 
+	// //////Tsvetoslav - Parameters which used into SQLite////////////
+	// Address on BNB for get on XML file
+	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=bg";
+	// Name of DB
+	public static final String DATABASE_NAME = "currencies.db";
+	// Version of DB
+	public static final int DATABASE_VERSION = 1;
+	// table name
+	public static final String TABLE_CURRENCY = "currencies";
+	// Name of columns in table
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_GOLD = "gold";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_CODE = "code";
+	public static final String COLUMN_RATIO = "ratio";
+	public static final String COLUMN_REVERSERATE = "reverserate";
+	public static final String COLUMN_RATE = "rate";
+	public static final String COLUMN_EXTRAINFO = "extrainfo";
+	public static final String COLUMN_CURR_DATE = "curr_date";
+	public static final String COLUMN_TITLE = "title";
+	public static final String COLUMN_F_STAR = "f_star";
+	// ////////////////////////////////////////////////////////////////
+
 	public final static String URL_BNB_FORMAT = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=%s";
 	public final static String URL_BNB_SUFFIX_BG = "BG";
 	public final static String URL_BNB_SUFFIX_EN = "EN";
