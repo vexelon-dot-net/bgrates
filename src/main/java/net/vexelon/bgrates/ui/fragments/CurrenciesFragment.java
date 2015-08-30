@@ -34,6 +34,7 @@ import net.vexelon.bgrates.remote.Source;
 import net.vexelon.bgrates.remote.SourceException;
 import net.vexelon.bgrates.ui.UIUtils;
 import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.DateTimeUtils;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,21 +46,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-<<<<<<< HEAD
+import android.widget.TextView;
 
 import com.google.common.collect.Lists;
-=======
-import android.widget.TextView;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.remote.LocalRawSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
-import net.vexelon.bgrates.utils.DateTimeUtils;
->>>>>>> origin/dev
 
 public class CurrenciesFragment extends AbstractFragment {
 

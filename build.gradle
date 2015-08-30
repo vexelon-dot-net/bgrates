@@ -63,7 +63,7 @@ android {
 	}
 	dependencies {
 		compile 'com.android.support:appcompat-v7:22.0.0',
-				'com.android.support:support-v13:+',
+				'com.android.support:support-v13:22.2.1',
 				'com.google.guava:guava:18.+'
 	    
 	    testCompile 'junit:junit:4.+'
