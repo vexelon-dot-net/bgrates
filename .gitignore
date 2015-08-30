@@ -1,8 +1,14 @@
-# ignored builds
-/gen
-/bin
-
 # Eclipse
+gen
+bin
 .settings/*
 .classpath
-
+.project
+local.properties
+# Gradle
+.gradle
+build
+gradle.properties
+# Others
+libs/android-support-*.jar
+libs/*-appcompat.jar

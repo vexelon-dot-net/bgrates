@@ -1,0 +1,117 @@
+/**
+ * BGrates Build Script
+ */
+ 
+buildscript {
+	repositories {
+		jcenter()
+		mavenCentral()
+	}
+    dependencies {
+    	classpath 'com.android.tools.build:gradle:1.2.+'
+	}
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'com.android.application'
+
+eclipse {
+	project {
+		natures 'org.springsource.ide.eclipse.gradle.core.nature',
+				'com.android.ide.eclipse.adt.AndroidNature'
+				'org.eclipse.jdt.core.javanature'
+				
+		buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
+		buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
+		buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
+	}
+	jdt {
+		sourceCompatibility = JavaVersion.VERSION_1_7
+		targetCompatibility = JavaVersion.VERSION_1_7
+	}
+	classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
+	classpath.file {
+	    beforeMerged { classpath ->
+	    	classpath.entries.removeAll() { c -> 
+	        	c.kind == 'src'
+	    	}
+	    }
+	
+		withXml {
+		    def node = it.asNode()
+		
+		    node.appendNode('classpathentry kind="src" path="src/main/java"')
+		    node.appendNode('classpathentry kind="src" path="src/test/java"')
+		    node.appendNode('classpathentry kind="src" path="gen"')
+		    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"')
+		    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"')
+		    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"')
+		    node.appendNode('classpathentry kind="output" path="bin/classes"')
+	
+		    node.children().removeAll() { c ->
+		        def path = c.attribute('path')
+		        path != null && ( path.contains('support-v7') )
+		    }
+		}
+	}
+}
+
+android {
+	repositories {
+		jcenter()
+		mavenCentral()
+	}
+	dependencies {
+		compile 'com.android.support:appcompat-v7:22.0.0',
+				'com.android.support:support-v13:22.2.1',
+				'com.google.guava:guava:18.+'
+	    
+	    testCompile 'junit:junit:4.+'
+	}	
+	
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
+
+    defaultConfig {
+    	applicationId 'net.vexelon.bgrates'
+		minSdkVersion 15
+        targetSdkVersion 22
+        //versionCode 1
+        //versionName "1.0"
+    }
+    compileOptions {
+		sourceCompatibility = JavaVersion.VERSION_1_7
+    	targetCompatibility = JavaVersion.VERSION_1_7
+    }
+	lintOptions {
+		abortOnError false
+	}
+    sourceSets {
+    	main {
+			manifest.srcFile 'AndroidManifest.xml'
+			res.srcDirs = ['res']
+			assets.srcDirs = ['assets']
+			java.srcDirs = ['src/main/java', 'src/main/test']
+            resources.srcDirs = ['src/main/java']
+            aidl.srcDirs = ['src/main/java']
+            renderscript.srcDirs = ['src/main/java']
+		}
+		//androidTest.setRoot('tests')
+    }
+    signingConfigs {
+    	release {
+    		storeFile file(KS)
+    		storePassword KSPWD
+    		keyAlias KALIAS
+    		keyPassword KPWD
+    	}
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+

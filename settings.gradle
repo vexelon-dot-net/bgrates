@@ -1,0 +1,5 @@
+/**
+ * BGrates Build Script
+ */
+ 
+rootProject.name = 'bgrates'
