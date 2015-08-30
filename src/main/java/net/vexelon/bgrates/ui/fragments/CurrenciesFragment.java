@@ -23,6 +23,7 @@
  */
 package net.vexelon.bgrates.ui.fragments;
 
+import java.util.Date;
 import java.util.List;
 
 import net.vexelon.bgrates.Defs;
@@ -44,8 +45,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+<<<<<<< HEAD
 
 import com.google.common.collect.Lists;
+=======
+import android.widget.TextView;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.remote.LocalRawSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.DateTimeUtils;
+>>>>>>> origin/dev
 
 public class CurrenciesFragment extends AbstractFragment {
 
@@ -119,6 +133,9 @@ public class CurrenciesFragment extends AbstractFragment {
 			if (updateOK) {
 				CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, result);
 				listView.setAdapter(adapter);
+				TextView tv = (TextView) activity.findViewById(R.id.tvLastUpdate);
+				tv.setText(DateTimeUtils.toString(activity, new Date()));
+
 				// lv.setOnItemClickListener(new OnItemClickListener() {
 				// @Override
 				// public void onItemClick(AdapterView<?> arg0, View arg1, int

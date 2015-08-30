@@ -15,18 +15,45 @@ buildscript {
 apply plugin: 'eclipse'
 apply plugin: 'com.android.application'
 
-eclipse.project {
-	natures 'org.springsource.ide.eclipse.gradle.core.nature',
-			'com.android.ide.eclipse.adt.AndroidNature'
-			'org.eclipse.jdt.core.javanature'
-			
-   buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
-   buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
-   buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
-}
-eclipse.jdt {
-	sourceCompatibility = 1.6
-    targetCompatibility = 1.6
+eclipse {
+	project {
+		natures 'org.springsource.ide.eclipse.gradle.core.nature',
+				'com.android.ide.eclipse.adt.AndroidNature'
+				'org.eclipse.jdt.core.javanature'
+				
+		buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
+		buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
+		buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
+	}
+	jdt {
+		sourceCompatibility = JavaVersion.VERSION_1_7
+		targetCompatibility = JavaVersion.VERSION_1_7
+	}
+	classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
+	classpath.file {
+	    beforeMerged { classpath ->
+	    	classpath.entries.removeAll() { c -> 
+	        	c.kind == 'src'
+	    	}
+	    }
+	
+		withXml {
+		    def node = it.asNode()
+		
+		    node.appendNode('classpathentry kind="src" path="src/main/java"')
+		    node.appendNode('classpathentry kind="src" path="src/test/java"')
+		    node.appendNode('classpathentry kind="src" path="gen"')
+		    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"')
+		    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"')
+		    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"')
+		    node.appendNode('classpathentry kind="output" path="bin/classes"')
+	
+		    node.children().removeAll() { c ->
+		        def path = c.attribute('path')
+		        path != null && ( path.contains('support-v7') )
+		    }
+		}
+	}
 }
 
 android {
@@ -34,6 +61,13 @@ android {
 		jcenter()
 		mavenCentral()
 	}
+	dependencies {
+		compile 'com.android.support:appcompat-v7:22.0.0',
+				'com.android.support:support-v13:+',
+				'com.google.guava:guava:18.+'
+	    
+	    testCompile 'junit:junit:4.+'
+	}	
 	
     compileSdkVersion 22
     buildToolsVersion '22.0.1'
@@ -44,6 +78,10 @@ android {
         targetSdkVersion 22
         //versionCode 1
         //versionName "1.0"
+    }
+    compileOptions {
+		sourceCompatibility = JavaVersion.VERSION_1_7
+    	targetCompatibility = JavaVersion.VERSION_1_7
     }
 	lintOptions {
 		abortOnError false
@@ -60,45 +98,20 @@ android {
 		}
 		//androidTest.setRoot('tests')
     }
+    signingConfigs {
+    	release {
+    		storeFile file(KS)
+    		storePassword KSPWD
+    		keyAlias KALIAS
+    		keyPassword KPWD
+    	}
+    }
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+            signingConfig signingConfigs.release
         }
     }
 }
 
-dependencies {
-	compile 'com.android.support:appcompat-v7:22.0.0',
-			'com.android.support:support-v13:+',
-			'com.google.guava:guava:18.+'
-    
-    testCompile 'junit:junit:4.+'
-}
-
-eclipse.classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
-
-eclipse.classpath.file {
-    beforeMerged { classpath ->
-    	classpath.entries.removeAll() { c -> 
-        	c.kind == 'src'
-    	}
-    }
-
-	withXml {
-	    def node = it.asNode()
-	
-	    node.appendNode('classpathentry kind="src" path="src/main/java"')
-	    node.appendNode('classpathentry kind="src" path="src/test/java"')
-	    node.appendNode('classpathentry kind="src" path="gen"')
-	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"')
-	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"')
-	    node.appendNode('classpathentry kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"')
-	    node.appendNode('classpathentry kind="output" path="bin/classes"')
-
-	    node.children().removeAll() { c ->
-	        def path = c.attribute('path')
-	        path != null && ( path.contains('support-v7') )
-	    }
-	}
-}
