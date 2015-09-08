@@ -41,7 +41,7 @@
     <string name="about_version">вер.</string>
     <string name="about_bnb_info">Обменните курсове се предоставят и обновяват от сайта на Българска Национална Банка.</string>
     <string name="about_bnb_info_2">Обменните валутни курсове на чуждестранните валути се изчисляват на основата на фиксирания курс на лева спрямо еврото, като за източник се използват публикуваните от Европейската централна банка курсове на еврото към същите валути за съответния ден.</string>
-    <string name="about_author">Автори - Петър Петров, CECO</string>
+    <string name="about_author">Автори - Петър Петров, Цветослав Цветков</string>
     <string name="about_logo_author">Графично Лого - Стремена Тузсузова</string>
     <string name="about_flag_icons_info">Безплатни икони от:</string>
     <string name="dlg_lastupdate_title">Обновяване</string>

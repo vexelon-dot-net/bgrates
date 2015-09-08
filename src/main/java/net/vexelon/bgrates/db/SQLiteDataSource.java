@@ -46,26 +46,25 @@ public class SQLiteDataSource implements DataSource {
 		return formatter.format(date);
 	}
 
-	public void addRates(CurrencyData currencyData) {
-		ContentValues values = new ContentValues();
-		values.put(Defs.COLUMN_GOLD, currencyData.getGold());
-		values.put(Defs.COLUMN_NAME, currencyData.getName());
-		values.put(Defs.COLUMN_CODE, currencyData.getCode());
-		values.put(Defs.COLUMN_RATIO, currencyData.getRatio());
-		values.put(Defs.COLUMN_REVERSERATE, currencyData.getReverseRate());
-		values.put(Defs.COLUMN_RATE, currencyData.getRate());
-		values.put(Defs.COLUMN_EXTRAINFO, currencyData.getExtraInfo());
-		values.put(Defs.COLUMN_CURR_DATE, parseDateToString(currencyData.getCurrDate(), "yyyy-MM-dd"));
-		values.put(Defs.COLUMN_TITLE, currencyData.getTitle());
-		values.put(Defs.COLUMN_F_STAR, currencyData.getfStar());
+	public void addRates(List<CurrencyData> rates) throws DataSourceException {
 
-		long insertId = database.insert(Defs.TABLE_CURRENCY, null, values);
-		Cursor cursor = database.query(Defs.TABLE_CURRENCY, allColumns, Defs.COLUMN_ID + " = " + insertId, null, null,
-				null, null);
-		cursor.moveToFirst();
-		CurrencyData newComment = cursorToCurrency(cursor);
-		cursor.close();
-		// return newComment;
+		ContentValues values = new ContentValues();
+		for (int i = 0; i < rates.size(); i++) {
+
+			values.put(Defs.COLUMN_GOLD, rates.get(i).getGold());
+			values.put(Defs.COLUMN_NAME, rates.get(i).getName());
+			values.put(Defs.COLUMN_CODE, rates.get(i).getCode());
+			values.put(Defs.COLUMN_RATIO, rates.get(i).getRatio());
+			values.put(Defs.COLUMN_REVERSERATE, rates.get(i).getReverseRate());
+			values.put(Defs.COLUMN_RATE, rates.get(i).getRate());
+			values.put(Defs.COLUMN_EXTRAINFO, rates.get(i).getExtraInfo());
+			values.put(Defs.COLUMN_CURR_DATE, parseDateToString(rates.get(i).getCurrDate(), "yyyy-MM-dd"));
+			values.put(Defs.COLUMN_TITLE, rates.get(i).getTitle());
+			values.put(Defs.COLUMN_F_STAR, rates.get(i).getfStar());
+
+			database.insert(Defs.TABLE_CURRENCY, null, values);
+			values = new ContentValues();
+		}
 	}
 
 	public List<Date> getAvailableRatesDates() throws DataSourceException {

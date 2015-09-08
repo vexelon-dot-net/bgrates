@@ -70,6 +70,6 @@ public interface DataSource {
 	 * @param rates
 	 * @throws DataSourceException
 	 */
-	void addRates(CurrencyData rates) throws DataSourceException;
+	void addRates(List<CurrencyData> rates) throws DataSourceException;
 
 }
