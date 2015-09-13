@@ -63,7 +63,7 @@ public class CurrenciesFragment extends AbstractFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		init(rootView);
-		reloadRates(false);
+		// reloadRates(false);
 		return rootView;
 	}
 
@@ -78,7 +78,7 @@ public class CurrenciesFragment extends AbstractFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_refresh) {
-			reloadRates(true);
+			reloadRates(false);
 			setRefreshActionButtonState(true);
 			return true;
 		}
@@ -163,7 +163,17 @@ public class CurrenciesFragment extends AbstractFragment {
 		protected void onPostExecute(List<CurrencyData> result) {
 			// notifyListeners(Notifications.UPDATE_RATES_DONE);
 			setRefreshActionButtonState(false);
-			if (updateOK) {
+			if (updateOK && !result.isEmpty()) {
+				try (DataSource source = new SQLiteDataSource()) {
+					source.connect(activity);
+					source.addRates(result);
+				} catch (DataSourceException e) {
+					// TODO: Add UI error msg
+					Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
+				} catch (IOException e) {
+					// We don't throw any IOException
+					e.printStackTrace();
+				}
 				updateCurrenciesListView(result);
 			} else {
 				UIUtils.showAlertDialog(activity, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
