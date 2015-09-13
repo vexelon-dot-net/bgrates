@@ -1,6 +1,5 @@
 package net.vexelon.bgrates.remote;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -12,12 +11,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import com.google.common.base.Charsets;
+
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.db.models.CurrencyData;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 public class BNBSource implements Source {
 
@@ -52,7 +52,7 @@ public class BNBSource implements Source {
 			factory.setNamespaceAware(true);
 			parser = factory.newPullParser();
 
-			parser.setInput(is, "UTF_8");
+			parser.setInput(is, Charsets.UTF_8.name());
 
 			int eventType = parser.getEventType();
 			while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -122,16 +122,10 @@ public class BNBSource implements Source {
 				}
 				eventType = parser.next();
 			}
-
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			return listCurrencyData;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new SourceException("Failed loading currencies from BNB source!", e);
 		}
-
-		return listCurrencyData;
 	}
 
 }
