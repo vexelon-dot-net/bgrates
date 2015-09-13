@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.db.models.CurrencyData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.db.models.CurrencyData;
 
 public class SQLiteDataSource implements DataSource {
 
@@ -24,16 +24,21 @@ public class SQLiteDataSource implements DataSource {
 			Defs.COLUMN_RATIO, Defs.COLUMN_REVERSERATE, Defs.COLUMN_RATE, Defs.COLUMN_EXTRAINFO, Defs.COLUMN_CURR_DATE,
 			Defs.COLUMN_TITLE, Defs.COLUMN_F_STAR };
 
-	public SQLiteDataSource(Context context) {
-		dbHelper = new CurrenciesSQLiteDB(context);
+	@Override
+	public void connect(Context context) throws DataSourceException {
+		try {
+			dbHelper = new CurrenciesSQLiteDB(context);
+			database = dbHelper.getWritableDatabase();
+		} catch (SQLException e) {
+			throw new DataSourceException("Could not open SQLite database!", e);
+		}
 	}
 
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
-	}
-
+	@Override
 	public void close() {
-		dbHelper.close();
+		if (dbHelper != null) {
+			dbHelper.close();
+		}
 	}
 
 	private Date parseStringToDate(String date, String format) throws ParseException {
@@ -46,8 +51,8 @@ public class SQLiteDataSource implements DataSource {
 		return formatter.format(date);
 	}
 
+	@Override
 	public void addRates(List<CurrencyData> rates) throws DataSourceException {
-
 		ContentValues values = new ContentValues();
 		for (int i = 0; i < rates.size(); i++) {
 
@@ -67,6 +72,7 @@ public class SQLiteDataSource implements DataSource {
 		}
 	}
 
+	@Override
 	public List<Date> getAvailableRatesDates() throws DataSourceException {
 		List<Date> resultCurrency = new ArrayList<Date>();
 		String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
@@ -90,6 +96,7 @@ public class SQLiteDataSource implements DataSource {
 		return resultCurrency;
 	}
 
+	@Override
 	public List<CurrencyData> getRates(Date dateOfCurrency) {
 		List<CurrencyData> resultCurrency = new ArrayList<CurrencyData>();
 		String whereClause = "curr_date = ? ";
@@ -109,6 +116,7 @@ public class SQLiteDataSource implements DataSource {
 
 	}
 
+	@Override
 	public List<CurrencyData> getRates() {
 		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
 
@@ -135,8 +143,8 @@ public class SQLiteDataSource implements DataSource {
 		currency.setRate(cursor.getFloat(cursor.getColumnIndex(Defs.COLUMN_RATE)));
 		currency.setExtraInfo(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_EXTRAINFO)));
 		try {
-			currency.setCurrDate(parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
-					"yyyy-MM-dd"));
+			currency.setCurrDate(
+					parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)), "yyyy-MM-dd"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

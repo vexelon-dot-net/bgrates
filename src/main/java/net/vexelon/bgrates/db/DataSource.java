@@ -23,16 +23,27 @@
  */
 package net.vexelon.bgrates.db;
 
+import java.io.Closeable;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
 import net.vexelon.bgrates.db.models.CurrencyData;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
  * data source implementation.
  */
-public interface DataSource {
+public interface DataSource extends Closeable {
+
+	/**
+	 * Establishes connection to data source.
+	 * 
+	 * @param context
+	 * @throws DataSourceException
+	 *             If an SQL error is thrown.
+	 */
+	void connect(Context context) throws DataSourceException;
 
 	/**
 	 * Fetches a list of dates for which exchange rates were downloaded and
