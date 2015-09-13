@@ -12,6 +12,11 @@ android:
 before_script:
   - echo no | android create avd --force -n test -t android-15 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
+  - touch gradle.properties
+  - echo KS=test >> gradle.properties
+  - echo KSPWD=test >> gradle.properties
+  - echo KALIAS=test >> gradle.properties
+  - echo KPWD=test >> gradle.properties
   - ./gradlew assembleDebugAndroidTest
   - ./gradlew assembleDebug
   - android-wait-for-emulator
