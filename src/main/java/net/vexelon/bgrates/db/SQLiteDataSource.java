@@ -17,12 +17,13 @@ import net.vexelon.bgrates.db.models.CurrencyData;
 
 public class SQLiteDataSource implements DataSource {
 
+	private static final String[] ALL_COLUMNS = { Defs.COLUMN_ID, Defs.COLUMN_GOLD, Defs.COLUMN_NAME, Defs.COLUMN_CODE,
+			Defs.COLUMN_RATIO, Defs.COLUMN_REVERSERATE, Defs.COLUMN_RATE, Defs.COLUMN_EXTRAINFO, Defs.COLUMN_CURR_DATE,
+			Defs.COLUMN_TITLE, Defs.COLUMN_F_STAR };
+
 	// Database fields
 	private SQLiteDatabase database;
 	private CurrenciesSQLiteDB dbHelper;
-	private String[] allColumns = { Defs.COLUMN_ID, Defs.COLUMN_GOLD, Defs.COLUMN_NAME, Defs.COLUMN_CODE,
-			Defs.COLUMN_RATIO, Defs.COLUMN_REVERSERATE, Defs.COLUMN_RATE, Defs.COLUMN_EXTRAINFO, Defs.COLUMN_CURR_DATE,
-			Defs.COLUMN_TITLE, Defs.COLUMN_F_STAR };
 
 	@Override
 	public void connect(Context context) throws DataSourceException {
@@ -102,7 +103,7 @@ public class SQLiteDataSource implements DataSource {
 		String whereClause = "curr_date = ? ";
 		String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, "yyyy-MM-dd") };
 
-		Cursor cursor = database.query(Defs.TABLE_CURRENCY, allColumns, whereClause, whereArgs, null, null, null);
+		Cursor cursor = database.query(Defs.TABLE_CURRENCY, ALL_COLUMNS, whereClause, whereArgs, null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -120,7 +121,7 @@ public class SQLiteDataSource implements DataSource {
 	public List<CurrencyData> getRates() {
 		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
 
-		Cursor cursor = database.query(Defs.TABLE_CURRENCY, allColumns, null, null, null, null, null);
+		Cursor cursor = database.query(Defs.TABLE_CURRENCY, ALL_COLUMNS, null, null, null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
