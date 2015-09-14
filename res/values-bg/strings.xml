@@ -63,10 +63,11 @@
     <string name="title_section3">Относно</string>
     <string name="action_refresh">Обнови</string>
     <string name="action_settings">Настройки</string>
-    <string-array name="entries_download_names">
+    <string name="prefs_title">BGrates Настройки</string>
+    <string-array name="pref_display_names">
         <item >По подразбиране</item>
         <item >Български</item>
         <item >Английски</item>
     </string-array>
-    <string name="pref_download_lang_title">Език на валути</string>
+    <string name="pref_display_lang_title">Език на валути</string>
 </resources>
