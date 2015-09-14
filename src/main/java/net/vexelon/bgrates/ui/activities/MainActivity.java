@@ -30,7 +30,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -101,6 +103,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 			// this tab is selected.
 			actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
 		}
+
+		// load default values
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 	}
 
 	@Override
@@ -118,7 +123,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			// TODO:
+			Intent intent = new Intent(this, PrefsActivity.class);
+			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

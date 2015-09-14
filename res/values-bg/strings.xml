@@ -34,7 +34,6 @@
     <string name="dlg_update_error_msg">Грешка при сваляне на файла с последните обменни курсове ! Моля, проверете връзката си към интернет.</string>
     <string name="dlg_parse_error_title">Грешка при четене</string>
     <string name="dlg_parse_error_msg">Грешка при четене на файла с обменните курсове!</string>
-    <string name="INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg</string>
     <string name="menu_bg_rates">Обнови</string>
     <string name="menu_en_rates">Update</string>
     <string name="about_tagline">Обменни курсове към Български лев</string>
@@ -48,7 +47,7 @@
     <string name="dlg_lastupdate_msg">Текущите валутни курсове са от предходен ден. Обнови сега ?</string>
     <string name="dlg_yes">Да</string>
     <string name="dlg_no">Не</string>
-    <string name="bg_currency_name">Лв.</string>
+    <string name="bg_currency_name">лв.</string>
     <string name="menu_convert">Преобразуване</string>
     <string name="conv_hint_msg">Преобразуване на валути</string>
     <string name="PREVIOUS_INTERNAL_STORAGE_CACHE">bgrates-inet-cache-bg_previous</string>
@@ -64,5 +63,10 @@
     <string name="title_section3">Относно</string>
     <string name="action_refresh">Обнови</string>
     <string name="action_settings">Настройки</string>
-
+    <string-array name="entries_download_names">
+        <item >По подразбиране</item>
+        <item >Български</item>
+        <item >Английски</item>
+    </string-array>
+    <string name="pref_download_lang_title">Език на валути</string>
 </resources>

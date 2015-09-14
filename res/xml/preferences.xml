@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="app_prefs">
+    <ListPreference android:key="pref_currencies_language" android:entryValues="@array/entries_download_values" android:entries="@array/entries_download_names" android:dialogTitle="@string/pref_download_lang_title" android:title="@string/pref_download_lang_title" android:defaultValue="@string/pref_download_lang_default"/>
+    
+
+</PreferenceScreen>

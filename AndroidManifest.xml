@@ -18,22 +18,7 @@
                 </category>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.activities.AboutActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".ui.activities.ConvertActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".ui.activities.RateInfoActivity"
-            android:theme="@android:style/Theme.Dialog" >
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
-        </activity>
+        <activity android:name=".ui.activities.PrefsActivity" android:label="@string/app_name"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" >
