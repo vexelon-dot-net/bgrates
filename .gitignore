@@ -10,5 +10,4 @@ local.properties
 build
 gradle.properties
 # Others
-libs/android-support-*.jar
-libs/*-appcompat.jar
+libs/
