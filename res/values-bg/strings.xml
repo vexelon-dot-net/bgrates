@@ -22,7 +22,7 @@
 
     <string name="app_name">BGrates M-Tel</string>
     <string name="app_name_pure">BGrates</string>
-    <string name="menu_about">BGrates - Относно</string>
+    <string name="menu_about">BGrates Относно</string>
     <string name="perm_inet_label">Позволяване на приложението да достъпва интернет, за да сваля необходими файлове и ресурси.</string>
     <string name="perm_inet_desc">Позволяване на приложението да тегли списък с валутни курсова, за да обнови информацията която показва.</string>
     <string name="last_update">Последно обновено</string>
@@ -58,9 +58,8 @@
         <item name="android:textColor">#606060</item>
     </style>
 
-    <string name="title_section1">Обменни курсове</string>
-    <string name="title_section2">Преобразуване</string>
-    <string name="title_section3">Относно</string>
+    <string name="tab_title_currencies">Обменни курсове</string>
+    <string name="tab_title_convert">Преобразуване</string>
     <string name="action_refresh">Обнови</string>
     <string name="action_settings">Настройки</string>
     <string name="prefs_title">BGrates Настройки</string>
