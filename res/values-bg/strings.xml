@@ -22,12 +22,12 @@
 
     <string name="app_name">BGrates M-Tel</string>
     <string name="app_name_pure">BGrates</string>
+    <string name="menu_about">BGrates - Относно</string>
     <string name="perm_inet_label">Позволяване на приложението да достъпва интернет, за да сваля необходими файлове и ресурси.</string>
     <string name="perm_inet_desc">Позволяване на приложението да тегли списък с валутни курсова, за да обнови информацията която показва.</string>
     <string name="last_update">Последно обновено</string>
     <string name="URL_BNB_RATES_SUFFIX">BG</string>
     <string name="menu_refresh">Обнови курсове</string>
-    <string name="menu_about">Относно</string>
     <string name="dlg_update_title">Сваляне...</string>
     <string name="dlg_update_msg">Сваляне на последните курсове. Моля изчакайте ...</string>
     <string name="dlg_update_error_title">Грешка при сваляне</string>
@@ -70,4 +70,5 @@
         <item >Английски</item>
     </string-array>
     <string name="pref_display_lang_title">Език на валути</string>
+    <string name="prefs_about_title">Относно BGrates</string>
 </resources>

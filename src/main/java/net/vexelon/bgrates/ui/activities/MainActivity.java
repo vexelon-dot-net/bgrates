@@ -40,7 +40,6 @@ import android.view.MenuItem;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.ui.Notifications;
 import net.vexelon.bgrates.ui.NotificationsListener;
-import net.vexelon.bgrates.ui.fragments.AboutFragment;
 import net.vexelon.bgrates.ui.fragments.AbstractFragment;
 import net.vexelon.bgrates.ui.fragments.ConvertFragment;
 import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
@@ -166,8 +165,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-		public SectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
+		public SectionsPagerAdapter(FragmentManager fragmentManager) {
+			super(fragmentManager);
 		}
 
 		@Override
@@ -182,8 +181,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
-			return 3;
+			// Show 2 total pages.
+			return 2;
 		}
 
 		@Override
@@ -194,8 +193,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 				return getString(R.string.title_section1).toUpperCase(l);
 			case 1:
 				return getString(R.string.title_section2).toUpperCase(l);
-			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
 			}
 			return null;
 		}
@@ -223,9 +220,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 				break;
 			case 2:
 				fragment = new ConvertFragment();
-				break;
-			case 3:
-				fragment = new AboutFragment();
 				break;
 			}
 			if (fragment != null) {

@@ -1,46 +1,22 @@
-/*
- * The MIT License
- * 
- * Copyright (c) 2015 Petar Petrov
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-package net.vexelon.bgrates.ui.fragments;
+package net.vexelon.bgrates.ui.activities;
 
+import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.util.Linkify;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.vexelon.bgrates.R;
 
-public class AboutFragment extends AbstractFragment {
+public class AboutActivity extends Activity {
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_about, container, false);
-		init(rootView);
-		return rootView;
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.fragment_about);
+		init(findViewById(android.R.id.content));
 	}
 
 	private void init(View view) {
@@ -49,8 +25,7 @@ public class AboutFragment extends AbstractFragment {
 
 		PackageInfo pinfo = null;
 		try {
-			pinfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(),
-					PackageManager.GET_GIDS);
+			pinfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_GIDS);
 		} catch (Exception e) {
 			// Log.e(TAG, e.getMessage());
 		}
@@ -65,7 +40,7 @@ public class AboutFragment extends AbstractFragment {
 			sb.append(pinfo.versionName);
 			sb.append("\n");
 		}
-		this.setText(view, R.id.about_row1, sb.toString());
+		setText(R.id.about_row1, sb.toString());
 		Linkify.addLinks((TextView) view.findViewById(R.id.about_row1), Linkify.ALL);
 
 		sb = new StringBuilder();
@@ -92,19 +67,19 @@ public class AboutFragment extends AbstractFragment {
 		sb.append("\n");
 		sb.append("Copyright (CC BY-ND 3.0) Visual Pharm. http://icons8.com");
 		sb.append("\n");
-		this.setText(view, R.id.about_row2, sb.toString());
+		setText(R.id.about_row2, sb.toString());
 		Linkify.addLinks((TextView) view.findViewById(R.id.about_row2), Linkify.ALL);
 	}
 
-	void setText(View view, int id, String text) {
-		TextView tx = (TextView) view.findViewById(id);
+	void setText(int id, String text) {
+		TextView tx = (TextView) findViewById(id);
 		if (tx != null) {
 			tx.setText(text);
 		}
 	}
 
 	String getResString(int resId) {
-		return getActivity().getString(resId);
+		return getString(resId);
 	}
 
 }
