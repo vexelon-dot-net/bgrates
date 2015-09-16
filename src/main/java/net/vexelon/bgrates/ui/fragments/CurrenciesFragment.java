@@ -30,6 +30,8 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -77,9 +79,13 @@ public class CurrenciesFragment extends AbstractFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_refresh) {
+		switch (id) {
+		case R.id.action_refresh:
 			reloadRates(false);
 			setRefreshActionButtonState(true);
+			return true;
+		case R.id.action_sort:
+			newSortMenu().show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -88,6 +94,20 @@ public class CurrenciesFragment extends AbstractFragment {
 	private void init(View view) {
 		lvCurrencies = (ListView) view.findViewById(R.id.ListView01);
 		tvLastUpdate = (TextView) view.findViewById(R.id.tvLastUpdate);
+	}
+
+	private AlertDialog newSortMenu() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle(R.string.action_sort_title).setSingleChoiceItems(R.array.action_sort_values, -1,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO
+						dialog.dismiss();
+					}
+				});
+		return builder.create();
 	}
 
 	/**

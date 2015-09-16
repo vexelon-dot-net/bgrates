@@ -62,8 +62,8 @@ android {
 		mavenCentral()
 	}
 	dependencies {
-		compile 'com.android.support:appcompat-v7:22.0.0',
-				'com.android.support:support-v13:22.2.1',
+		compile 'com.android.support:appcompat-v7:22.0.+',
+				'com.android.support:support-v13:22.+',
 				'com.google.guava:guava:18.+'
 	    
 	    testCompile 'junit:junit:4.+'

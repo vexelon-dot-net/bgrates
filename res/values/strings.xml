@@ -10,6 +10,9 @@
     <style name="FontList" parent="@android:style/TextAppearance">
         <item name="android:textSize">18sp</item>
     </style>
+    
+    <string name="text_ok">OK</string>
+    <string name="text_cancel">Cancel</string>
 
     <string name="app_name">BGrates M-Tel</string>
     <string name="app_name_pure">BGrates</string>
@@ -67,6 +70,12 @@
     <string name="tab_title_currencies">Currencies</string>
     <string name="tab_title_convert">Convert</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_sort">Sort</string>
+    <string name="action_sort_title">Sort by</string>
+	<string-array name="action_sort_values">
+		<item >Name</item>
+		<item >Code</item>
+	</string-array>
     <string name="action_settings">Settings</string>
     <string name="prefs_title">BGrates Settings</string>
     <string-array name="pref_display_names">
@@ -82,4 +91,5 @@
     <string name="pref_display_lang_default">default</string>
     <string name="pref_display_lang_title">Currencies language</string>
 	<string name="prefs_about_title">About BGrates</string>
+
 </resources>
