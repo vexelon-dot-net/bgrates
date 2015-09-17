@@ -68,12 +68,12 @@ public class AbstractFragment extends Fragment {
 
 	protected void setRefreshActionButtonState(final boolean isRefreshing) {
 		if (mMenu != null) {
-			final MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
-			if (refreshItem != null) {
+			MenuItem menuItem = mMenu.findItem(R.id.action_refresh);
+			if (menuItem != null) {
 				if (isRefreshing) {
-					refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
+					menuItem.setActionView(isRefreshing ? R.layout.actionbar_indeterminate_progress : null);
 				} else {
-					refreshItem.setActionView(null);
+					menuItem.setActionView(null);
 				}
 			}
 		}

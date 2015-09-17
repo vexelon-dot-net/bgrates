@@ -65,7 +65,7 @@ public class CurrenciesFragment extends AbstractFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		init(rootView);
-		// reloadRates(false);
+		reloadRates(false);
 		return rootView;
 	}
 
@@ -81,7 +81,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.action_refresh:
-			reloadRates(false);
+			reloadRates(true);
 			setRefreshActionButtonState(true);
 			return true;
 		case R.id.action_sort:
@@ -147,6 +147,7 @@ public class CurrenciesFragment extends AbstractFragment {
 			}
 		}
 		if (useRemoteSource) {
+			setRefreshActionButtonState(true);
 			new UpdateRatesTask().execute();
 		}
 	}
