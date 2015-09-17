@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="app_prefs" android:title="@string/prefs_title">
-    <ListPreference android:key="pref_currencies_language" android:entryValues="@array/pref_display_values" android:entries="@array/pref_display_names" android:dialogTitle="@string/pref_display_lang_title" android:title="@string/pref_display_lang_title" android:defaultValue="@string/pref_display_lang_default"/>
+    <ListPreference android:key="pref_currencies_language" android:entryValues="@array/pref_display_values" android:entries="@array/pref_display_names" android:dialogTitle="@string/pref_display_lang_title" android:title="@string/pref_display_lang_title" android:defaultValue="@string/pref_display_lang_default" android:persistent="true"/>
     <Preference android:key="about" android:title="@string/prefs_about_title">
    		<intent android:action="net.vexelon.bgrates.ui.activities.AboutActivity"/>
    	</Preference>

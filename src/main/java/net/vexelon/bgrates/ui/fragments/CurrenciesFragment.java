@@ -24,6 +24,7 @@
 package net.vexelon.bgrates.ui.fragments;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.db.DataSource;
@@ -97,16 +99,32 @@ public class CurrenciesFragment extends AbstractFragment {
 	}
 
 	private AlertDialog newSortMenu() {
+		final AppSettings appSettings = new AppSettings(getActivity());
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(R.string.action_sort_title).setSingleChoiceItems(R.array.action_sort_values, -1,
-				new DialogInterface.OnClickListener() {
+		builder.setTitle(R.string.action_sort_title).setSingleChoiceItems(R.array.action_sort_values,
+				appSettings.getCurrenciesSortSelection(), new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO
+						appSettings.setCurrenciesSortSelection(which);
 						dialog.dismiss();
 					}
 				});
+		builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				// TODO:
+				CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
+				adapter.sort(new Comparator<CurrencyData>() {
+					@Override
+					public int compare(CurrencyData lhs, CurrencyData rhs) {
+						return lhs.getName().compareToIgnoreCase(rhs.getName());
+					}
+				});
+				adapter.notifyDataSetChanged();
+			}
+		});
 		return builder.create();
 	}
 
