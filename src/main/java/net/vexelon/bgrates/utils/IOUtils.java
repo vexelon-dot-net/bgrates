@@ -85,27 +85,12 @@ public class IOUtils {
 	 * @throws IOException
 	 */
 	public static void moveCacheFile(Context context, File cacheFile, String internalStorageName) throws IOException {
-		FileInputStream input = null;
-		FileOutputStream output = null;
-		try {
-			input = new FileInputStream(cacheFile);
+		try (FileInputStream input = new FileInputStream(cacheFile);
+				FileOutputStream output = context.openFileOutput(internalStorageName, Context.MODE_PRIVATE)) {
 			byte[] fileData = read(input);
-			output = context.openFileOutput(internalStorageName, Context.MODE_PRIVATE);
 			output.write(fileData);
-			output.close();
 			// delete cache
 			cacheFile.delete();
-		} finally {
-			try {
-				if (input != null)
-					input.close();
-			} catch (IOException e) {
-			}
-			try {
-				if (output != null)
-					output.close();
-			} catch (IOException e) {
-			}
 		}
 	}
 
@@ -119,19 +104,12 @@ public class IOUtils {
 	 */
 	public static void writeToInternalStorage(Context context, InputStream source, String internalStorageName)
 			throws IOException {
-		FileOutputStream output = null;
-		try {
+		try (FileOutputStream output = context.openFileOutput(internalStorageName, Context.MODE_PRIVATE)) {
 			byte[] fileData = read(source);
-			output = context.openFileOutput(internalStorageName, Context.MODE_PRIVATE);
 			BufferedOutputStream bos = new BufferedOutputStream(output);
 			bos.write(fileData);
 			bos.flush();
 		} finally {
-			try {
-				if (output != null)
-					output.close();
-			} catch (IOException e) {
-			}
 			try {
 				if (source != null)
 					source.close();
@@ -149,8 +127,8 @@ public class IOUtils {
 	 */
 	public static byte[] read(InputStream source) throws IOException {
 		ReadableByteChannel srcChannel = Channels.newChannel(source);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(source.available() > 0 ? source.available()
-				: BUFFER_PAGE_SIZE);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(
+				source.available() > 0 ? source.available() : BUFFER_PAGE_SIZE);
 		WritableByteChannel destination = Channels.newChannel(baos);
 
 		try {
