@@ -60,6 +60,8 @@ import net.vexelon.bgrates.utils.DateTimeUtils;
 
 public class CurrenciesFragment extends AbstractFragment {
 
+	private static boolean sortByAscending = true;
+
 	private ListView lvCurrencies;
 	private TextView tvLastUpdate;
 
@@ -106,6 +108,7 @@ public class CurrenciesFragment extends AbstractFragment {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						sortByAscending = appSettings.getCurrenciesSortSelection() != which ? true : !sortByAscending;
 						appSettings.setCurrenciesSortSelection(which);
 						dialog.dismiss();
 					}
@@ -114,12 +117,23 @@ public class CurrenciesFragment extends AbstractFragment {
 
 			@Override
 			public void onDismiss(DialogInterface dialog) {
-				// TODO:
 				CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
 				adapter.sort(new Comparator<CurrencyData>() {
 					@Override
 					public int compare(CurrencyData lhs, CurrencyData rhs) {
-						return lhs.getName().compareToIgnoreCase(rhs.getName());
+						switch (appSettings.getCurrenciesSortSelection()) {
+						case AppSettings.SORTBY_CODE:
+							if (sortByAscending) {
+								return lhs.getCode().compareToIgnoreCase(rhs.getCode());
+							}
+							return rhs.getCode().compareToIgnoreCase(lhs.getCode());
+						case AppSettings.SORTBY_NAME:
+						default:
+							if (sortByAscending) {
+								return lhs.getName().compareToIgnoreCase(rhs.getName());
+							}
+							return rhs.getName().compareToIgnoreCase(lhs.getName());
+						}
 					}
 				});
 				adapter.notifyDataSetChanged();

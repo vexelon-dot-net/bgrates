@@ -25,6 +25,9 @@ import android.preference.PreferenceManager;
 
 public class AppSettings {
 
+	public static final int SORTBY_NAME = 0;
+	public static final int SORTBY_CODE = 1;
+
 	private SharedPreferences generalPrefs = null;
 
 	public AppSettings(Context context) {
