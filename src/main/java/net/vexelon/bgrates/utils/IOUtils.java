@@ -25,6 +25,7 @@ package net.vexelon.bgrates.utils;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -127,8 +128,8 @@ public class IOUtils {
 	 */
 	public static byte[] read(InputStream source) throws IOException {
 		ReadableByteChannel srcChannel = Channels.newChannel(source);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(
-				source.available() > 0 ? source.available() : BUFFER_PAGE_SIZE);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(source.available() > 0 ? source.available()
+				: BUFFER_PAGE_SIZE);
 		WritableByteChannel destination = Channels.newChannel(baos);
 
 		try {
@@ -159,6 +160,15 @@ public class IOUtils {
 					destination.close();
 			} catch (IOException e) {
 			}
+		}
+	}
+
+	public static void closeQuitely(Closeable source) {
+		try {
+			if (source != null)
+				source.close();
+		} catch (IOException e) {
+
 		}
 	}
 
