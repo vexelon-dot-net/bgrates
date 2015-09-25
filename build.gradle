@@ -26,8 +26,8 @@ eclipse {
 		buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
 	}
 	jdt {
-		sourceCompatibility = JavaVersion.VERSION_1_7
-		targetCompatibility = JavaVersion.VERSION_1_7
+		sourceCompatibility = JavaVersion.VERSION_1_6
+		targetCompatibility = JavaVersion.VERSION_1_6
 	}
 	classpath.plusConfigurations += [ configurations.compile, configurations.testCompile ]
 	classpath.file {
