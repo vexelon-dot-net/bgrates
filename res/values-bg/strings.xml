@@ -64,6 +64,10 @@
     <string name="action_refresh">Обновяване</string>
     <string name="action_sort">Сортиране</string>
     <string name="action_sort_title">Сортиране по:</string>
+    <string name="action_sort_name_asc">Име - възходящо</string>
+    <string name="action_sort_name_desc">Име низходящо</string>
+    <string name="action_sort_code_asc">Код - възходящо</string>
+    <string name="action_sort_code_desc">Код - низходящо</string>
 	<string-array name="action_sort_values">
 		<item >Наименование</item>
 		<item >Код</item>

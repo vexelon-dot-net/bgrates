@@ -72,7 +72,11 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_sort">Sort</string>
     <string name="action_sort_title">Sort by</string>
-	<string-array name="action_sort_values">
+    <string name="action_sort_name_asc">Name asecending</string>
+    <string name="action_sort_name_desc">Name descending</string>
+    <string name="action_sort_code_asc">Code asecending</string>
+    <string name="action_sort_code_desc">Code descending</string>
+   	<string-array name="action_sort_values">
 		<item >Name</item>
 		<item >Code</item>
 	</string-array>

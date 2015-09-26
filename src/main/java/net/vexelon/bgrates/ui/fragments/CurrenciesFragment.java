@@ -43,6 +43,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
@@ -136,6 +137,20 @@ public class CurrenciesFragment extends AbstractFragment {
 						}
 					}
 				});
+				// notify user
+				switch (appSettings.getCurrenciesSortSelection()) {
+				case AppSettings.SORTBY_CODE:
+					Toast.makeText(getActivity(),
+							sortByAscending ? R.string.action_sort_code_asc : R.string.action_sort_code_desc,
+							Toast.LENGTH_SHORT).show();
+					break;
+				case AppSettings.SORTBY_NAME:
+				default:
+					Toast.makeText(getActivity(),
+							sortByAscending ? R.string.action_sort_name_asc : R.string.action_sort_name_desc,
+							Toast.LENGTH_SHORT).show();
+					break;
+				}
 				adapter.notifyDataSetChanged();
 			}
 		});
