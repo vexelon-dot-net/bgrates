@@ -111,49 +111,43 @@ public class CurrenciesFragment extends AbstractFragment {
 					public void onClick(DialogInterface dialog, int which) {
 						sortByAscending = appSettings.getCurrenciesSortSelection() != which ? true : !sortByAscending;
 						appSettings.setCurrenciesSortSelection(which);
+						CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
+						adapter.sort(new Comparator<CurrencyData>() {
+							@Override
+							public int compare(CurrencyData lhs, CurrencyData rhs) {
+								switch (appSettings.getCurrenciesSortSelection()) {
+								case AppSettings.SORTBY_CODE:
+									if (sortByAscending) {
+										return lhs.getCode().compareToIgnoreCase(rhs.getCode());
+									}
+									return rhs.getCode().compareToIgnoreCase(lhs.getCode());
+								case AppSettings.SORTBY_NAME:
+								default:
+									if (sortByAscending) {
+										return lhs.getName().compareToIgnoreCase(rhs.getName());
+									}
+									return rhs.getName().compareToIgnoreCase(lhs.getName());
+								}
+							}
+						});
+						// notify user
+						switch (appSettings.getCurrenciesSortSelection()) {
+						case AppSettings.SORTBY_CODE:
+							Toast.makeText(getActivity(),
+									sortByAscending ? R.string.action_sort_code_asc : R.string.action_sort_code_desc,
+									Toast.LENGTH_SHORT).show();
+							break;
+						case AppSettings.SORTBY_NAME:
+						default:
+							Toast.makeText(getActivity(),
+									sortByAscending ? R.string.action_sort_name_asc : R.string.action_sort_name_desc,
+									Toast.LENGTH_SHORT).show();
+							break;
+						}
+						adapter.notifyDataSetChanged();
 						dialog.dismiss();
 					}
 				});
-		builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
-				adapter.sort(new Comparator<CurrencyData>() {
-					@Override
-					public int compare(CurrencyData lhs, CurrencyData rhs) {
-						switch (appSettings.getCurrenciesSortSelection()) {
-						case AppSettings.SORTBY_CODE:
-							if (sortByAscending) {
-								return lhs.getCode().compareToIgnoreCase(rhs.getCode());
-							}
-							return rhs.getCode().compareToIgnoreCase(lhs.getCode());
-						case AppSettings.SORTBY_NAME:
-						default:
-							if (sortByAscending) {
-								return lhs.getName().compareToIgnoreCase(rhs.getName());
-							}
-							return rhs.getName().compareToIgnoreCase(lhs.getName());
-						}
-					}
-				});
-				// notify user
-				switch (appSettings.getCurrenciesSortSelection()) {
-				case AppSettings.SORTBY_CODE:
-					Toast.makeText(getActivity(),
-							sortByAscending ? R.string.action_sort_code_asc : R.string.action_sort_code_desc,
-							Toast.LENGTH_SHORT).show();
-					break;
-				case AppSettings.SORTBY_NAME:
-				default:
-					Toast.makeText(getActivity(),
-							sortByAscending ? R.string.action_sort_name_asc : R.string.action_sort_name_desc,
-							Toast.LENGTH_SHORT).show();
-					break;
-				}
-				adapter.notifyDataSetChanged();
-			}
-		});
 		return builder.create();
 	}
 
