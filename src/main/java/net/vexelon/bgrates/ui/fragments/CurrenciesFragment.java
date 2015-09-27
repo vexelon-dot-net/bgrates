@@ -23,7 +23,6 @@
  */
 package net.vexelon.bgrates.ui.fragments;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -55,8 +54,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import net.vexelon.bgrates.AppSettings;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.DataSource;
+import net.vexelon.bgrates.db.DataSourceException;
+import net.vexelon.bgrates.db.SQLiteDataSource;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.remote.BNBSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.DateTimeUtils;
 
 import com.google.common.collect.Lists;
+import android.widget.Toast;
+import net.vexelon.bgrates.AppSettings;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.DataSource;
+import net.vexelon.bgrates.db.DataSourceException;
+import net.vexelon.bgrates.db.SQLiteDataSource;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.remote.BNBSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.DateTimeUtils;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class CurrenciesFragment extends AbstractFragment {
 
@@ -136,6 +163,20 @@ public class CurrenciesFragment extends AbstractFragment {
 						}
 					}
 				});
+				// notify user
+				switch (appSettings.getCurrenciesSortSelection()) {
+				case AppSettings.SORTBY_CODE:
+					Toast.makeText(getActivity(),
+							sortByAscending ? R.string.action_sort_code_asc : R.string.action_sort_code_desc,
+							Toast.LENGTH_SHORT).show();
+					break;
+				case AppSettings.SORTBY_NAME:
+				default:
+					Toast.makeText(getActivity(),
+							sortByAscending ? R.string.action_sort_name_asc : R.string.action_sort_name_desc,
+							Toast.LENGTH_SHORT).show();
+					break;
+				}
 				adapter.notifyDataSetChanged();
 			}
 		});
@@ -161,7 +202,9 @@ public class CurrenciesFragment extends AbstractFragment {
 	 */
 	public void reloadRates(boolean useRemoteSource) {
 		if (!useRemoteSource) {
-			try (DataSource source = new SQLiteDataSource()) {
+			DataSource source = null;
+			try {
+				source = new SQLiteDataSource();
 				source.connect(getActivity());
 				List<CurrencyData> ratesList = source.getRates();
 				if (!ratesList.isEmpty()) {
@@ -173,9 +216,8 @@ public class CurrenciesFragment extends AbstractFragment {
 			} catch (DataSourceException e) {
 				// TODO: Add UI error msg
 				Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);
-			} catch (IOException e) {
-				// We don't throw any IOException
-				e.printStackTrace();
+			} finally {
+				IOUtils.closeQuitely(source);
 			}
 		}
 		if (useRemoteSource) {
@@ -217,16 +259,17 @@ public class CurrenciesFragment extends AbstractFragment {
 			// notifyListeners(Notifications.UPDATE_RATES_DONE);
 			setRefreshActionButtonState(false);
 			if (updateOK && !result.isEmpty()) {
-				try (DataSource source = new SQLiteDataSource()) {
+				DataSource source = null;
+				try {
+					source = new SQLiteDataSource();
 					source.connect(activity);
 					source.addRates(result);
 					// TODO: Test
 				} catch (DataSourceException e) {
 					// TODO: Add UI error msg
 					Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
-				} catch (IOException e) {
-					// We don't throw any IOException
-					e.printStackTrace();
+				} finally {
+					IOUtils.closeQuitely(source);
 				}
 				updateCurrenciesListView(result);
 			} else {

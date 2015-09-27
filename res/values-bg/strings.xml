@@ -64,6 +64,10 @@
     <string name="action_refresh">Обновяване</string>
     <string name="action_sort">Сортиране</string>
     <string name="action_sort_title">Сортиране по:</string>
+    <string name="action_sort_name_asc">По име от А-Я</string>
+    <string name="action_sort_name_desc">По име от Я-А</string>
+    <string name="action_sort_code_asc">По код от А-Я</string>
+    <string name="action_sort_code_desc">По код от Я-А</string>
 	<string-array name="action_sort_values">
 		<item >Наименование</item>
 		<item >Код</item>
@@ -76,5 +80,6 @@
         <item >Английски</item>
     </string-array>
     <string name="pref_display_lang_title">Език на валути</string>
-    <string name="prefs_about_title">Относно BGrates</string>
+    <string name="pref_rateus_title">Подкрепете ни и оценете приложението</string>
+    <string name="pref_about_title">Относно BGrates</string>
 </resources>

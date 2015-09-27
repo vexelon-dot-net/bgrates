@@ -52,27 +52,18 @@ public class IOUtils {
 	 * @throws IOException
 	 */
 	public static void downloadFile(String url, File destFile) throws IOException {
-		FileOutputStream out = null;
 		InputStream input = null;
+		FileOutputStream output = null;
 		try {
 			URL myUrl = new URL(url);
 			URLConnection connection = myUrl.openConnection();
 			input = connection.getInputStream();
 			byte[] fileData = read(input);
-			out = new FileOutputStream(destFile);
-			out.write(fileData);
-			out.close();
+			output = new FileOutputStream(destFile);
+			output.write(fileData);
 		} finally {
-			try {
-				if (out != null)
-					out.close();
-			} catch (IOException e) {
-			}
-			try {
-				if (input != null)
-					input.close();
-			} catch (IOException e) {
-			}
+			closeQuitely(input);
+			closeQuitely(output);
 		}
 	}
 
@@ -86,12 +77,18 @@ public class IOUtils {
 	 * @throws IOException
 	 */
 	public static void moveCacheFile(Context context, File cacheFile, String internalStorageName) throws IOException {
-		try (FileInputStream input = new FileInputStream(cacheFile);
-				FileOutputStream output = context.openFileOutput(internalStorageName, Context.MODE_PRIVATE)) {
+		FileInputStream input = null;
+		FileOutputStream output = null;
+		try {
+			input = new FileInputStream(cacheFile);
 			byte[] fileData = read(input);
+			output = context.openFileOutput(internalStorageName, Context.MODE_PRIVATE);
 			output.write(fileData);
 			// delete cache
 			cacheFile.delete();
+		} finally {
+			closeQuitely(input);
+			closeQuitely(output);
 		}
 	}
 
@@ -105,17 +102,15 @@ public class IOUtils {
 	 */
 	public static void writeToInternalStorage(Context context, InputStream source, String internalStorageName)
 			throws IOException {
-		try (FileOutputStream output = context.openFileOutput(internalStorageName, Context.MODE_PRIVATE)) {
+		BufferedOutputStream bos = null;
+		try {
 			byte[] fileData = read(source);
-			BufferedOutputStream bos = new BufferedOutputStream(output);
+			bos = new BufferedOutputStream(context.openFileOutput(internalStorageName, Context.MODE_PRIVATE));
 			bos.write(fileData);
 			bos.flush();
 		} finally {
-			try {
-				if (source != null)
-					source.close();
-			} catch (IOException e) {
-			}
+			closeQuitely(source);
+			closeQuitely(bos);
 		}
 	}
 
@@ -128,10 +123,9 @@ public class IOUtils {
 	 */
 	public static byte[] read(InputStream source) throws IOException {
 		ReadableByteChannel srcChannel = Channels.newChannel(source);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(source.available() > 0 ? source.available()
-				: BUFFER_PAGE_SIZE);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(
+				source.available() > 0 ? source.available() : BUFFER_PAGE_SIZE);
 		WritableByteChannel destination = Channels.newChannel(baos);
-
 		try {
 			ByteBuffer buffer = ByteBuffer.allocate(BUFFER_PAGE_SIZE);
 			while (srcChannel.read(buffer) > 0) {
@@ -145,31 +139,18 @@ public class IOUtils {
 		} catch (IOException e) {
 			throw e;
 		} finally {
-			try {
-				if (srcChannel != null)
-					srcChannel.close();
-			} catch (IOException e) {
-			}
-			try {
-				if (source != null)
-					source.close();
-			} catch (IOException e) {
-			}
-			try {
-				if (destination != null)
-					destination.close();
-			} catch (IOException e) {
-			}
+			closeQuitely(srcChannel);
+			closeQuitely(source);
+			closeQuitely(destination);
 		}
 	}
 
 	public static void closeQuitely(Closeable source) {
 		try {
-			if (source != null)
+			if (source != null) {
 				source.close();
+			}
 		} catch (IOException e) {
-
 		}
 	}
-
 }
