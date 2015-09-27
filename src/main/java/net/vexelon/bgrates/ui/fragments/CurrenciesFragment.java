@@ -28,8 +28,19 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
+import net.vexelon.bgrates.AppSettings;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.DataSource;
+import net.vexelon.bgrates.db.DataSourceException;
+import net.vexelon.bgrates.db.SQLiteDataSource;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.remote.BNBSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.DateTimeUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -44,19 +55,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import net.vexelon.bgrates.AppSettings;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.DataSource;
-import net.vexelon.bgrates.db.DataSourceException;
-import net.vexelon.bgrates.db.SQLiteDataSource;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.remote.BNBSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
-import net.vexelon.bgrates.utils.DateTimeUtils;
+
+import com.google.common.collect.Lists;
 
 public class CurrenciesFragment extends AbstractFragment {
 
@@ -220,6 +220,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				try (DataSource source = new SQLiteDataSource()) {
 					source.connect(activity);
 					source.addRates(result);
+					// TODO: Test
 				} catch (DataSourceException e) {
 					// TODO: Add UI error msg
 					Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);

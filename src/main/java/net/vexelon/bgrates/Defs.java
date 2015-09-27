@@ -34,7 +34,10 @@ public class Defs {
 	public final static String CONV_PREFS_KEY_CONVITEMS_COUNT = "ConvertItemsCount";
 	public final static String CONV_PREFS_KEY_ITEM = "ConvertItem_";
 
-	// //////Tsvetoslav - Parameters which used into SQLite////////////
+	// //////Tsvetoslav
+	// Time for request to BNB
+	public static final long NOTIFY_INTERVAL = 60 * 1000; // 10 seconds
+	// Parameters which used into SQLite//
 	// Address on BNB for get on XML file
 	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=bg";
 	// Name of DB
