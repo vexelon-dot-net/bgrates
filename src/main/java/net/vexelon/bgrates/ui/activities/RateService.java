@@ -45,6 +45,11 @@ public class RateService extends Service {
 	}
 
 	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		return START_REDELIVER_INTENT;
+	}
+
+	@Override
 	public void onCreate() {
 		// cancel if already existed
 		if (mTimer != null) {
@@ -92,9 +97,8 @@ public class RateService extends Service {
 			try {
 				source = new SQLiteDataSource();
 				source.connect(ctx);
-				listCurrency = source.getRates(cal.getTime());// Temp code
-				// listCurrency =
-				// source.getRates(Calendar.getInstance().getTime());// !!!
+				// listCurrency = source.getRates(cal.getTime());// Temp code
+				listCurrency = source.getRates(Calendar.getInstance().getTime());// !!!
 				// listCurrency =
 				// datasource.getRates(Calendar.getInstance().getTime());
 			} catch (DataSourceException e) {

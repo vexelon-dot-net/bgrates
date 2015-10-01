@@ -108,6 +108,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 
 		// Start Service
 		startService(new Intent(this, RateService.class));
+
+		// Create an Explicit Intent
+		// Intent intent = new Intent(this, RateService.class);
+		// // Set some data that the Service might require/use
+		// intent.putExtra("key", "val");
+		// // Start the Service
+		// startService(intent);
 	}
 
 	@Override
