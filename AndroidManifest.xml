@@ -25,6 +25,10 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        
+        <!--Service declared in manifest -->
+         <service android:name="net.vexelon.bgrates.ui.activities.RateService"/>
+         
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" >

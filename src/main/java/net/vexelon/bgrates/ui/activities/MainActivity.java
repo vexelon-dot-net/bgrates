@@ -25,6 +25,12 @@ package net.vexelon.bgrates.ui.activities;
 
 import java.util.Locale;
 
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.ui.Notifications;
+import net.vexelon.bgrates.ui.NotificationsListener;
+import net.vexelon.bgrates.ui.fragments.AbstractFragment;
+import net.vexelon.bgrates.ui.fragments.ConvertFragment;
+import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -37,19 +43,13 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.ui.Notifications;
-import net.vexelon.bgrates.ui.NotificationsListener;
-import net.vexelon.bgrates.ui.fragments.AbstractFragment;
-import net.vexelon.bgrates.ui.fragments.ConvertFragment;
-import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener, NotificationsListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link FragmentPagerAdapter} derivative, which will keep every
+	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
+	 * derivative, which will keep every
 	 * loaded fragment in memory. If this becomes too memory intensive, it
 	 * may be best to switch to a
 	 * {@link android.support.v13.app.FragmentStatePagerAdapter}.
@@ -105,6 +105,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 
 		// load default values
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+		// Start Service
+		startService(new Intent(this, RateService.class));
+
+		// Create an Explicit Intent
+		// Intent intent = new Intent(this, RateService.class);
+		// // Set some data that the Service might require/use
+		// intent.putExtra("key", "val");
+		// // Start the Service
+		// startService(intent);
 	}
 
 	@Override
