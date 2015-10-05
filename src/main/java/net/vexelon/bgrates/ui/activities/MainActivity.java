@@ -23,9 +23,12 @@
  */
 package net.vexelon.bgrates.ui.activities;
 
+import java.util.Calendar;
 import java.util.Locale;
 
+import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.service.RateService;
 import net.vexelon.bgrates.ui.Notifications;
 import net.vexelon.bgrates.ui.NotificationsListener;
 import net.vexelon.bgrates.ui.fragments.AbstractFragment;
@@ -33,9 +36,11 @@ import net.vexelon.bgrates.ui.fragments.ConvertFragment;
 import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -43,6 +48,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements ActionBar.TabListener, NotificationsListener {
 
@@ -55,6 +61,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 	 * {@link android.support.v13.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
+	private PendingIntent pendingIntent;// //
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -107,14 +114,29 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		// Start Service
-		startService(new Intent(this, RateService.class));
+		startService();
 
-		// Create an Explicit Intent
-		// Intent intent = new Intent(this, RateService.class);
-		// // Set some data that the Service might require/use
-		// intent.putExtra("key", "val");
-		// // Start the Service
-		// startService(intent);
+	}
+
+	public void startService() {
+		Intent myIntent = new Intent(MainActivity.this, RateService.class);
+		pendingIntent = PendingIntent.getService(MainActivity.this, 0, myIntent, 0);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		calendar.add(Calendar.SECOND, 30);
+		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), Defs.NOTIFY_INTERVAL,
+				pendingIntent);
+
+		Toast.makeText(MainActivity.this, "Start Alarm", Toast.LENGTH_LONG).show();
+	}
+
+	public void cancelService() {
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarmManager.cancel(pendingIntent);
+		// Tell the user about what we did.
+		// Toast.makeText(RateService.this, "Cancel!",
+		// Toast.LENGTH_LONG).show();
 	}
 
 	@Override

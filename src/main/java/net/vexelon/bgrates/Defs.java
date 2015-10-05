@@ -36,7 +36,7 @@ public class Defs {
 
 	// //////Tsvetoslav
 	// Time for request to BNB
-	public static final long NOTIFY_INTERVAL = 60 * 1000; // 10 seconds
+	public static final long NOTIFY_INTERVAL = 3600 * 1000; // 1 hour
 	// Parameters which used into SQLite//
 	// Address on BNB for get on XML file
 	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=bg";
@@ -46,7 +46,8 @@ public class Defs {
 	public static final int DATABASE_VERSION = 1;
 	// table name
 	public static final String TABLE_CURRENCY = "currencies";
-	// Name of columns in table
+	public static final String TABLE_CURRENCY_DATE = "currenciesdate";
+	// Name of columns in table TABLE_CURRENCY
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_GOLD = "gold";
 	public static final String COLUMN_NAME = "name";
