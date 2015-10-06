@@ -40,6 +40,7 @@ import net.vexelon.bgrates.remote.SourceException;
 import net.vexelon.bgrates.ui.UIUtils;
 import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
 import net.vexelon.bgrates.utils.DateTimeUtils;
+import net.vexelon.bgrates.utils.IOUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -54,36 +55,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import net.vexelon.bgrates.AppSettings;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.DataSource;
-import net.vexelon.bgrates.db.DataSourceException;
-import net.vexelon.bgrates.db.SQLiteDataSource;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.remote.BNBSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
-import net.vexelon.bgrates.utils.DateTimeUtils;
+import android.widget.Toast;
 
 import com.google.common.collect.Lists;
-import android.widget.Toast;
-import net.vexelon.bgrates.AppSettings;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.DataSource;
-import net.vexelon.bgrates.db.DataSourceException;
-import net.vexelon.bgrates.db.SQLiteDataSource;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.remote.BNBSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
-import net.vexelon.bgrates.utils.DateTimeUtils;
-import net.vexelon.bgrates.utils.IOUtils;
 
 public class CurrenciesFragment extends AbstractFragment {
 
@@ -209,7 +183,8 @@ public class CurrenciesFragment extends AbstractFragment {
 				List<CurrencyData> ratesList = source.getRates();
 				if (!ratesList.isEmpty()) {
 					Log.v(Defs.LOG_TAG, "Displaying rates from database...");
-					updateCurrenciesListView(ratesList);
+					updateCurrenciesListView(ratesList);// TODO remove
+					// commenct
 				} else {
 					useRemoteSource = true;
 				}
@@ -220,10 +195,12 @@ public class CurrenciesFragment extends AbstractFragment {
 				IOUtils.closeQuitely(source);
 			}
 		}
-		if (useRemoteSource) {
-			setRefreshActionButtonState(true);
-			new UpdateRatesTask().execute();
-		}
+		/*
+		 * if (useRemoteSource) {
+		 * setRefreshActionButtonState(true);
+		 * new UpdateRatesTask().execute();
+		 * }
+		 */// TODO remove comment
 	}
 
 	private class UpdateRatesTask extends AsyncTask<Void, Void, List<CurrencyData>> {
@@ -263,7 +240,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				try {
 					source = new SQLiteDataSource();
 					source.connect(activity);
-					source.addRates(result);
+					// source.addRates(result);//TODO remove comment
 					// TODO: Test
 				} catch (DataSourceException e) {
 					// TODO: Add UI error msg
@@ -271,7 +248,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				} finally {
 					IOUtils.closeQuitely(source);
 				}
-				updateCurrenciesListView(result);
+				// updateCurrenciesListView(result);//TODO remove comment
 			} else {
 				UIUtils.showAlertDialog(activity, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
 			}
