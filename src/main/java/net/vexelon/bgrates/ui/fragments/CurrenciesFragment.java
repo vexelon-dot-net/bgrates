@@ -177,8 +177,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				List<CurrencyData> ratesList = source.getRates();
 				if (!ratesList.isEmpty()) {
 					Log.v(Defs.LOG_TAG, "Displaying rates from database...");
-					updateCurrenciesListView(ratesList);// TODO remove
-					// commenct
+					updateCurrenciesListView(ratesList);
 				} else {
 					useRemoteSource = true;
 				}
@@ -189,12 +188,10 @@ public class CurrenciesFragment extends AbstractFragment {
 				IOUtils.closeQuitely(source);
 			}
 		}
-		/*
-		 * if (useRemoteSource) {
-		 * setRefreshActionButtonState(true);
-		 * new UpdateRatesTask().execute();
-		 * }
-		 */// TODO remove comment
+		if (useRemoteSource) {
+			setRefreshActionButtonState(true);
+			new UpdateRatesTask().execute();
+		}
 	}
 
 	private class UpdateRatesTask extends AsyncTask<Void, Void, List<CurrencyData>> {
@@ -234,7 +231,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				try {
 					source = new SQLiteDataSource();
 					source.connect(activity);
-					// source.addRates(result);//TODO remove comment
+					source.addRates(result);
 					// TODO: Test
 				} catch (DataSourceException e) {
 					// TODO: Add UI error msg
@@ -242,7 +239,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				} finally {
 					IOUtils.closeQuitely(source);
 				}
-				// updateCurrenciesListView(result);//TODO remove comment
+				updateCurrenciesListView(result);
 			} else {
 				UIUtils.showAlertDialog(activity, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
 			}
