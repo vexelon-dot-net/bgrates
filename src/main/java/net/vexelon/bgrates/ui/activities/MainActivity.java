@@ -48,7 +48,6 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 public class MainActivity extends Activity implements ActionBar.TabListener, NotificationsListener {
 
@@ -128,7 +127,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), Defs.NOTIFY_INTERVAL,
 				pendingIntent);
 
-		Toast.makeText(MainActivity.this, "Start Alarm", Toast.LENGTH_LONG).show();
+		// Toast.makeText(MainActivity.this, "Start Alarm",
+		// Toast.LENGTH_LONG).show();
 	}
 
 	public void cancelService() {

@@ -18,21 +18,19 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.common.collect.Lists;
 
 public class RateService extends Service {
 
 	public List<CurrencyData> listCurrency;
-	private SQLiteDataSource datasource;
 
 	@Override
 	public void onCreate() {
 
 		// TODO Auto-generated method stub
-
-		Toast.makeText(this, "MyAlarmService.onCreate()", Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, "MyAlarmService.onCreate()",
+		// Toast.LENGTH_LONG).show();
 
 	}
 
@@ -41,7 +39,8 @@ public class RateService extends Service {
 
 		// TODO Auto-generated method stub
 
-		Toast.makeText(this, "MyAlarmService.onBind()", Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, "MyAlarmService.onBind()",
+		// Toast.LENGTH_LONG).show();
 
 		return null;
 
@@ -54,7 +53,8 @@ public class RateService extends Service {
 
 		super.onDestroy();
 
-		Toast.makeText(this, "MyAlarmService.onDestroy()", Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, "MyAlarmService.onDestroy()",
+		// Toast.LENGTH_LONG).show();
 
 	}
 
@@ -65,8 +65,9 @@ public class RateService extends Service {
 
 		super.onStart(intent, startId);
 
-		Toast.makeText(this, "MyAlarmService.onStart()", Toast.LENGTH_LONG).show();
-		if (!isCurrenciesToDate()) // TODO remove comment
+		// Toast.makeText(this, "MyAlarmService.onStart()",
+		// Toast.LENGTH_LONG).show();
+		if (!isCurrenciesToDate())
 			new DownloadWebpageTask().execute("");
 
 	}
@@ -76,7 +77,8 @@ public class RateService extends Service {
 
 		// TODO Auto-generated method stub
 
-		Toast.makeText(this, "MyAlarmService.onUnbind()", Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, "MyAlarmService.onUnbind()",
+		// Toast.LENGTH_LONG).show();
 
 		return super.onUnbind(intent);
 
@@ -88,21 +90,12 @@ public class RateService extends Service {
 	 * @return: true-Have, false-Haven't
 	 */
 	private boolean isCurrenciesToDate() {
-
-		// Temp code
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, -1);
-		// Temp code
-
 		Context ctx = RateService.this;
 		DataSource source = null;
 		try {
 			source = new SQLiteDataSource();
 			source.connect(ctx);
-			// listCurrency = source.getRates(cal.getTime());// Temp code
-			listCurrency = source.getRates(Calendar.getInstance().getTime());// !!!
-			// listCurrency =
-			// datasource.getRates(Calendar.getInstance().getTime());
+			listCurrency = source.getRates(Calendar.getInstance().getTime());
 		} catch (DataSourceException e) {
 			// TODO: Add UI error msg
 			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
@@ -131,7 +124,8 @@ public class RateService extends Service {
 			return ratesList;
 		}
 
-		// onPostExecute displays the results of the AsyncTask.
+		// onPostExecute results of the AsyncTask - add currencies in DB if not
+		// exists
 		@Override
 		protected void onPostExecute(List<CurrencyData> result) {
 			Context ctx = RateService.this;
