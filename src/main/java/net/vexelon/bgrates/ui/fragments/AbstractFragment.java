@@ -31,7 +31,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
 import net.vexelon.bgrates.ui.Notifications;
 import net.vexelon.bgrates.ui.NotificationsListener;
 
@@ -76,6 +78,19 @@ public class AbstractFragment extends Fragment {
 					menuItem.setActionView(null);
 				}
 			}
+		}
+	}
+
+	protected CurrencyLocales getSelectedCurrenciesLocale() {
+		final AppSettings appSettings = new AppSettings(getActivity());
+		switch (appSettings.getCurrenciesLanguage()) {
+		case 1:
+			return CurrencyLocales.BG;
+		case 2:
+			return CurrencyLocales.EN;
+		case 0:
+		default:
+			return CurrencyLocales.getAppLocale(getActivity());
 		}
 	}
 

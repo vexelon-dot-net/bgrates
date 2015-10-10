@@ -7,7 +7,6 @@ import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import net.vexelon.bgrates.db.models.CurrencyData;
@@ -23,7 +23,7 @@ import net.vexelon.bgrates.db.models.CurrencyLocales;
 
 public class BNBSource implements Source {
 
-	// Address on BNB for get on XML file
+	// Addresses on BNB for get on XML file
 	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
 	public final static String URL_BNB_FORMAT_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
 
@@ -40,16 +40,14 @@ public class BNBSource implements Source {
 	public final static String XML_TAG_TITLE = "TITLE";
 	public final static String XML_TAG_F_STAR = "F_STAR";
 
-	// private final static String TAG = Defs.LOG_TAG;
-	List<CurrencyData> listCurrencyData;
 	private CurrencyData currencyData;
 	private String text;
 
 	public BNBSource() {
-		listCurrencyData = new ArrayList<CurrencyData>();
 	}
 
 	public List<CurrencyData> getRatesFromUrl(String ratesUrl) throws SourceException {
+		List<CurrencyData> listCurrencyData = Lists.newArrayList();
 		XmlPullParserFactory factory = null;
 		XmlPullParser parser = null;
 		URL url = null;

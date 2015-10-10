@@ -176,8 +176,7 @@ public class CurrenciesFragment extends AbstractFragment {
 			try {
 				source = new SQLiteDataSource();
 				source.connect(getActivity());
-				// TODO locale
-				List<CurrencyData> ratesList = source.getRates(CurrencyLocales.BG);
+				List<CurrencyData> ratesList = source.getRates(getSelectedCurrenciesLocale());
 				if (!ratesList.isEmpty()) {
 					Log.v(Defs.LOG_TAG, "Displaying rates from database...");
 					updateCurrenciesListView(ratesList);
@@ -208,7 +207,6 @@ public class CurrenciesFragment extends AbstractFragment {
 
 		@Override
 		protected void onPreExecute() {
-			// TODO: show updating msg
 		}
 
 		@Override
@@ -242,8 +240,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				} finally {
 					IOUtils.closeQuitely(source);
 				}
-				// TODO
-				updateCurrenciesListView(result.get(CurrencyLocales.BG));
+				updateCurrenciesListView(result.get(getSelectedCurrenciesLocale()));
 			} else {
 				UIUtils.showAlertDialog(activity, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
 			}
