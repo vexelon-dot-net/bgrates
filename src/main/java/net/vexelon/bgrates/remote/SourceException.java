@@ -26,6 +26,10 @@ package net.vexelon.bgrates.remote;
 @SuppressWarnings("serial")
 public class SourceException extends Exception {
 
+	public SourceException(String message) {
+		super(message);
+	}
+
 	public SourceException(Throwable t) {
 		super(t);
 	}

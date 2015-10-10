@@ -17,9 +17,11 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
 
 import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class BNBSource implements Source {
 
@@ -48,6 +50,7 @@ public class BNBSource implements Source {
 
 	public List<CurrencyData> getRatesFromUrl(String ratesUrl) throws SourceException {
 		List<CurrencyData> listCurrencyData = Lists.newArrayList();
+		InputStream is = null;
 		XmlPullParserFactory factory = null;
 		XmlPullParser parser = null;
 		URL url = null;
@@ -57,16 +60,15 @@ public class BNBSource implements Source {
 			URLConnection connection = url.openConnection();
 			connection.setDoInput(true);
 			HttpURLConnection httpConn = (HttpURLConnection) connection;
-			InputStream is = null;
-			if (httpConn.getResponseCode() >= 400) {
+			if (httpConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+				// read error and throw it to caller
 				is = httpConn.getErrorStream();
-			} else {
-				is = httpConn.getInputStream();
+				throw new SourceException(new String(ByteStreams.toByteArray(is), Charsets.UTF_8.name()));
 			}
+			is = httpConn.getInputStream();
 			factory = XmlPullParserFactory.newInstance();
 			factory.setNamespaceAware(true);
 			parser = factory.newPullParser();
-
 			parser.setInput(is, Charsets.UTF_8.name());
 
 			int eventType = parser.getEventType();
@@ -139,6 +141,8 @@ public class BNBSource implements Source {
 			return listCurrencyData;
 		} catch (Exception e) {
 			throw new SourceException("Failed loading currencies from BNB source!", e);
+		} finally {
+			IOUtils.closeQuitely(is);
 		}
 	}
 
