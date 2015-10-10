@@ -26,21 +26,10 @@ package net.vexelon.bgrates.ui.fragments;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import net.vexelon.bgrates.AppSettings;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.DataSource;
-import net.vexelon.bgrates.db.DataSourceException;
-import net.vexelon.bgrates.db.SQLiteDataSource;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.remote.BNBSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
-import net.vexelon.bgrates.utils.DateTimeUtils;
-import net.vexelon.bgrates.utils.IOUtils;
+import com.google.common.collect.Maps;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -56,8 +45,20 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.common.collect.Lists;
+import net.vexelon.bgrates.AppSettings;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.DataSource;
+import net.vexelon.bgrates.db.DataSourceException;
+import net.vexelon.bgrates.db.SQLiteDataSource;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.remote.BNBSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.DateTimeUtils;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class CurrenciesFragment extends AbstractFragment {
 
@@ -194,7 +195,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		}
 	}
 
-	private class UpdateRatesTask extends AsyncTask<Void, Void, List<CurrencyData>> {
+	private class UpdateRatesTask extends AsyncTask<Void, Void, Map<String, List<CurrencyData>>> {
 
 		private Activity activity;
 		private boolean updateOK = false;
@@ -209,12 +210,12 @@ public class CurrenciesFragment extends AbstractFragment {
 		}
 
 		@Override
-		protected List<CurrencyData> doInBackground(Void... params) {
-			List<CurrencyData> ratesList = Lists.newArrayList();
+		protected Map<String, List<CurrencyData>> doInBackground(Void... params) {
+			Map<String, List<CurrencyData>> ratesList = Maps.newHashMap();
 			try {
 				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
 				Source source = new BNBSource();
-				ratesList = source.fetchRates();
+				ratesList = source.downloadRates();
 				updateOK = true;
 			} catch (SourceException e) {
 				Log.e(Defs.LOG_TAG, "Could not laod rates from remote!", e);
@@ -223,7 +224,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		}
 
 		@Override
-		protected void onPostExecute(List<CurrencyData> result) {
+		protected void onPostExecute(Map<String, List<CurrencyData>> result) {
 			// notifyListeners(Notifications.UPDATE_RATES_DONE);
 			setRefreshActionButtonState(false);
 			if (updateOK && !result.isEmpty()) {
@@ -231,15 +232,16 @@ public class CurrenciesFragment extends AbstractFragment {
 				try {
 					source = new SQLiteDataSource();
 					source.connect(activity);
-					source.addRates(result);
-					// TODO: Test
+					// TODO
+					// source.addRates(result);
 				} catch (DataSourceException e) {
 					// TODO: Add UI error msg
 					Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 				} finally {
 					IOUtils.closeQuitely(source);
 				}
-				updateCurrenciesListView(result);
+				// TODO
+				updateCurrenciesListView(result.get(Defs.LANG_EN));
 			} else {
 				UIUtils.showAlertDialog(activity, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
 			}
