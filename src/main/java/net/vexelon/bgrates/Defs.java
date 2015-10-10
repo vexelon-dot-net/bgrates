@@ -58,26 +58,7 @@ public class Defs {
 	public static final String COLUMN_TITLE = "title";
 	public static final String COLUMN_F_STAR = "f_star";
 
-	public final static String LANG_BG = "BG";
-	public final static String LANG_EN = "EN";
-
-	public final static String URI_CACHE_NAME = "BGRatesDownloadCache";
-	public final static String URL_BNB_INDEX = "http://www.bnb.bg/index.htm";
-	public final static String URI_CACHE_NAME_INDEXHTM = "BGRatesDownloadCacheHTM";
-
-	public final static String INT_EXCHANGERATES = "int-exch";
-
-	public final static int MAX_RATE_CHARS_SIZE = 8;
-	public final static int MAX_TOAST_INFO_TIME = 3150;
-
-	public final static int MENU_REFRESH = 10;
-	public final static int MENU_BG_RATES = 12;
-	public final static int MENU_EN_RATES = 14;
-	public final static int MENU_CONVERT = 15;
-	public final static int MENU_ABOUT = 20;
-
-	public final static int ACTIVITYRESULT_CLOSE = 100;
-
+	// calculations floating-point position
 	public final static int SCALE_SHOW_LONG = 5;
 	public final static int SCALE_SHOW_SHORT = 3;
 	public final static int SCALE_CALCULATIONS = 10;

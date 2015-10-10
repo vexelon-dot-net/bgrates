@@ -115,12 +115,12 @@ public class BNBSource implements Source {
 							currencyData.setExtraInfo(text);
 						} else if (tagname.equalsIgnoreCase(XML_TAG_CURR_DATE)) {
 							DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-							Date currencyDate = null;
+							Date currencyDate = new Date();
 							try {
 								currencyDate = df.parse(text);
 							} catch (ParseException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
+								// use default (today)
 							}
 							currencyData.setCurrDate(currencyDate);
 						} else if (tagname.equalsIgnoreCase(XML_TAG_TITLE)) {
