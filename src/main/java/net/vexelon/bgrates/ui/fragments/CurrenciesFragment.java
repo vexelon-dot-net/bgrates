@@ -113,25 +113,7 @@ public class CurrenciesFragment extends AbstractFragment {
 					public void onClick(DialogInterface dialog, int which) {
 						sortByAscending = appSettings.getCurrenciesSortSelection() != which ? true : !sortByAscending;
 						appSettings.setCurrenciesSortSelection(which);
-						CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
-						adapter.sort(new Comparator<CurrencyData>() {
-							@Override
-							public int compare(CurrencyData lhs, CurrencyData rhs) {
-								switch (appSettings.getCurrenciesSortSelection()) {
-								case AppSettings.SORTBY_CODE:
-									if (sortByAscending) {
-										return lhs.getCode().compareToIgnoreCase(rhs.getCode());
-									}
-									return rhs.getCode().compareToIgnoreCase(lhs.getCode());
-								case AppSettings.SORTBY_NAME:
-								default:
-									if (sortByAscending) {
-										return lhs.getName().compareToIgnoreCase(rhs.getName());
-									}
-									return rhs.getName().compareToIgnoreCase(lhs.getName());
-								}
-							}
-						});
+						sortCurrenciesListView(which);
 						// notify user
 						switch (appSettings.getCurrenciesSortSelection()) {
 						case AppSettings.SORTBY_CODE:
@@ -146,7 +128,6 @@ public class CurrenciesFragment extends AbstractFragment {
 									Toast.LENGTH_SHORT).show();
 							break;
 						}
-						adapter.notifyDataSetChanged();
 						dialog.dismiss();
 					}
 				});
@@ -156,13 +137,43 @@ public class CurrenciesFragment extends AbstractFragment {
 	/**
 	 * Populates the list of currencies
 	 * 
-	 * @param result
+	 * @param currenciesList
 	 */
-	private void updateCurrenciesListView(List<CurrencyData> result) {
+	private void updateCurrenciesListView(List<CurrencyData> currenciesList) {
 		final Activity activity = getActivity();
-		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, result);
+		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, currenciesList);
 		lvCurrencies.setAdapter(adapter);
+		sortCurrenciesListView(new AppSettings(activity).getCurrenciesSortSelection());
+		// TODO date here is wrong
 		tvLastUpdate.setText(DateTimeUtils.toString(activity, new Date()));
+	}
+
+	/**
+	 * Sorts currencies by given criteria
+	 * 
+	 * @param sortBy
+	 */
+	private void sortCurrenciesListView(final int sortBy) {
+		CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
+		adapter.sort(new Comparator<CurrencyData>() {
+			@Override
+			public int compare(CurrencyData lhs, CurrencyData rhs) {
+				switch (sortBy) {
+				case AppSettings.SORTBY_CODE:
+					if (sortByAscending) {
+						return lhs.getCode().compareToIgnoreCase(rhs.getCode());
+					}
+					return rhs.getCode().compareToIgnoreCase(lhs.getCode());
+				case AppSettings.SORTBY_NAME:
+				default:
+					if (sortByAscending) {
+						return lhs.getName().compareToIgnoreCase(rhs.getName());
+					}
+					return rhs.getName().compareToIgnoreCase(lhs.getName());
+				}
+			}
+		});
+		adapter.notifyDataSetChanged();
 	}
 
 	/**
