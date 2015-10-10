@@ -82,16 +82,7 @@ public class AbstractFragment extends Fragment {
 	}
 
 	protected CurrencyLocales getSelectedCurrenciesLocale() {
-		final AppSettings appSettings = new AppSettings(getActivity());
-		switch (appSettings.getCurrenciesLanguage()) {
-		case 1:
-			return CurrencyLocales.BG;
-		case 2:
-			return CurrencyLocales.EN;
-		case 0:
-		default:
-			return CurrencyLocales.getAppLocale(getActivity());
-		}
+		return new AppSettings(getActivity()).getCurrenciesLanguage();
 	}
 
 }
