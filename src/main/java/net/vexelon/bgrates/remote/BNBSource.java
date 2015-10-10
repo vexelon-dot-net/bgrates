@@ -18,10 +18,14 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 
-import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
 
 public class BNBSource implements Source {
+
+	// Address on BNB for get on XML file
+	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
+	public final static String URL_BNB_FORMAT_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
 
 	public final static String XML_TAG_ROWSET = "ROWSET";
 	public final static String XML_TAG_ROW = "ROW";
@@ -141,10 +145,10 @@ public class BNBSource implements Source {
 	}
 
 	@Override
-	public Map<String, List<CurrencyData>> downloadRates() throws SourceException {
-		Map<String, List<CurrencyData>> result = Maps.newHashMap();
-		result.put(Defs.LANG_EN, getRatesFromUrl(Defs.URL_BNB_FORMAT_EN));
-		result.put(Defs.LANG_BG, getRatesFromUrl(Defs.URL_BNB_FORMAT_BG));
+	public Map<CurrencyLocales, List<CurrencyData>> downloadRates() throws SourceException {
+		Map<CurrencyLocales, List<CurrencyData>> result = Maps.newHashMap();
+		result.put(CurrencyLocales.EN, getRatesFromUrl(URL_BNB_FORMAT_EN));
+		result.put(CurrencyLocales.BG, getRatesFromUrl(URL_BNB_FORMAT_BG));
 		return result;
 	}
 

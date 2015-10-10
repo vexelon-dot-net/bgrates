@@ -52,6 +52,7 @@ import net.vexelon.bgrates.db.DataSource;
 import net.vexelon.bgrates.db.DataSourceException;
 import net.vexelon.bgrates.db.SQLiteDataSource;
 import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
 import net.vexelon.bgrates.remote.BNBSource;
 import net.vexelon.bgrates.remote.Source;
 import net.vexelon.bgrates.remote.SourceException;
@@ -175,7 +176,8 @@ public class CurrenciesFragment extends AbstractFragment {
 			try {
 				source = new SQLiteDataSource();
 				source.connect(getActivity());
-				List<CurrencyData> ratesList = source.getRates();
+				// TODO locale
+				List<CurrencyData> ratesList = source.getRates(CurrencyLocales.BG);
 				if (!ratesList.isEmpty()) {
 					Log.v(Defs.LOG_TAG, "Displaying rates from database...");
 					updateCurrenciesListView(ratesList);
@@ -195,7 +197,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		}
 	}
 
-	private class UpdateRatesTask extends AsyncTask<Void, Void, Map<String, List<CurrencyData>>> {
+	private class UpdateRatesTask extends AsyncTask<Void, Void, Map<CurrencyLocales, List<CurrencyData>>> {
 
 		private Activity activity;
 		private boolean updateOK = false;
@@ -210,21 +212,21 @@ public class CurrenciesFragment extends AbstractFragment {
 		}
 
 		@Override
-		protected Map<String, List<CurrencyData>> doInBackground(Void... params) {
-			Map<String, List<CurrencyData>> ratesList = Maps.newHashMap();
+		protected Map<CurrencyLocales, List<CurrencyData>> doInBackground(Void... params) {
+			Map<CurrencyLocales, List<CurrencyData>> rates = Maps.newHashMap();
 			try {
 				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
 				Source source = new BNBSource();
-				ratesList = source.downloadRates();
+				rates = source.downloadRates();
 				updateOK = true;
 			} catch (SourceException e) {
 				Log.e(Defs.LOG_TAG, "Could not laod rates from remote!", e);
 			}
-			return ratesList;
+			return rates;
 		}
 
 		@Override
-		protected void onPostExecute(Map<String, List<CurrencyData>> result) {
+		protected void onPostExecute(Map<CurrencyLocales, List<CurrencyData>> result) {
 			// notifyListeners(Notifications.UPDATE_RATES_DONE);
 			setRefreshActionButtonState(false);
 			if (updateOK && !result.isEmpty()) {
@@ -241,7 +243,7 @@ public class CurrenciesFragment extends AbstractFragment {
 					IOUtils.closeQuitely(source);
 				}
 				// TODO
-				updateCurrenciesListView(result.get(Defs.LANG_EN));
+				updateCurrenciesListView(result.get(CurrencyLocales.BG));
 			} else {
 				UIUtils.showAlertDialog(activity, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
 			}

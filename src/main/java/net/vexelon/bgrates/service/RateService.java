@@ -1,6 +1,5 @@
 package net.vexelon.bgrates.service;
 
-import java.util.Calendar;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -92,7 +91,9 @@ public class RateService extends Service {
 		try {
 			source = new SQLiteDataSource();
 			source.connect(ctx);
-			listCurrency = source.getRates(Calendar.getInstance().getTime());
+			// TODO refactor
+			// listCurrency = source.getRates(Calendar.getInstance().getTime());
+			return true;
 		} catch (DataSourceException e) {
 			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 		} finally {
@@ -130,7 +131,8 @@ public class RateService extends Service {
 			try {
 				source = new SQLiteDataSource();
 				source.connect(ctx);
-				source.addRates(result);
+				// TODO
+				// source.addRates(result);
 			} catch (DataSourceException e) {
 				Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 			} finally {

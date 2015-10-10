@@ -26,14 +26,6 @@ package net.vexelon.bgrates.ui.activities;
 import java.util.Calendar;
 import java.util.Locale;
 
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.service.RateService;
-import net.vexelon.bgrates.ui.Notifications;
-import net.vexelon.bgrates.ui.NotificationsListener;
-import net.vexelon.bgrates.ui.fragments.AbstractFragment;
-import net.vexelon.bgrates.ui.fragments.ConvertFragment;
-import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -48,6 +40,14 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.service.RateService;
+import net.vexelon.bgrates.ui.Notifications;
+import net.vexelon.bgrates.ui.NotificationsListener;
+import net.vexelon.bgrates.ui.fragments.AbstractFragment;
+import net.vexelon.bgrates.ui.fragments.ConvertFragment;
+import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener, NotificationsListener {
 
@@ -114,7 +114,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 
 		// Start Service
 		startService();
-
 	}
 
 	public void startService() {
@@ -126,9 +125,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		calendar.add(Calendar.SECOND, 30);
 		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), Defs.NOTIFY_INTERVAL,
 				pendingIntent);
-
-		// Toast.makeText(MainActivity.this, "Start Alarm",
-		// Toast.LENGTH_LONG).show();
 	}
 
 	public void cancelService() {

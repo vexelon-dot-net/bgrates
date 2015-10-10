@@ -38,9 +38,6 @@ public class Defs {
 	// Time for request to BNB
 	public static final long NOTIFY_INTERVAL = 3600 * 1000; // 1 hour
 	// Parameters which used into SQLite//
-	// Address on BNB for get on XML file
-	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
-	public final static String URL_BNB_FORMAT_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
 	// Name of DB
 	public static final String DATABASE_NAME = "currencies.db";
 	// Version of DB
@@ -84,12 +81,4 @@ public class Defs {
 	public final static int SCALE_SHOW_LONG = 5;
 	public final static int SCALE_SHOW_SHORT = 3;
 	public final static int SCALE_CALCULATIONS = 10;
-
-	public final static int MAX_CONVERT_ROWS = 4;
-
-	public final static String INTENT_FLAG_ID = "_FLAG_ID";
-	public final static String INTENT_OLD_RATEINFO = "_OLD_RATEINFO";
-	public final static String INTENT_NEW_RATEINFO = "_NEW_RATEINFO";
-	public final static String INTENT_NEW_RATEINFO_TENDENCY_ICONID = "_INTENT_NEW_RATEINFO_TENDENCY_ICONID";
-
 }
