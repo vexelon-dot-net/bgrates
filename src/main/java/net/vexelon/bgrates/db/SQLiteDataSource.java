@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.db.models.CurrencyData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.db.models.CurrencyData;
 
 public class SQLiteDataSource implements DataSource {
 
@@ -54,31 +54,47 @@ public class SQLiteDataSource implements DataSource {
 
 	@Override
 	public void addRates(List<CurrencyData> rates) throws DataSourceException {
-		ContentValues values = new ContentValues();
-		for (int i = 0; i < rates.size(); i++) {
 
-			values.put(Defs.COLUMN_GOLD, rates.get(i).getGold());
-			values.put(Defs.COLUMN_NAME, rates.get(i).getName());
-			values.put(Defs.COLUMN_CODE, rates.get(i).getCode());
-			values.put(Defs.COLUMN_RATIO, rates.get(i).getRatio());
-			values.put(Defs.COLUMN_REVERSERATE, rates.get(i).getReverseRate());
-			values.put(Defs.COLUMN_RATE, rates.get(i).getRate());
-			values.put(Defs.COLUMN_EXTRAINFO, rates.get(i).getExtraInfo());
-			values.put(Defs.COLUMN_CURR_DATE, parseDateToString(rates.get(i).getCurrDate(), "yyyy-MM-dd"));
-			values.put(Defs.COLUMN_TITLE, rates.get(i).getTitle());
-			values.put(Defs.COLUMN_F_STAR, rates.get(i).getfStar());
+		// TODO to make checking from method getAvailableRatesDates()
+		// Checking whether have this XML into DB
+		if (getRates(rates.get(1).getCurrDate()).size() == 0) {// TODO to
+			// remove comments
+			ContentValues values = new ContentValues();
 
-			database.insert(Defs.TABLE_CURRENCY, null, values);
-			values = new ContentValues();
+			for (int i = 0; i < rates.size(); i++) {
+
+				values.put(Defs.COLUMN_GOLD, rates.get(i).getGold());
+				values.put(Defs.COLUMN_NAME, rates.get(i).getName());
+				values.put(Defs.COLUMN_CODE, rates.get(i).getCode());
+				values.put(Defs.COLUMN_RATIO, rates.get(i).getRatio());
+				values.put(Defs.COLUMN_REVERSERATE, rates.get(i).getReverseRate());
+				values.put(Defs.COLUMN_RATE, rates.get(i).getRate());
+				values.put(Defs.COLUMN_EXTRAINFO, rates.get(i).getExtraInfo());
+				values.put(Defs.COLUMN_CURR_DATE, parseDateToString(rates.get(i).getCurrDate(), "yyyy-MM-dd"));
+				values.put(Defs.COLUMN_TITLE, rates.get(i).getTitle());
+				values.put(Defs.COLUMN_F_STAR, rates.get(i).getfStar());
+
+				database.insert(Defs.TABLE_CURRENCY, null, values);
+				values = new ContentValues();
+			}
+
+			// TODO insert in new table date from XML
+			ContentValues valuesDate = new ContentValues();
+			valuesDate.put(Defs.COLUMN_CURR_DATE, parseDateToString(rates.get(1).getCurrDate(), "yyyy-MM-dd"));
+			valuesDate.put(Defs.COLUMN_LANGUAGE, "BGN");
+			database.insert(Defs.TABLE_CURRENCY_DATE, null, valuesDate);
 		}
+
 	}
 
+	// TODO to change method to read from new table and have parameter if is it
+	// null return all date if is not null return for date
 	@Override
 	public List<Date> getAvailableRatesDates() throws DataSourceException {
 		List<Date> resultCurrency = new ArrayList<Date>();
 		String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
 
-		Cursor cursor = database.query(true, Defs.TABLE_CURRENCY, tableColumns, null, null, null, null, null, null);
+		Cursor cursor = database.query(Defs.TABLE_CURRENCY_DATE, tableColumns, null, null, null, null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -96,6 +112,31 @@ public class SQLiteDataSource implements DataSource {
 		cursor.close();
 		return resultCurrency;
 	}
+
+	// @Override
+	// public List<Date> getAvailableRatesDates() throws DataSourceException {
+	// List<Date> resultCurrency = new ArrayList<Date>();
+	// String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
+	//
+	// Cursor cursor = database.query(true, Defs.TABLE_CURRENCY, tableColumns,
+	// null, null, null, null, null, null);
+	//
+	// cursor.moveToFirst();
+	// while (!cursor.isAfterLast()) {
+	// try {
+	// resultCurrency.add(parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
+	// "yyyy-MM-dd"));
+	// } catch (ParseException e) {
+	// // TODO Auto-generated catch block
+	// throw new DataSourceException(e);
+	// }
+	//
+	// cursor.moveToNext();
+	// }
+	// // make sure to close the cursor
+	// cursor.close();
+	// return resultCurrency;
+	// }
 
 	@Override
 	public List<CurrencyData> getRates(Date dateOfCurrency) {
@@ -144,8 +185,8 @@ public class SQLiteDataSource implements DataSource {
 		currency.setRate(cursor.getFloat(cursor.getColumnIndex(Defs.COLUMN_RATE)));
 		currency.setExtraInfo(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_EXTRAINFO)));
 		try {
-			currency.setCurrDate(
-					parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)), "yyyy-MM-dd"));
+			currency.setCurrDate(parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
+					"yyyy-MM-dd"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
