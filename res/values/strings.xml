@@ -89,9 +89,9 @@
         <item >English</item>
     </string-array>
     <string-array name="pref_display_values">
-        <item >default</item>
-        <item >bg</item>
-        <item >en</item>
+        <item>default</item>
+        <item>bg</item>
+        <item>en</item>
     </string-array>
     <string name="pref_display_lang_default">default</string>
     <string name="pref_display_lang_title">Currencies language</string>

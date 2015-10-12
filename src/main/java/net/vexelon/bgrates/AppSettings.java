@@ -22,6 +22,7 @@ package net.vexelon.bgrates;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
 
 public class AppSettings {
 
@@ -29,9 +30,11 @@ public class AppSettings {
 	public static final int SORTBY_CODE = 1;
 
 	private SharedPreferences generalPrefs = null;
+	private Context context = null;
 
 	public AppSettings(Context context) {
-		generalPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		this.context = context;
+		this.generalPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 	/**
@@ -58,14 +61,16 @@ public class AppSettings {
 	/**
 	 * Gets currencies language selection
 	 * 
-	 * @return
-	 * 		<ul>
-	 *         <li>0 (Default)
-	 *         <li>1 (Bulgarian)
-	 *         <li>2 (English)
+	 * @return {@link CurrencyLocales}
 	 */
-	public int getCurrenciesLanguage() {
-		return generalPrefs.getInt("pref_currencies_language", 0);
+	public CurrencyLocales getCurrenciesLanguage() {
+		String value = generalPrefs.getString("pref_currencies_language", "default");
+		if ("en".equals(value)) {
+			return CurrencyLocales.EN;
+		} else if ("bg".equals(value)) {
+			return CurrencyLocales.BG;
+		}
+		return CurrencyLocales.getAppLocale(context);
 	}
 
 }

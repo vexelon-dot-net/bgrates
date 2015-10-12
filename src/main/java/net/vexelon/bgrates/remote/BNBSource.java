@@ -7,51 +7,68 @@ import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
 
-import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class BNBSource implements Source {
 
-	// private final static String TAG = Defs.LOG_TAG;
-	List<CurrencyData> listCurrencyData;
+	// Addresses on BNB for get on XML file
+	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
+	public final static String URL_BNB_FORMAT_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
+
+	public final static String XML_TAG_ROWSET = "ROWSET";
+	public final static String XML_TAG_ROW = "ROW";
+	public final static String XML_TAG_GOLD = "GOLD";
+	public final static String XML_TAG_NAME = "NAME_";
+	public final static String XML_TAG_CODE = "CODE";
+	public final static String XML_TAG_RATIO = "RATIO";
+	public final static String XML_TAG_REVERSERATE = "REVERSERATE";
+	public final static String XML_TAG_RATE = "RATE";
+	public final static String XML_TAG_EXTRAINFO = "EXTRAINFO";
+	public final static String XML_TAG_CURR_DATE = "CURR_DATE";
+	public final static String XML_TAG_TITLE = "TITLE";
+	public final static String XML_TAG_F_STAR = "F_STAR";
+
 	private CurrencyData currencyData;
 	private String text;
-	private int header = 0;// Default value
 
 	public BNBSource() {
-		listCurrencyData = new ArrayList<CurrencyData>();
 	}
 
-	@Override
-	public List<CurrencyData> fetchRates() throws SourceException {
+	public List<CurrencyData> getRatesFromUrl(String ratesUrl) throws SourceException {
+		List<CurrencyData> listCurrencyData = Lists.newArrayList();
+		InputStream is = null;
 		XmlPullParserFactory factory = null;
 		XmlPullParser parser = null;
 		URL url = null;
+		int header = 0;
 		try {
-			url = new URL(Defs.URL_BNB_FORMAT_BG);
-
+			url = new URL(ratesUrl);
 			URLConnection connection = url.openConnection();
 			connection.setDoInput(true);
 			HttpURLConnection httpConn = (HttpURLConnection) connection;
-			InputStream is = null;
-			if (httpConn.getResponseCode() >= 400) {
+			if (httpConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+				// read error and throw it to caller
 				is = httpConn.getErrorStream();
-			} else {
-				is = httpConn.getInputStream();
+				throw new SourceException(new String(ByteStreams.toByteArray(is), Charsets.UTF_8.name()));
 			}
+			is = httpConn.getInputStream();
 			factory = XmlPullParserFactory.newInstance();
 			factory.setNamespaceAware(true);
 			parser = factory.newPullParser();
-
 			parser.setInput(is, Charsets.UTF_8.name());
 
 			int eventType = parser.getEventType();
@@ -60,13 +77,12 @@ public class BNBSource implements Source {
 				String tagname = parser.getName();
 				switch (eventType) {
 				case XmlPullParser.START_TAG:
-					if (tagname.equalsIgnoreCase(Defs.XML_TAG_ROW)) {
-
-						if (header == 0)
+					if (tagname.equalsIgnoreCase(XML_TAG_ROW)) {
+						if (header == 0) {
 							header = 1;
-						else
+						} else {
 							header = 2;
-
+						}
 						// create a new instance of CurrencyData
 						if (header > 1)
 							currencyData = new CurrencyData();
@@ -74,47 +90,47 @@ public class BNBSource implements Source {
 					break;
 
 				case XmlPullParser.TEXT:
-					if (header > 1)
+					if (header > 1) {
 						text = parser.getText();
+					}
 					break;
 
 				case XmlPullParser.END_TAG:
 					if (header > 1) {
-						if (tagname.equalsIgnoreCase(Defs.XML_TAG_ROW)) {
+						if (tagname.equalsIgnoreCase(XML_TAG_ROW)) {
 							// add employee object to list
 							listCurrencyData.add(currencyData);
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_GOLD)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_GOLD)) {
 							currencyData.setGold(Integer.parseInt(text));
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_NAME)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_NAME)) {
 							currencyData.setName(text);
 							eventType = parser.next();// ?
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_CODE)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_CODE)) {
 							currencyData.setCode(text);
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_RATIO)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_RATIO)) {
 							currencyData.setRatio(Integer.parseInt(text));
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_REVERSERATE)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_REVERSERATE)) {
 							currencyData.setReverseRate(Float.parseFloat(text));
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_RATE)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_RATE)) {
 							currencyData.setRate(Float.parseFloat(text));
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_EXTRAINFO)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_EXTRAINFO)) {
 							currencyData.setExtraInfo(text);
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_CURR_DATE)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_CURR_DATE)) {
 							DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-							Date currencyDate = null;
+							Date currencyDate = new Date();
 							try {
 								currencyDate = df.parse(text);
 							} catch (ParseException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
+								// use default (today)
 							}
 							currencyData.setCurrDate(currencyDate);
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_TITLE)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_TITLE)) {
 							currencyData.setTitle(text);
-						} else if (tagname.equalsIgnoreCase(Defs.XML_TAG_F_STAR)) {
+						} else if (tagname.equalsIgnoreCase(XML_TAG_F_STAR)) {
 							currencyData.setfStar(Integer.parseInt(text));
 						}
 					}
-
 					break;
 
 				default:
@@ -125,7 +141,17 @@ public class BNBSource implements Source {
 			return listCurrencyData;
 		} catch (Exception e) {
 			throw new SourceException("Failed loading currencies from BNB source!", e);
+		} finally {
+			IOUtils.closeQuitely(is);
 		}
+	}
+
+	@Override
+	public Map<CurrencyLocales, List<CurrencyData>> downloadRates() throws SourceException {
+		Map<CurrencyLocales, List<CurrencyData>> result = Maps.newHashMap();
+		result.put(CurrencyLocales.EN, getRatesFromUrl(URL_BNB_FORMAT_EN));
+		result.put(CurrencyLocales.BG, getRatesFromUrl(URL_BNB_FORMAT_BG));
+		return result;
 	}
 
 }

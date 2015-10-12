@@ -26,9 +26,11 @@ package net.vexelon.bgrates.db;
 import java.io.Closeable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
@@ -58,29 +60,33 @@ public interface DataSource extends Closeable {
 	/**
 	 * Fetches the latest exchange rates from the underlying data source.
 	 * 
+	 * @param locale
 	 * @return {@link List} or <code>null</code>, if no rates are
 	 *         available.
 	 * @throws DataSourceException
 	 */
-	List<CurrencyData> getRates() throws DataSourceException;
+	List<CurrencyData> getRates(CurrencyLocales locale) throws DataSourceException;
 
 	/**
 	 * Fetches exchange rates for a given date.
 	 * 
+	 * @param locale
 	 * @param date
 	 * @return {@link List} or <code>null</code>, if no rates are
 	 *         available for the given date.
 	 * @throws DataSourceException
 	 */
-	List<CurrencyData> getRates(Date date) throws DataSourceException;
+	List<CurrencyData> getRates(CurrencyLocales locale, Date date) throws DataSourceException;
 
 	/**
 	 * Adds exchange rates data for given download {@link Date}.
 	 * 
 	 * @param date
 	 * @param rates
+	 *            A {@link Map} of language and {@link CurrencyData} list
+	 *            values.
 	 * @throws DataSourceException
 	 */
-	void addRates(List<CurrencyData> rates) throws DataSourceException;
+	void addRates(Map<CurrencyLocales, List<CurrencyData>> rates) throws DataSourceException;
 
 }

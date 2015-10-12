@@ -113,8 +113,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		// Start Service
-		startService();
-
+		// startService();
 	}
 
 	public void startService() {
@@ -126,9 +125,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		calendar.add(Calendar.SECOND, 30);
 		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), Defs.NOTIFY_INTERVAL,
 				pendingIntent);
-
-		// Toast.makeText(MainActivity.this, "Start Alarm",
-		// Toast.LENGTH_LONG).show();
 	}
 
 	public void cancelService() {

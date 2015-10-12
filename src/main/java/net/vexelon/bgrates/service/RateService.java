@@ -1,25 +1,21 @@
 package net.vexelon.bgrates.service;
 
-import java.util.Calendar;
 import java.util.List;
 
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.db.DataSource;
-import net.vexelon.bgrates.db.DataSourceException;
-import net.vexelon.bgrates.db.SQLiteDataSource;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.remote.BNBSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.utils.IOUtils;
+import com.google.common.collect.Lists;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
-
-import com.google.common.collect.Lists;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.db.DataSource;
+import net.vexelon.bgrates.db.DataSourceException;
+import net.vexelon.bgrates.db.SQLiteDataSource;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class RateService extends Service {
 
@@ -95,9 +91,10 @@ public class RateService extends Service {
 		try {
 			source = new SQLiteDataSource();
 			source.connect(ctx);
-			listCurrency = source.getRates(Calendar.getInstance().getTime());
+			// TODO refactor
+			// listCurrency = source.getRates(Calendar.getInstance().getTime());
+			return true;
 		} catch (DataSourceException e) {
-			// TODO: Add UI error msg
 			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 		} finally {
 			IOUtils.closeQuitely(source);
@@ -114,13 +111,14 @@ public class RateService extends Service {
 		@Override
 		protected List<CurrencyData> doInBackground(String... urls) {
 			List<CurrencyData> ratesList = Lists.newArrayList();
-			try {
-				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
-				Source source = new BNBSource();
-				ratesList = source.fetchRates();
-			} catch (SourceException e) {
-				Log.e(Defs.LOG_TAG, "Could not laod rates from remote!", e);
-			}
+			// TODO
+			// try {
+			// Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
+			// Source source = new BNBSource();
+			// ratesList = source.fetchRates();
+			// } catch (SourceException e) {
+			// Log.e(Defs.LOG_TAG, "Could not laod rates from remote!", e);
+			// }
 			return ratesList;
 		}
 
@@ -133,9 +131,9 @@ public class RateService extends Service {
 			try {
 				source = new SQLiteDataSource();
 				source.connect(ctx);
-				source.addRates(result);
+				// TODO
+				// source.addRates(result);
 			} catch (DataSourceException e) {
-				// TODO: Add UI error msg
 				Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 			} finally {
 				IOUtils.closeQuitely(source);

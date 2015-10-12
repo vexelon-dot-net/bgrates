@@ -6,10 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.db.models.CurrencyData;
-import android.content.ContentValues;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -53,38 +54,48 @@ public class SQLiteDataSource implements DataSource {
 	}
 
 	@Override
-	public void addRates(List<CurrencyData> rates) throws DataSourceException {
+	public void addRates(Map<CurrencyLocales, List<CurrencyData>> rates) throws DataSourceException {
+		// ContentValues values = new ContentValues();
+		// for (int i = 0; i < rates.size(); i++) {
+		//
+		// values.put(Defs.COLUMN_GOLD, rates.get(i).getGold());
+		// values.put(Defs.COLUMN_NAME, rates.get(i).getName());
+		// values.put(Defs.COLUMN_CODE, rates.get(i).getCode());
+		// values.put(Defs.COLUMN_RATIO, rates.get(i).getRatio());
+		// values.put(Defs.COLUMN_REVERSERATE, rates.get(i).getReverseRate());
+		// values.put(Defs.COLUMN_RATE, rates.get(i).getRate());
+		// values.put(Defs.COLUMN_EXTRAINFO, rates.get(i).getExtraInfo());
+		// values.put(Defs.COLUMN_CURR_DATE,
+		// parseDateToString(rates.get(i).getCurrDate(), "yyyy-MM-dd"));
+		// values.put(Defs.COLUMN_TITLE, rates.get(i).getTitle());
+		// values.put(Defs.COLUMN_F_STAR, rates.get(i).getfStar());
+		//
+		// database.insert(Defs.TABLE_CURRENCY, null, values);
+		// values = new ContentValues();
+		// }
 
 		// TODO to make checking from method getAvailableRatesDates()
 		// Checking whether have this XML into DB
-		if (getRates(rates.get(1).getCurrDate()).size() == 0) {// TODO to
-			// remove comments
-			ContentValues values = new ContentValues();
+		// if (getRates(rates.get(1).getCurrDate())
 
-			for (int i = 0; i < rates.size(); i++) {
-
-				values.put(Defs.COLUMN_GOLD, rates.get(i).getGold());
-				values.put(Defs.COLUMN_NAME, rates.get(i).getName());
-				values.put(Defs.COLUMN_CODE, rates.get(i).getCode());
-				values.put(Defs.COLUMN_RATIO, rates.get(i).getRatio());
-				values.put(Defs.COLUMN_REVERSERATE, rates.get(i).getReverseRate());
-				values.put(Defs.COLUMN_RATE, rates.get(i).getRate());
-				values.put(Defs.COLUMN_EXTRAINFO, rates.get(i).getExtraInfo());
-				values.put(Defs.COLUMN_CURR_DATE, parseDateToString(rates.get(i).getCurrDate(), "yyyy-MM-dd"));
-				values.put(Defs.COLUMN_TITLE, rates.get(i).getTitle());
-				values.put(Defs.COLUMN_F_STAR, rates.get(i).getfStar());
-
-				database.insert(Defs.TABLE_CURRENCY, null, values);
-				values = new ContentValues();
-			}
-
-			// TODO insert in new table date from XML
-			ContentValues valuesDate = new ContentValues();
-			valuesDate.put(Defs.COLUMN_CURR_DATE, parseDateToString(rates.get(1).getCurrDate(), "yyyy-MM-dd"));
-			valuesDate.put(Defs.COLUMN_LANGUAGE, "BGN");
-			database.insert(Defs.TABLE_CURRENCY_DATE, null, valuesDate);
-		}
-
+		// ContentValues values = new ContentValues();
+		// for (int i = 0; i < rates.size(); i++) {
+		//
+		// values.put(Defs.COLUMN_GOLD, rates.get(i).getGold());
+		// values.put(Defs.COLUMN_NAME, rates.get(i).getName());
+		// values.put(Defs.COLUMN_CODE, rates.get(i).getCode());
+		// values.put(Defs.COLUMN_RATIO, rates.get(i).getRatio());
+		// values.put(Defs.COLUMN_REVERSERATE, rates.get(i).getReverseRate());
+		// values.put(Defs.COLUMN_RATE, rates.get(i).getRate());
+		// values.put(Defs.COLUMN_EXTRAINFO, rates.get(i).getExtraInfo());
+		// values.put(Defs.COLUMN_CURR_DATE,
+		// parseDateToString(rates.get(i).getCurrDate(), "yyyy-MM-dd"));
+		// values.put(Defs.COLUMN_TITLE, rates.get(i).getTitle());
+		// values.put(Defs.COLUMN_F_STAR, rates.get(i).getfStar());
+		//
+		// database.insert(Defs.TABLE_CURRENCY, null, values);
+		// values = new ContentValues();
+		// }
 	}
 
 	// TODO to change method to read from new table and have parameter if is it
@@ -139,7 +150,7 @@ public class SQLiteDataSource implements DataSource {
 	// }
 
 	@Override
-	public List<CurrencyData> getRates(Date dateOfCurrency) {
+	public List<CurrencyData> getRates(CurrencyLocales locale, Date dateOfCurrency) {
 		List<CurrencyData> resultCurrency = new ArrayList<CurrencyData>();
 		String whereClause = "curr_date = ? ";
 		String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, "yyyy-MM-dd") };
@@ -159,7 +170,7 @@ public class SQLiteDataSource implements DataSource {
 	}
 
 	@Override
-	public List<CurrencyData> getRates() {
+	public List<CurrencyData> getRates(CurrencyLocales locale) {
 		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
 
 		Cursor cursor = database.query(Defs.TABLE_CURRENCY, ALL_COLUMNS, null, null, null, null, null);

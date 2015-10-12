@@ -26,21 +26,10 @@ package net.vexelon.bgrates.ui.fragments;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import net.vexelon.bgrates.AppSettings;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.DataSource;
-import net.vexelon.bgrates.db.DataSourceException;
-import net.vexelon.bgrates.db.SQLiteDataSource;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.remote.BNBSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
-import net.vexelon.bgrates.utils.DateTimeUtils;
-import net.vexelon.bgrates.utils.IOUtils;
+import com.google.common.collect.Maps;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -56,8 +45,21 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.common.collect.Lists;
+import net.vexelon.bgrates.AppSettings;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.DataSource;
+import net.vexelon.bgrates.db.DataSourceException;
+import net.vexelon.bgrates.db.SQLiteDataSource;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.remote.BNBSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.DateTimeUtils;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class CurrenciesFragment extends AbstractFragment {
 
@@ -111,25 +113,7 @@ public class CurrenciesFragment extends AbstractFragment {
 					public void onClick(DialogInterface dialog, int which) {
 						sortByAscending = appSettings.getCurrenciesSortSelection() != which ? true : !sortByAscending;
 						appSettings.setCurrenciesSortSelection(which);
-						CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
-						adapter.sort(new Comparator<CurrencyData>() {
-							@Override
-							public int compare(CurrencyData lhs, CurrencyData rhs) {
-								switch (appSettings.getCurrenciesSortSelection()) {
-								case AppSettings.SORTBY_CODE:
-									if (sortByAscending) {
-										return lhs.getCode().compareToIgnoreCase(rhs.getCode());
-									}
-									return rhs.getCode().compareToIgnoreCase(lhs.getCode());
-								case AppSettings.SORTBY_NAME:
-								default:
-									if (sortByAscending) {
-										return lhs.getName().compareToIgnoreCase(rhs.getName());
-									}
-									return rhs.getName().compareToIgnoreCase(lhs.getName());
-								}
-							}
-						});
+						sortCurrenciesListView(which);
 						// notify user
 						switch (appSettings.getCurrenciesSortSelection()) {
 						case AppSettings.SORTBY_CODE:
@@ -144,7 +128,6 @@ public class CurrenciesFragment extends AbstractFragment {
 									Toast.LENGTH_SHORT).show();
 							break;
 						}
-						adapter.notifyDataSetChanged();
 						dialog.dismiss();
 					}
 				});
@@ -154,13 +137,43 @@ public class CurrenciesFragment extends AbstractFragment {
 	/**
 	 * Populates the list of currencies
 	 * 
-	 * @param result
+	 * @param currenciesList
 	 */
-	private void updateCurrenciesListView(List<CurrencyData> result) {
+	private void updateCurrenciesListView(List<CurrencyData> currenciesList) {
 		final Activity activity = getActivity();
-		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, result);
+		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, currenciesList);
 		lvCurrencies.setAdapter(adapter);
+		sortCurrenciesListView(new AppSettings(activity).getCurrenciesSortSelection());
+		// TODO date here is wrong
 		tvLastUpdate.setText(DateTimeUtils.toString(activity, new Date()));
+	}
+
+	/**
+	 * Sorts currencies by given criteria
+	 * 
+	 * @param sortBy
+	 */
+	private void sortCurrenciesListView(final int sortBy) {
+		CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
+		adapter.sort(new Comparator<CurrencyData>() {
+			@Override
+			public int compare(CurrencyData lhs, CurrencyData rhs) {
+				switch (sortBy) {
+				case AppSettings.SORTBY_CODE:
+					if (sortByAscending) {
+						return lhs.getCode().compareToIgnoreCase(rhs.getCode());
+					}
+					return rhs.getCode().compareToIgnoreCase(lhs.getCode());
+				case AppSettings.SORTBY_NAME:
+				default:
+					if (sortByAscending) {
+						return lhs.getName().compareToIgnoreCase(rhs.getName());
+					}
+					return rhs.getName().compareToIgnoreCase(lhs.getName());
+				}
+			}
+		});
+		adapter.notifyDataSetChanged();
 	}
 
 	/**
@@ -174,7 +187,7 @@ public class CurrenciesFragment extends AbstractFragment {
 			try {
 				source = new SQLiteDataSource();
 				source.connect(getActivity());
-				List<CurrencyData> ratesList = source.getRates();
+				List<CurrencyData> ratesList = source.getRates(getSelectedCurrenciesLocale());
 				if (!ratesList.isEmpty()) {
 					Log.v(Defs.LOG_TAG, "Displaying rates from database...");
 					updateCurrenciesListView(ratesList);
@@ -194,7 +207,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		}
 	}
 
-	private class UpdateRatesTask extends AsyncTask<Void, Void, List<CurrencyData>> {
+	private class UpdateRatesTask extends AsyncTask<Void, Void, Map<CurrencyLocales, List<CurrencyData>>> {
 
 		private Activity activity;
 		private boolean updateOK = false;
@@ -205,25 +218,24 @@ public class CurrenciesFragment extends AbstractFragment {
 
 		@Override
 		protected void onPreExecute() {
-			// TODO: show updating msg
 		}
 
 		@Override
-		protected List<CurrencyData> doInBackground(Void... params) {
-			List<CurrencyData> ratesList = Lists.newArrayList();
+		protected Map<CurrencyLocales, List<CurrencyData>> doInBackground(Void... params) {
+			Map<CurrencyLocales, List<CurrencyData>> rates = Maps.newHashMap();
 			try {
 				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
 				Source source = new BNBSource();
-				ratesList = source.fetchRates();
+				rates = source.downloadRates();
 				updateOK = true;
 			} catch (SourceException e) {
 				Log.e(Defs.LOG_TAG, "Could not laod rates from remote!", e);
 			}
-			return ratesList;
+			return rates;
 		}
 
 		@Override
-		protected void onPostExecute(List<CurrencyData> result) {
+		protected void onPostExecute(Map<CurrencyLocales, List<CurrencyData>> result) {
 			// notifyListeners(Notifications.UPDATE_RATES_DONE);
 			setRefreshActionButtonState(false);
 			if (updateOK && !result.isEmpty()) {
@@ -231,15 +243,15 @@ public class CurrenciesFragment extends AbstractFragment {
 				try {
 					source = new SQLiteDataSource();
 					source.connect(activity);
-					source.addRates(result);
-					// TODO: Test
+					// TODO
+					// source.addRates(result);
 				} catch (DataSourceException e) {
 					// TODO: Add UI error msg
 					Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 				} finally {
 					IOUtils.closeQuitely(source);
 				}
-				updateCurrenciesListView(result);
+				updateCurrenciesListView(result.get(getSelectedCurrenciesLocale()));
 			} else {
 				UIUtils.showAlertDialog(activity, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
 			}
