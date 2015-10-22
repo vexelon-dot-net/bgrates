@@ -13,14 +13,14 @@ public class CurrenciesSQLiteDB extends SQLiteOpenHelper {
 	private static final String CREATE_TABLE_CURRENCY = "create table " + Defs.TABLE_CURRENCY + "(" + Defs.COLUMN_ID
 			+ " integer primary key autoincrement, " + Defs.COLUMN_GOLD + " integer not null, " + Defs.COLUMN_NAME
 			+ " text not null, " + Defs.COLUMN_CODE + " text not null, " + Defs.COLUMN_RATIO + " integer not null, "
-			+ Defs.COLUMN_REVERSERATE + " integer, " + Defs.COLUMN_RATE + " integer not null, " + Defs.COLUMN_EXTRAINFO
+			+ Defs.COLUMN_REVERSERATE + " text, " + Defs.COLUMN_RATE + " text not null, " + Defs.COLUMN_EXTRAINFO
 			+ " text, " + Defs.COLUMN_CURR_DATE + " text not null, " + Defs.COLUMN_TITLE + " text, "
-			+ Defs.COLUMN_F_STAR + " integer not null" + ");";
+			+ Defs.COLUMN_F_STAR + " integer not null," + Defs.COLUMN_LOCALE + " text " + ");";
 
 	// TABLE_CURRENCY_DATE table create statement
 	private static final String CREATE_TABLE_CURRENCY_DATE = "create table " + Defs.TABLE_CURRENCY_DATE + "("
 			+ Defs.COLUMN_ID + " integer primary key autoincrement, " + Defs.COLUMN_CURR_DATE + " text not null, "
-			+ Defs.COLUMN_LANGUAGE + " text not null " + ");";
+			+ Defs.COLUMN_LOCALE + " text not null " + ");";
 
 	public CurrenciesSQLiteDB(Context context) {
 		super(context, Defs.DATABASE_NAME, null, Defs.DATABASE_VERSION);

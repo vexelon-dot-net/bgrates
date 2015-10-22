@@ -59,7 +59,7 @@ public class Defs {
 	public static final String COLUMN_CURR_DATE = "curr_date";
 	public static final String COLUMN_TITLE = "title";
 	public static final String COLUMN_F_STAR = "f_star";
-	public static final String COLUMN_LANGUAGE = "language";
+	public static final String COLUMN_LOCALE = "locale";
 	// ////////////////////////////////////////////////////////////////
 
 	public final static String URL_BNB_FORMAT = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=%s";

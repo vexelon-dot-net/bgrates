@@ -28,9 +28,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
 import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.db.models.CurrencyLocales;
+import android.content.Context;
 
 /**
  * Encapsulates the available read-write operations to and from an underlying
@@ -55,7 +55,7 @@ public interface DataSource extends Closeable {
 	 *         if no dates are available.
 	 * @throws DataSourceException
 	 */
-	List<Date> getAvailableRatesDates() throws DataSourceException;
+	List<Date> getAvailableRatesDates(CurrencyLocales locale) throws DataSourceException;
 
 	/**
 	 * Fetches the latest exchange rates from the underlying data source.
@@ -88,5 +88,8 @@ public interface DataSource extends Closeable {
 	 * @throws DataSourceException
 	 */
 	void addRates(Map<CurrencyLocales, List<CurrencyData>> rates) throws DataSourceException;
+
+	// List<CurrencyData> getLastRates(CurrencyLocales locale) throws
+	// DataSourceException;
 
 }
