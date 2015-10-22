@@ -23,9 +23,11 @@
  */
 package net.vexelon.bgrates.ui.components;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.ui.UIFlags;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +35,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.ui.UIFlags;
-import net.vexelon.bgrates.utils.NumberUtils;
 
 public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 
@@ -65,10 +62,16 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 			setResText(v, R.id.code, ci.getCode());
 			setResText(v, R.id.ratio, Integer.toString(ci.getRatio()));
 
-			BigDecimal rate = new BigDecimal(ci.getRate());
-			String rateFull = NumberUtils.scaleNumber(rate, Defs.SCALE_SHOW_LONG);
-			setResText(v, R.id.rate, rateFull.substring(0, rateFull.length() - 3));
-			setResText(v, R.id.rate_decimals, rateFull.substring(rateFull.length() - 3, rateFull.length()));
+			// TODO - to check
+			// BigDecimal rate = new BigDecimal(ci.getRate());
+			// String rateFull = NumberUtils.scaleNumber(rate,
+			// Defs.SCALE_SHOW_LONG);
+			// setResText(v, R.id.rate, rateFull.substring(0, rateFull.length()
+			// - 3));
+			// setResText(v, R.id.rate_decimals,
+			// rateFull.substring(rateFull.length() - 3, rateFull.length()));
+			setResText(v, R.id.rate, ci.getRate());
+
 			// setResText(v, R.id.rate,
 			// ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ?
 			// ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) :

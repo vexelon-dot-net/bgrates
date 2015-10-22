@@ -11,6 +11,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.utils.IOUtils;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -18,10 +22,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
-
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.db.models.CurrencyLocales;
-import net.vexelon.bgrates.utils.IOUtils;
 
 public class BNBSource implements Source {
 
@@ -110,9 +110,9 @@ public class BNBSource implements Source {
 						} else if (tagname.equalsIgnoreCase(XML_TAG_RATIO)) {
 							currencyData.setRatio(Integer.parseInt(text));
 						} else if (tagname.equalsIgnoreCase(XML_TAG_REVERSERATE)) {
-							currencyData.setReverseRate(Float.parseFloat(text));
+							currencyData.setReverseRate(text);
 						} else if (tagname.equalsIgnoreCase(XML_TAG_RATE)) {
-							currencyData.setRate(Float.parseFloat(text));
+							currencyData.setRate(text);
 						} else if (tagname.equalsIgnoreCase(XML_TAG_EXTRAINFO)) {
 							currencyData.setExtraInfo(text);
 						} else if (tagname.equalsIgnoreCase(XML_TAG_CURR_DATE)) {

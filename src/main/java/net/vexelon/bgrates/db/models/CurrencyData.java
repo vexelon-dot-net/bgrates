@@ -7,8 +7,8 @@ public class CurrencyData {
 	private String name;
 	private String code;
 	private int ratio;
-	private float reverserate;
-	private float rate;
+	private String reverseRate;
+	private String rate;
 	private String extraInfo;
 	private Date currDate;
 	private String title;
@@ -46,19 +46,19 @@ public class CurrencyData {
 		this.ratio = ratio;
 	}
 
-	public float getReverseRate() {
-		return reverserate;
+	public String getReverseRate() {
+		return reverseRate;
 	}
 
-	public void setReverseRate(float reverserate) {
-		this.reverserate = reverserate;
+	public void setReverseRate(String reverseRate) {
+		this.reverseRate = reverseRate;
 	}
 
-	public float getRate() {
+	public String getRate() {
 		return rate;
 	}
 
-	public void setRate(float rate) {
+	public void setRate(String rate) {
 		this.rate = rate;
 	}
 
@@ -97,7 +97,7 @@ public class CurrencyData {
 	@Override
 	public String toString() {
 		return "CurrencyData [gold=" + gold + ", name=" + name + ", code=" + code + ", ratio=" + ratio
-				+ ", reverserate=" + reverserate + ", rate=" + rate + ", extraInfo=" + extraInfo + ", currDate="
+				+ ", reverseRate=" + reverseRate + ", rate=" + rate + ", extraInfo=" + extraInfo + ", currDate="
 				+ currDate + ", title=" + title + ", fStar=" + fStar + "]";
 	}
 
