@@ -25,7 +25,6 @@ package net.vexelon.bgrates.ui.fragments;
 
 import java.util.ArrayList;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -64,35 +63,39 @@ public class ConvertFragment extends AbstractFragment {
 	/**
 	 * Read previously selected currencies for convert
 	 */
-	private void loadSettings() {
-		SharedPreferences prefs = getActivity().getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
-
-		int count = prefs.getInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT, MAX_CONVERT_ROWS);
-		_visibleCurrencies = new int[count];
-
-		for (int i = 0; i < count; i++) {
-			String key = Defs.CONV_PREFS_KEY_ITEM + i;
-			_visibleCurrencies[i] = prefs.getInt(key, 0);
-		}
-	}
+	// private void loadSettings() {
+	// SharedPreferences prefs =
+	// getActivity().getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
+	//
+	// int count = prefs.getInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT,
+	// MAX_CONVERT_ROWS);
+	// _visibleCurrencies = new int[count];
+	//
+	// for (int i = 0; i < count; i++) {
+	// String key = Defs.CONV_PREFS_KEY_ITEM + i;
+	// _visibleCurrencies[i] = prefs.getInt(key, 0);
+	// }
+	// }
 
 	/**
 	 * Write currently selected currencies for convert
 	 */
-	private void saveSettings() {
-		SharedPreferences prefs = getActivity().getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
-		SharedPreferences.Editor editor = prefs.edit();
-
-		editor.putInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT, MAX_CONVERT_ROWS);
-		int i = 0;
-		for (ConvertRow row : _rows) {
-			Spinner spinner = (Spinner) getActivity().findViewById(row.getSpinnerId());
-			String key = Defs.CONV_PREFS_KEY_ITEM + i++;
-			editor.putInt(key, spinner.getSelectedItemPosition());
-		}
-
-		editor.commit();
-	}
+	// private void saveSettings() {
+	// SharedPreferences prefs =
+	// getActivity().getSharedPreferences(Defs.CONV_PREFS_NAME, 0);
+	// SharedPreferences.Editor editor = prefs.edit();
+	//
+	// editor.putInt(Defs.CONV_PREFS_KEY_CONVITEMS_COUNT, MAX_CONVERT_ROWS);
+	// int i = 0;
+	// for (ConvertRow row : _rows) {
+	// Spinner spinner = (Spinner)
+	// getActivity().findViewById(row.getSpinnerId());
+	// String key = Defs.CONV_PREFS_KEY_ITEM + i++;
+	// editor.putInt(key, spinner.getSelectedItemPosition());
+	// }
+	//
+	// editor.commit();
+	// }
 
 	/**
 	 * Creates and inits UI elements (spinner & edittext) from logical row
