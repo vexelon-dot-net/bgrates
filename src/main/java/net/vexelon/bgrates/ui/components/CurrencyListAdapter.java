@@ -23,11 +23,9 @@
  */
 package net.vexelon.bgrates.ui.components;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.ui.UIFlags;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +33,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.ui.UIFlags;
+import net.vexelon.bgrates.utils.NumberUtils;
 
 public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 
@@ -47,36 +50,22 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-
 		View v = convertView;
 		if (v == null) {
 			LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = li.inflate(R.layout.currency_row_layout, null);
 		}
-
 		// set texts
 		CurrencyData ci = _items.get(position);
 		if (ci != null) {
-
 			setResText(v, R.id.name, ci.getName());
 			setResText(v, R.id.code, ci.getCode());
 			setResText(v, R.id.ratio, Integer.toString(ci.getRatio()));
 
-			// TODO - to check
-			// BigDecimal rate = new BigDecimal(ci.getRate());
-			// String rateFull = NumberUtils.scaleNumber(rate,
-			// Defs.SCALE_SHOW_LONG);
-			// setResText(v, R.id.rate, rateFull.substring(0, rateFull.length()
-			// - 3));
-			// setResText(v, R.id.rate_decimals,
-			// rateFull.substring(rateFull.length() - 3, rateFull.length()));
-			setResText(v, R.id.rate, ci.getRate());
-
-			// setResText(v, R.id.rate,
-			// ci.getRate().length() > Defs.MAX_RATE_CHARS_SIZE ?
-			// ci.getRate().subSequence(0, Defs.MAX_RATE_CHARS_SIZE) :
-			// ci.getRate()
-			// );
+			BigDecimal rateDecimal = new BigDecimal(ci.getRate());
+			String rate = NumberUtils.scaleNumber(rateDecimal, Defs.SCALE_SHOW_LONG);
+			setResText(v, R.id.rate, rate.substring(0, rate.length() - 3));
+			setResText(v, R.id.rate_decimals, rate.substring(rate.length() - 3));
 
 			// country ID icon
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
@@ -93,20 +82,19 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 				// RelativeLayout.CENTER_VERTICAL);
 				// icon.setLayoutParams(lp);
 			}
-
 			// add tendency icon
 			// ImageView tendencyIcon = (ImageView)
 			// v.findViewById(R.id.tendency);
 			// tendencyIcon.setImageResource(ExchangeRates.getResourceFromTendency(ci.getTendency()));
 		}
-
 		return v;
 	}
 
 	private void setResText(View v, int id, CharSequence text) {
 		TextView tx = (TextView) v.findViewById(id);
-		if (tx != null)
+		if (tx != null) {
 			tx.setText(text);
+		}
 	}
 
 }

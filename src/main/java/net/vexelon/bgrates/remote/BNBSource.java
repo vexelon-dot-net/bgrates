@@ -11,10 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.db.models.CurrencyLocales;
-import net.vexelon.bgrates.utils.IOUtils;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -22,6 +18,10 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
+
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class BNBSource implements Source {
 
@@ -84,8 +84,12 @@ public class BNBSource implements Source {
 							header = 2;
 						}
 						// create a new instance of CurrencyData
-						if (header > 1)
+						if (header > 1) {
 							currencyData = new CurrencyData();
+							// defaults
+							currencyData.setRate("0");
+							currencyData.setReverseRate("0");
+						}
 					}
 					break;
 
