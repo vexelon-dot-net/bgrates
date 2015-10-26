@@ -87,8 +87,10 @@ public class SQLiteDataSource implements DataSource {
 
 				valuesDate = new ContentValues();
 			}
-		}
 
+			// TODO Temp code
+			List<CurrencyData> lastRates = getLastRates(currenciesData.getKey());
+		}
 	}
 
 	private Boolean isHaveRates(CurrencyLocales locale, Date dateOfCurrency) {
@@ -107,12 +109,35 @@ public class SQLiteDataSource implements DataSource {
 		}
 	}
 
-	// @Override
+	@Override
 	public List<CurrencyData> getLastRates(CurrencyLocales locale) throws DataSourceException {
 		List<CurrencyData> lastRates = new ArrayList<CurrencyData>();
 		String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
-		Cursor cursor = database.query(Defs.TABLE_CURRENCY_DATE, tableColumns, null, null, null, null, tableColumns
-				+ " DESC");
+		String whereClause = Defs.COLUMN_LOCALE + " = ? ";
+		String[] whereArgs = new String[] { locale.toString() };
+
+		Cursor cursor = database.query(Defs.TABLE_CURRENCY_DATE, tableColumns, whereClause, whereArgs, null, null,
+				Defs.COLUMN_CURR_DATE + " DESC");
+
+		if (cursor.moveToFirst()) {
+			String whereClause2 = Defs.COLUMN_CURR_DATE + " = ? AND " + Defs.COLUMN_LOCALE + " = ? ";
+			String[] whereArgs2 = new String[] { cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
+					locale.toString() };
+
+			Cursor cursor2 = database.query(Defs.TABLE_CURRENCY, ALL_COLUMNS, whereClause2, whereArgs2, null, null,
+					null);
+
+			cursor2.moveToFirst();
+			while (!cursor2.isAfterLast()) {
+				CurrencyData comment = cursorToCurrency(cursor2);
+				lastRates.add(comment);
+				cursor2.moveToNext();
+			}
+			// make sure to close the cursor
+			cursor2.close();
+
+		}
+		cursor.close();
 
 		return lastRates;
 	}

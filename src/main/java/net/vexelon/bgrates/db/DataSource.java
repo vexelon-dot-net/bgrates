@@ -89,7 +89,12 @@ public interface DataSource extends Closeable {
 	 */
 	void addRates(Map<CurrencyLocales, List<CurrencyData>> rates) throws DataSourceException;
 
-	// List<CurrencyData> getLastRates(CurrencyLocales locale) throws
-	// DataSourceException;
+	/**
+	 * Fetches last rates from database
+	 * 
+	 * @param locale
+	 * @throws DataSourceException
+	 */
+	List<CurrencyData> getLastRates(CurrencyLocales locale) throws DataSourceException;
 
 }
