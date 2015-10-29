@@ -37,10 +37,15 @@ public class DateTimeUtils {
 
 	protected static final Calendar CALENDAR = Calendar.getInstance();
 	protected static DateFormat DT_FORMAT = null;
+	protected static DateFormat DATE_FORMAT = null;
 
 	private static void initDateFormat(Context context) {
 		if (DT_FORMAT == null) {
 			DT_FORMAT = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT,
+					context.getResources().getConfiguration().locale);
+		}
+		if (DATE_FORMAT == null) {
+			DATE_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM,
 					context.getResources().getConfiguration().locale);
 		}
 	}
@@ -173,9 +178,14 @@ public class DateTimeUtils {
 		return startOfDay(new Date());
 	}
 
-	public static String toString(Context context, Date date) {
+	public static String toDateTimeText(Context context, Date date) {
 		initDateFormat(context);
 		return DT_FORMAT.format(date);
+	}
+
+	public static String toDateText(Context context, Date date) {
+		initDateFormat(context);
+		return DATE_FORMAT.format(date);
 	}
 
 }

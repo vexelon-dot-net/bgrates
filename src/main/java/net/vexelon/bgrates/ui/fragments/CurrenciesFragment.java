@@ -28,21 +28,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import net.vexelon.bgrates.AppSettings;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.db.DataSource;
-import net.vexelon.bgrates.db.DataSourceException;
-import net.vexelon.bgrates.db.SQLiteDataSource;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.db.models.CurrencyLocales;
-import net.vexelon.bgrates.remote.BNBSource;
-import net.vexelon.bgrates.remote.Source;
-import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
-import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
-import net.vexelon.bgrates.utils.DateTimeUtils;
-import net.vexelon.bgrates.utils.IOUtils;
+import com.google.common.collect.Maps;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -58,8 +45,21 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.common.collect.Maps;
+import net.vexelon.bgrates.AppSettings;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.DataSource;
+import net.vexelon.bgrates.db.DataSourceException;
+import net.vexelon.bgrates.db.SQLiteDataSource;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.remote.BNBSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.ui.UIUtils;
+import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
+import net.vexelon.bgrates.utils.DateTimeUtils;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class CurrenciesFragment extends AbstractFragment {
 
@@ -144,8 +144,8 @@ public class CurrenciesFragment extends AbstractFragment {
 		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, currenciesList);
 		lvCurrencies.setAdapter(adapter);
 		sortCurrenciesListView(new AppSettings(activity).getCurrenciesSortSelection());
-		// TODO date here is wrong
-		tvLastUpdate.setText(DateTimeUtils.toString(activity, new Date()));
+		Date lastUpdateDate = currenciesList.iterator().next().getCurrDate();
+		tvLastUpdate.setText(DateTimeUtils.toDateText(activity, lastUpdateDate));
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class CurrenciesFragment extends AbstractFragment {
 			try {
 				source = new SQLiteDataSource();
 				source.connect(getActivity());
-				List<CurrencyData> ratesList = source.getRates(getSelectedCurrenciesLocale());
+				List<CurrencyData> ratesList = source.getLastRates(getSelectedCurrenciesLocale());
 				if (!ratesList.isEmpty()) {
 					Log.v(Defs.LOG_TAG, "Displaying rates from database...");
 					updateCurrenciesListView(ratesList);
