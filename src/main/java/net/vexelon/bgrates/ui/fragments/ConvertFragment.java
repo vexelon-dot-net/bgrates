@@ -24,10 +24,14 @@
 package net.vexelon.bgrates.ui.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
@@ -39,25 +43,57 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.ui.components.ConvertCurrencyAdapter;
+import net.vexelon.bgrates.db.DataSource;
+import net.vexelon.bgrates.db.DataSourceException;
+import net.vexelon.bgrates.db.SQLiteDataSource;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.ui.components.ConvertListAdapter;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class ConvertFragment extends AbstractFragment {
 
 	public static final int MAX_CONVERT_ROWS = 4;
-
-	private final static String TAG = Defs.LOG_TAG;
 	private ArrayList<ConvertRow> _rows = null;
 	private int[] _visibleCurrencies = null;
 	private int _curSelectedRowId = -1;
+	//////////
+
+	private Spinner spinnerSourceCurrency;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_convert, container, false);
-		// init(rootView);
+		init(rootView);
 		return rootView;
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// add refresh currencies menu option
+		inflater.inflate(R.menu.convert, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
 	private void init(View view) {
+		spinnerSourceCurrency = (Spinner) view.findViewById(R.id.source_currency);
+
+		DataSource source = null;
+		try {
+			source = new SQLiteDataSource();
+			source.connect(getActivity());
+			List<CurrencyData> ratesList = source.getLastRates(getSelectedCurrenciesLocale());
+			if (!ratesList.isEmpty()) {
+				ConvertListAdapter adapter = new ConvertListAdapter(getActivity(), android.R.layout.simple_spinner_item,
+						ratesList);
+				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spinnerSourceCurrency.setAdapter(adapter);
+			}
+		} catch (DataSourceException e) {
+			// TODO: Add UI error msg
+			Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);
+		} finally {
+			IOUtils.closeQuitely(source);
+		}
 	}
 
 	/**
@@ -132,10 +168,6 @@ public class ConvertFragment extends AbstractFragment {
 		Spinner spinner = (Spinner) getActivity().findViewById(row.getSpinnerId());
 		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 		// this, android.R.layout.simple_spinner_item, items );
-		ConvertCurrencyAdapter adapter = new ConvertCurrencyAdapter(getActivity(), android.R.layout.simple_spinner_item,
-				items);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
 
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override

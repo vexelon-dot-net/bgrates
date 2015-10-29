@@ -41,11 +41,11 @@ import net.vexelon.bgrates.utils.NumberUtils;
 
 public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 
-	private List<CurrencyData> _items;
+	private List<CurrencyData> items;
 
 	public CurrencyListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
 		super(context, textViewResId, items);
-		this._items = items;
+		this.items = items;
 	}
 
 	@Override
@@ -56,22 +56,21 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 			v = li.inflate(R.layout.currency_row_layout, null);
 		}
 		// set texts
-		CurrencyData ci = _items.get(position);
-		if (ci != null) {
-			setResText(v, R.id.name, ci.getName());
-			setResText(v, R.id.code, ci.getCode());
-			setResText(v, R.id.ratio, Integer.toString(ci.getRatio()));
-
-			BigDecimal rateDecimal = new BigDecimal(ci.getRate());
+		CurrencyData currencyData = items.get(position);
+		if (currencyData != null) {
+			setResText(v, R.id.name, currencyData.getName());
+			setResText(v, R.id.code, currencyData.getCode());
+			setResText(v, R.id.ratio, Integer.toString(currencyData.getRatio()));
+			// rate
+			BigDecimal rateDecimal = new BigDecimal(currencyData.getRate());
 			String rate = NumberUtils.scaleNumber(rateDecimal, Defs.SCALE_SHOW_LONG);
 			setResText(v, R.id.rate, rate.substring(0, rate.length() - 3));
 			setResText(v, R.id.rate_decimals, rate.substring(rate.length() - 3));
-
 			// country ID icon
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
-			int imgId = UIFlags.getResourceFromCode(ci.getCode());
-			if (imgId != -1) {
-				icon.setImageResource(imgId);
+			int imageId = UIFlags.getResourceFromCode(currencyData.getCode());
+			if (imageId != -1) {
+				icon.setImageResource(imageId);
 				// icon.setScaleType(ScaleType.FIT_XY);
 				// icon.setAdjustViewBounds(true);
 				// android.widget.RelativeLayout.LayoutParams lp = new

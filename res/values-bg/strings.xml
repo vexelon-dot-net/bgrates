@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="FontListCode" parent="@android:style/TextAppearance">
-        <item name="android:textColor">#D3D3D3</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="FontList" parent="@android:style/TextAppearance">
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="FontListRatioRate" parent="@android:style/TextAppearance">
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="FontListRateDecimals" parent="@android:style/TextAppearance">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">#808080</item>
-    </style>
-    
     <string name="text_ok">OK</string>
     <string name="text_cancel">Отказ</string>
     
@@ -53,15 +34,10 @@
     <string name="menu_convert">Преобразуване</string>
     <string name="conv_hint_msg">Преобразуване на валути</string>
     <string name="text_selectcurrency">Изберете валута:</string>
-
-    <style name="FontStyleConvert" parent="@android:style/TextAppearance">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">#606060</item>
-    </style>
-
     <string name="tab_title_currencies">Обменни курсове</string>
     <string name="tab_title_convert">Преобразуване</string>
     <string name="action_refresh">Обновяване</string>
+    <string name="action_addcurrency">Добави валута</string>
     <string name="action_sort">Сортиране</string>
     <string name="action_sort_title">Сортиране по:</string>
     <string name="action_sort_name_asc">По име от А-Я</string>

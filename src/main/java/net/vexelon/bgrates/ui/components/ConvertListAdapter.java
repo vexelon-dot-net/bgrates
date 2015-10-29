@@ -23,6 +23,8 @@
  */
 package net.vexelon.bgrates.ui.components;
 
+import java.util.List;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,44 +33,49 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.ui.UIFlags;
 
-public class ConvertCurrencyAdapter extends ArrayAdapter<String> {
+public class ConvertListAdapter extends ArrayAdapter<CurrencyData> {
 
-	private String[] _items = null;
+	private List<CurrencyData> items;
 
-	public ConvertCurrencyAdapter(Context context, int textViewResId, String[] items) {
+	public ConvertListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
 		super(context, textViewResId, items);
-		this._items = items;
+		this.items = items;
 	}
 
-	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+	private View _getView(int position, View convertView) {
 		View v = convertView;
 		if (v == null) {
 			LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = li.inflate(R.layout.convert_row_layout, null);
 		}
-
-		// set texts
-		String code = _items[position];
-
-		// country ID icon
-		ImageView icon = (ImageView) v.findViewById(R.id.IconConvert);
-		int imgId = UIFlags.getResourceFromCode(code);
-		if (imgId != -1) {
-			icon.setImageResource(imgId);
+		CurrencyData currencyData = items.get(position);
+		ImageView icon = (ImageView) v.findViewById(R.id.convert_image_icon);
+		int imageId = UIFlags.getResourceFromCode(currencyData.getCode());
+		if (imageId != -1) {
+			icon.setImageResource(imageId);
 		}
-
-		setResText(v, R.id.TextConvertCode, code);
-
+		setResText(v, R.id.convert_text, currencyData.getName());
 		return v;
+	}
+
+	@Override
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		return _getView(position, convertView);
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		return _getView(position, convertView);
 	}
 
 	private void setResText(View v, int id, CharSequence text) {
 		TextView tx = (TextView) v.findViewById(id);
-		if (tx != null)
+		if (tx != null) {
 			tx.setText(text);
+		}
 	}
 
 }
