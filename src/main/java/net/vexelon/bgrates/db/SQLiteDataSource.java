@@ -87,9 +87,6 @@ public class SQLiteDataSource implements DataSource {
 
 				valuesDate = new ContentValues();
 			}
-
-			// TODO Temp code
-			List<CurrencyData> lastRates = getLastRates(currenciesData.getKey());
 		}
 	}
 
@@ -169,34 +166,8 @@ public class SQLiteDataSource implements DataSource {
 		return resultCurrency;
 	}
 
-	// @Override
-	// public List<Date> getAvailableRatesDates() throws DataSourceException {
-	// List<Date> resultCurrency = new ArrayList<Date>();
-	// String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
-	//
-	// Cursor cursor = database.query(true, Defs.TABLE_CURRENCY, tableColumns,
-	// null, null, null, null, null, null);
-	//
-	// cursor.moveToFirst();
-	// while (!cursor.isAfterLast()) {
-	// try {
-	// resultCurrency.add(parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
-	// "yyyy-MM-dd"));
-	// } catch (ParseException e) {
-	// // TODO Auto-generated catch block
-	// throw new DataSourceException(e);
-	// }
-	//
-	// cursor.moveToNext();
-	// }
-	// // make sure to close the cursor
-	// cursor.close();
-	// return resultCurrency;
-	// }
-
-	// TODO add throws DataSourceException
 	@Override
-	public List<CurrencyData> getRates(CurrencyLocales locale, Date dateOfCurrency) {
+	public List<CurrencyData> getRates(CurrencyLocales locale, Date dateOfCurrency) throws DataSourceException {
 		List<CurrencyData> resultCurrency = new ArrayList<CurrencyData>();
 		String whereClause = Defs.COLUMN_CURR_DATE + " = ? AND " + Defs.COLUMN_LOCALE + " = ? ";
 		String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, "yyyy-MM-dd"), locale.toString() };
@@ -215,9 +186,8 @@ public class SQLiteDataSource implements DataSource {
 
 	}
 
-	// TODO add throws DataSourceException
 	@Override
-	public List<CurrencyData> getRates(CurrencyLocales locale) {
+	public List<CurrencyData> getRates(CurrencyLocales locale) throws DataSourceException {
 		List<CurrencyData> currencies = new ArrayList<CurrencyData>();
 		String whereClause = Defs.COLUMN_LOCALE + " = ? ";
 		String[] whereArgs = new String[] { locale.toString() };

@@ -113,7 +113,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		// Start Service
-		// startService();
+		startService();
 	}
 
 	public void startService() {

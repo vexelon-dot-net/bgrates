@@ -1,21 +1,28 @@
 package net.vexelon.bgrates.service;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
-import com.google.common.collect.Lists;
-
+import net.vexelon.bgrates.AppSettings;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.db.DataSource;
+import net.vexelon.bgrates.db.DataSourceException;
+import net.vexelon.bgrates.db.SQLiteDataSource;
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.remote.BNBSource;
+import net.vexelon.bgrates.remote.Source;
+import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.utils.IOUtils;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.db.DataSource;
-import net.vexelon.bgrates.db.DataSourceException;
-import net.vexelon.bgrates.db.SQLiteDataSource;
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.utils.IOUtils;
+
+import com.google.common.collect.Maps;
 
 public class RateService extends Service {
 
@@ -63,8 +70,10 @@ public class RateService extends Service {
 
 		// Toast.makeText(this, "MyAlarmService.onStart()",
 		// Toast.LENGTH_LONG).show();
-		if (!isCurrenciesToDate())
-			new DownloadWebpageTask().execute("");
+		if (!isCurrenciesToDate()) {
+
+		}
+		new DownloadWebpageTask().execute("");
 
 	}
 
@@ -91,9 +100,7 @@ public class RateService extends Service {
 		try {
 			source = new SQLiteDataSource();
 			source.connect(ctx);
-			// TODO refactor
-			// listCurrency = source.getRates(Calendar.getInstance().getTime());
-			return true;
+			listCurrency = source.getRates(getSelectedCurrenciesLocale(), Calendar.getInstance().getTime());
 		} catch (DataSourceException e) {
 			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 		} finally {
@@ -106,33 +113,31 @@ public class RateService extends Service {
 		return false;
 	}
 
-	private class DownloadWebpageTask extends AsyncTask<String, Void, List<CurrencyData>> {
+	private class DownloadWebpageTask extends AsyncTask<String, Void, Map<CurrencyLocales, List<CurrencyData>>> {
 
 		@Override
-		protected List<CurrencyData> doInBackground(String... urls) {
-			List<CurrencyData> ratesList = Lists.newArrayList();
-			// TODO
-			// try {
-			// Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
-			// Source source = new BNBSource();
-			// ratesList = source.fetchRates();
-			// } catch (SourceException e) {
-			// Log.e(Defs.LOG_TAG, "Could not laod rates from remote!", e);
-			// }
-			return ratesList;
+		protected Map<CurrencyLocales, List<CurrencyData>> doInBackground(String... urls) {
+			Map<CurrencyLocales, List<CurrencyData>> rates = Maps.newHashMap();
+			try {
+				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
+				Source source = new BNBSource();
+				rates = source.downloadRates();
+			} catch (SourceException e) {
+				Log.e(Defs.LOG_TAG, "Could not laod rates from remote!", e);
+			}
+			return rates;
 		}
 
 		// onPostExecute results of the AsyncTask - add currencies in DB if not
 		// exists
 		@Override
-		protected void onPostExecute(List<CurrencyData> result) {
+		protected void onPostExecute(Map<CurrencyLocales, List<CurrencyData>> result) {
 			Context ctx = RateService.this;
 			DataSource source = null;
 			try {
 				source = new SQLiteDataSource();
 				source.connect(ctx);
-				// TODO
-				// source.addRates(result);
+				source.addRates(result);
 			} catch (DataSourceException e) {
 				Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 			} finally {
@@ -140,6 +145,11 @@ public class RateService extends Service {
 			}
 
 		}
+	}
+
+	protected CurrencyLocales getSelectedCurrenciesLocale() {
+		Context ctx = RateService.this;
+		return new AppSettings(ctx).getCurrenciesLanguage();
 	}
 
 }
