@@ -35,6 +35,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
@@ -81,6 +82,17 @@ public class ConvertFragment extends AbstractFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.action_addcurrency:
+			showAddCurrencyMenu();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	private void init(View view) {
 		final Context context = getActivity();
 		// setup source currencies
@@ -119,6 +131,9 @@ public class ConvertFragment extends AbstractFragment {
 		lvTargetCurrencies.setAdapter(adapter);
 	}
 
+	private void showAddCurrencyMenu() {
+		// TODO
+	}
 	/**
 	 * Read previously selected currencies for convert
 	 */
