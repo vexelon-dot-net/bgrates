@@ -3,7 +3,7 @@
     tools:context="net.vexelon.bgrates.MainActivity" >
 
 	<item android:id="@+id/action_addcurrency"
-          android:icon="@drawable/ic_add_box_white_48dp"
+          android:icon="@drawable/ic_add_white_48dp"
           android:title="@string/action_addcurrency"
           android:showAsAction="ifRoom" />
 
