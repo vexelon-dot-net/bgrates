@@ -3,7 +3,7 @@
     tools:context="net.vexelon.bgrates.MainActivity" >
 
 	<item android:id="@+id/action_refresh"
-          android:icon="@drawable/ic_cached_white_48dp"
+          android:icon="@drawable/ic_refresh_white_48dp"
           android:title="@string/action_refresh"
           android:showAsAction="ifRoom" />
 	
