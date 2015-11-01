@@ -28,7 +28,9 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -87,7 +89,7 @@ public class ConvertFragment extends AbstractFragment {
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.action_addcurrency:
-			showAddCurrencyMenu();
+			showAddCurrencyMenu().show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -131,8 +133,30 @@ public class ConvertFragment extends AbstractFragment {
 		lvTargetCurrencies.setAdapter(adapter);
 	}
 
-	private void showAddCurrencyMenu() {
+	private AlertDialog showAddCurrencyMenu() {
 		// TODO
+		DataSource source = null;
+		List<CurrencyData> currenciesList = Lists.newArrayList();
+		try {
+			source = new SQLiteDataSource();
+			source.connect(getActivity());
+			currenciesList = source.getLastRates(getSelectedCurrenciesLocale());
+		} catch (DataSourceException e) {
+			// TODO: Add UI error msg
+			Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);
+		} finally {
+			IOUtils.closeQuitely(source);
+		}
+		ConvertTargetListAdapter adapter = new ConvertTargetListAdapter(getActivity(),
+				R.layout.convert_target_row_layout, currenciesList);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Select currency").setAdapter(adapter, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				// The 'which' argument contains the index position
+				// of the selected item
+			}
+		});
+		return builder.create();
 	}
 	/**
 	 * Read previously selected currencies for convert
