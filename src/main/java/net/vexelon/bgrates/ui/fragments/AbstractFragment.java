@@ -28,6 +28,7 @@ import java.util.List;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -83,6 +84,10 @@ public class AbstractFragment extends Fragment {
 
 	protected CurrencyLocales getSelectedCurrenciesLocale() {
 		return new AppSettings(getActivity()).getCurrenciesLanguage();
+	}
+
+	protected int dp2px(int dp) {
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
 	}
 
 }

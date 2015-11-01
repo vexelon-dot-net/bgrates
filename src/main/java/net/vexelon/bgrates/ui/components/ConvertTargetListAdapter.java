@@ -36,11 +36,11 @@ import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.ui.UIFlags;
 
-public class ConvertListAdapter extends ArrayAdapter<CurrencyData> {
+public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 
 	private List<CurrencyData> items;
 
-	public ConvertListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
+	public ConvertTargetListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
 		super(context, textViewResId, items);
 		this.items = items;
 	}
@@ -49,21 +49,18 @@ public class ConvertListAdapter extends ArrayAdapter<CurrencyData> {
 		View v = convertView;
 		if (v == null) {
 			LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = li.inflate(R.layout.convert_row_layout, null);
+			v = li.inflate(R.layout.convert_target_row_layout, null);
 		}
 		CurrencyData currencyData = items.get(position);
-		ImageView icon = (ImageView) v.findViewById(R.id.convert_image_icon);
+		ImageView icon = (ImageView) v.findViewById(R.id.icon);
 		int imageId = UIFlags.getResourceFromCode(currencyData.getCode());
 		if (imageId != -1) {
 			icon.setImageResource(imageId);
 		}
-		setResText(v, R.id.convert_text, currencyData.getName());
+		setResText(v, R.id.name, currencyData.getName());
+		setResText(v, R.id.code, currencyData.getCode());
+		setResText(v, R.id.rate, currencyData.getRate());
 		return v;
-	}
-
-	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		return _getView(position, convertView);
 	}
 
 	@Override

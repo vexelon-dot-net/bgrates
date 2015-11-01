@@ -99,8 +99,8 @@ public class CurrenciesFragment extends AbstractFragment {
 	}
 
 	private void init(View view) {
-		lvCurrencies = (ListView) view.findViewById(R.id.ListView01);
-		tvLastUpdate = (TextView) view.findViewById(R.id.tvLastUpdate);
+		lvCurrencies = (ListView) view.findViewById(R.id.list_currencies);
+		tvLastUpdate = (TextView) view.findViewById(R.id.text_last_update);
 	}
 
 	private AlertDialog newSortMenu() {

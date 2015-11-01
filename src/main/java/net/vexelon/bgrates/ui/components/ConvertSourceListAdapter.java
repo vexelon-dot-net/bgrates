@@ -23,7 +23,6 @@
  */
 package net.vexelon.bgrates.ui.components;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import android.content.Context;
@@ -33,51 +32,43 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.ui.UIFlags;
-import net.vexelon.bgrates.utils.NumberUtils;
 
-public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
+public class ConvertSourceListAdapter extends ArrayAdapter<CurrencyData> {
 
 	private List<CurrencyData> items;
 
-	public CurrencyListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
+	public ConvertSourceListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
 		super(context, textViewResId, items);
 		this.items = items;
 	}
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	private View _getView(int position, View convertView) {
 		View v = convertView;
 		if (v == null) {
 			LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = li.inflate(R.layout.currency_row_layout, null);
+			v = li.inflate(R.layout.convert_source_row_layout, null);
 		}
-		// set texts
 		CurrencyData currencyData = items.get(position);
-		if (currencyData != null) {
-			setResText(v, R.id.name, currencyData.getName());
-			setResText(v, R.id.code, currencyData.getCode());
-			setResText(v, R.id.ratio, Integer.toString(currencyData.getRatio()));
-			// rate
-			BigDecimal rateDecimal = new BigDecimal(currencyData.getRate());
-			String rate = NumberUtils.scaleNumber(rateDecimal, Defs.SCALE_SHOW_LONG);
-			setResText(v, R.id.rate, rate.substring(0, rate.length() - 3));
-			setResText(v, R.id.rate_decimals, rate.substring(rate.length() - 3));
-			// country ID icon
-			ImageView icon = (ImageView) v.findViewById(R.id.icon);
-			int imageId = UIFlags.getResourceFromCode(currencyData.getCode());
-			if (imageId != -1) {
-				icon.setImageResource(imageId);
-			}
-			// add tendency icon
-			// ImageView tendencyIcon = (ImageView)
-			// v.findViewById(R.id.tendency);
-			// tendencyIcon.setImageResource(ExchangeRates.getResourceFromTendency(ci.getTendency()));
+		ImageView icon = (ImageView) v.findViewById(R.id.convert_image_icon);
+		int imageId = UIFlags.getResourceFromCode(currencyData.getCode());
+		if (imageId != -1) {
+			icon.setImageResource(imageId);
 		}
+		setResText(v, R.id.convert_text, currencyData.getName());
 		return v;
+	}
+
+	@Override
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		return _getView(position, convertView);
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		return _getView(position, convertView);
 	}
 
 	private void setResText(View v, int id, CharSequence text) {
