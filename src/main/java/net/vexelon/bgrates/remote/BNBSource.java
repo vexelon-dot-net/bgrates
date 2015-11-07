@@ -11,6 +11,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.utils.IOUtils;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -18,10 +25,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
-
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.db.models.CurrencyLocales;
-import net.vexelon.bgrates.utils.IOUtils;
 
 public class BNBSource implements Source {
 
@@ -50,13 +53,14 @@ public class BNBSource implements Source {
 	public BNBSource() {
 	}
 
-	public List<CurrencyData> getRatesFromUrl(String ratesUrl) throws SourceException {
+	public List<CurrencyData> getRatesFromUrl(String ratesUrl, String localeName) throws SourceException {
 		List<CurrencyData> listCurrencyData = Lists.newArrayList();
 		InputStream is = null;
 		XmlPullParserFactory factory = null;
 		XmlPullParser parser = null;
 		URL url = null;
 		int header = 0;
+		Date currencyDate = new Date();
 		try {
 			url = new URL(ratesUrl);
 			URLConnection connection = url.openConnection();
@@ -68,6 +72,8 @@ public class BNBSource implements Source {
 				throw new SourceException(new String(ByteStreams.toByteArray(is), Charsets.UTF_8.name()));
 			}
 			is = httpConn.getInputStream();
+			// getEuroValue();
+
 			factory = XmlPullParserFactory.newInstance();
 			factory.setNamespaceAware(true);
 			parser = factory.newPullParser();
@@ -123,7 +129,7 @@ public class BNBSource implements Source {
 							currencyData.setExtraInfo(text);
 						} else if (tagname.equalsIgnoreCase(XML_TAG_CURR_DATE)) {
 							DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-							Date currencyDate = new Date();
+							// Date currencyDate = new Date();//move up
 							try {
 								currencyDate = df.parse(text);
 							} catch (ParseException e1) {
@@ -144,7 +150,59 @@ public class BNBSource implements Source {
 				}
 				eventType = parser.next();
 			}
+
+			listCurrencyData.add(setEuroCurrency(localeName, currencyDate));
+
 			return listCurrencyData;
+		} catch (Exception e) {
+			throw new SourceException("Failed loading currencies from BNB source!", e);
+		} finally {
+			IOUtils.closeQuitely(is);
+		}
+	}
+
+	private CurrencyData setEuroCurrency(String currencyName, Date currencyDate) throws SourceException {
+		CurrencyData euroValue = new CurrencyData();
+		String euro = getEuroValue();
+		// currency.substring(0, 7);
+		// currency1.substring(currency1.lastIndexOf(' ') + 1);
+
+		euroValue.setGold(1);
+		euroValue.setName(currencyName);
+		euroValue.setCode(/* euro.substring(euro.lastIndexOf(' ') + 1) */"EURO");
+		euroValue.setRatio(1);// TODO -???
+		euroValue.setReverseRate("0.511292");
+		euroValue.setRate(euro.substring(0, 7));
+		// euroValue.setExtraInfo(text); - None
+		euroValue.setCurrDate(currencyDate);
+		// euroValue.setTitle(text); - None
+		euroValue.setfStar(0);
+
+		return euroValue;
+	}
+
+	private String getEuroValue() throws SourceException {
+		InputStream is = null;
+		URL url = null;
+		try {
+			url = new URL("http://www.bnb.bg/");
+			URLConnection connection = url.openConnection();
+			connection.setDoInput(true);
+			HttpURLConnection httpConn = (HttpURLConnection) connection;
+			if (httpConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+				// read error and throw it to caller
+				is = httpConn.getErrorStream();
+				throw new SourceException(new String(ByteStreams.toByteArray(is), Charsets.UTF_8.name()));
+			}
+			is = httpConn.getInputStream();
+			Document doc = Jsoup.parse(is, "UTF-8", "http://www.bnb.bg");
+
+			Element element = doc.select("div#more_information > div.box > div.top > div > ul > li").first();
+
+			Element euroValue = element.getElementsByTag("strong").first();
+			// String euroValuReturn = euroValue.text();
+			return euroValue.text();
+
 		} catch (Exception e) {
 			throw new SourceException("Failed loading currencies from BNB source!", e);
 		} finally {
@@ -155,8 +213,8 @@ public class BNBSource implements Source {
 	@Override
 	public Map<CurrencyLocales, List<CurrencyData>> downloadRates() throws SourceException {
 		Map<CurrencyLocales, List<CurrencyData>> result = Maps.newHashMap();
-		result.put(CurrencyLocales.EN, getRatesFromUrl(URL_BNB_FORMAT_EN));
-		result.put(CurrencyLocales.BG, getRatesFromUrl(URL_BNB_FORMAT_BG));
+		result.put(CurrencyLocales.EN, getRatesFromUrl(URL_BNB_FORMAT_EN, "Euro"));
+		result.put(CurrencyLocales.BG, getRatesFromUrl(URL_BNB_FORMAT_BG, "Евро"));
 		return result;
 	}
 
