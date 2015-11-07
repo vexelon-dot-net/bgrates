@@ -53,7 +53,7 @@ public class BNBSource implements Source {
 	public BNBSource() {
 	}
 
-	public List<CurrencyData> getRatesFromUrl(String ratesUrl, String localeName) throws SourceException {
+	public List<CurrencyData> getRatesFromUrl(CurrencyLocales localeName, String ratesUrl) throws SourceException {
 		List<CurrencyData> listCurrencyData = Lists.newArrayList();
 		InputStream is = null;
 		XmlPullParserFactory factory = null;
@@ -161,21 +161,21 @@ public class BNBSource implements Source {
 		}
 	}
 
-	private CurrencyData setEuroCurrency(String currencyName, Date currencyDate) throws SourceException {
+	private CurrencyData setEuroCurrency(CurrencyLocales currencyName, Date currencyDate) throws SourceException {
 		CurrencyData euroValue = new CurrencyData();
 		String euro = getEuroValue();
-		// currency.substring(0, 7);
-		// currency1.substring(currency1.lastIndexOf(' ') + 1);
 
 		euroValue.setGold(1);
-		euroValue.setName(currencyName);
-		euroValue.setCode(/* euro.substring(euro.lastIndexOf(' ') + 1) */"EURO");
-		euroValue.setRatio(1);// TODO -???
+		if (currencyName == CurrencyLocales.BG) {
+			euroValue.setName("Евро");
+		} else {
+			euroValue.setName("Euro");
+		}
+		euroValue.setCode("EUR");
+		euroValue.setRatio(1);
 		euroValue.setReverseRate("0.511292");
 		euroValue.setRate(euro.substring(0, 7));
-		// euroValue.setExtraInfo(text); - None
 		euroValue.setCurrDate(currencyDate);
-		// euroValue.setTitle(text); - None
 		euroValue.setfStar(0);
 
 		return euroValue;
@@ -195,7 +195,7 @@ public class BNBSource implements Source {
 				throw new SourceException(new String(ByteStreams.toByteArray(is), Charsets.UTF_8.name()));
 			}
 			is = httpConn.getInputStream();
-			Document doc = Jsoup.parse(is, "UTF-8", "http://www.bnb.bg");
+			Document doc = Jsoup.parse(is, Charsets.UTF_8.name(), "http://www.bnb.bg");
 
 			Element element = doc.select("div#more_information > div.box > div.top > div > ul > li").first();
 
@@ -213,8 +213,8 @@ public class BNBSource implements Source {
 	@Override
 	public Map<CurrencyLocales, List<CurrencyData>> downloadRates() throws SourceException {
 		Map<CurrencyLocales, List<CurrencyData>> result = Maps.newHashMap();
-		result.put(CurrencyLocales.EN, getRatesFromUrl(URL_BNB_FORMAT_EN, "Euro"));
-		result.put(CurrencyLocales.BG, getRatesFromUrl(URL_BNB_FORMAT_BG, "Евро"));
+		result.put(CurrencyLocales.EN, getRatesFromUrl(CurrencyLocales.EN, URL_BNB_FORMAT_EN));
+		result.put(CurrencyLocales.BG, getRatesFromUrl(CurrencyLocales.BG, URL_BNB_FORMAT_BG));
 		return result;
 	}
 
