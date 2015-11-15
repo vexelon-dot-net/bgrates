@@ -71,6 +71,15 @@ public class ConvertSourceListAdapter extends ArrayAdapter<CurrencyData> {
 		return _getView(position, convertView);
 	}
 
+	public int getSelectedCurrencyPosition(String currencyCode) {
+		for (int i = 0; i < items.size(); i++) {
+			if (currencyCode.equals(items.get(i).getCode())) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	private void setResText(View v, int id, CharSequence text) {
 		TextView tx = (TextView) v.findViewById(id);
 		if (tx != null) {

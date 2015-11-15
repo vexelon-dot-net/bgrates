@@ -95,6 +95,7 @@ public class ConvertFragment extends AbstractFragment {
 	}
 
 	private void init(View view) {
+		final AppSettings appSettings = new AppSettings(getActivity());
 		// setup source currencies
 		spinnerSourceCurrency = (Spinner) view.findViewById(R.id.source_currency);
 		DataSource source = null;
@@ -108,10 +109,17 @@ public class ConvertFragment extends AbstractFragment {
 						android.R.layout.simple_spinner_item, currenciesList);
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 				spinnerSourceCurrency.setAdapter(adapter);
+				spinnerSourceCurrency
+						.setSelection(adapter.getSelectedCurrencyPosition(appSettings.getLastConvertCurrencySel()));
 				spinnerSourceCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 					@Override
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-						updateTargetCurrenciesCalculations();
+						if (updateTargetCurrenciesCalculations()) {
+							// save if value is valid
+							CurrencyData sourceCurrency = (CurrencyData) spinnerSourceCurrency.getSelectedItem();
+							appSettings.setLastConvertCurrencySel(sourceCurrency.getCode());
+						}
+
 					}
 
 					public void onNothingSelected(android.widget.AdapterView<?> parent) {
@@ -126,6 +134,7 @@ public class ConvertFragment extends AbstractFragment {
 		}
 		// setup source value
 		etSourceValue = (EditText) view.findViewById(R.id.text_source_value);
+		etSourceValue.setText(appSettings.getLastConvertValue());
 		etSourceValue.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -145,7 +154,10 @@ public class ConvertFragment extends AbstractFragment {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				updateTargetCurrenciesCalculations();
+				if (updateTargetCurrenciesCalculations()) {
+					// save if value is valid
+					appSettings.setLastConvertValue(etSourceValue.getText().toString());
+				}
 			}
 		});
 		// setup target currencies list
@@ -187,7 +199,7 @@ public class ConvertFragment extends AbstractFragment {
 	/**
 	 * Does convert calculations and displays results
 	 */
-	private void updateTargetCurrenciesCalculations() {
+	private boolean updateTargetCurrenciesCalculations() {
 		ConvertTargetListAdapter adapter = (ConvertTargetListAdapter) lvTargetCurrencies.getAdapter();
 		CurrencyData sourceCurrency = (CurrencyData) spinnerSourceCurrency.getSelectedItem();
 		if (sourceCurrency != null) {
@@ -196,10 +208,12 @@ public class ConvertFragment extends AbstractFragment {
 				BigDecimal value = new BigDecimal(etSourceValue.getText().toString(), mathContext);
 				adapter.updateValues(sourceCurrency, value);
 				adapter.notifyDataSetChanged();
+				return true;
 			} catch (Exception e) {
 				Log.w(Defs.LOG_TAG, "Could not parse source currency value! " + e.getMessage());
 			}
 		}
+		return false;
 	}
 
 	/**

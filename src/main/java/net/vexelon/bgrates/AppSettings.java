@@ -19,6 +19,7 @@
  */
 package net.vexelon.bgrates;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -97,16 +98,43 @@ public class AppSettings {
 		return Sets.newHashSet(generalPrefs.getStringSet("pref_convert_currencycodes", emptySet));
 	}
 
-	public void addConvertCurrency(String code) {
+	public void addConvertCurrency(String currencyCode) {
 		Set<String> convertCurrencies = getConvertCurrencies();
-		convertCurrencies.add(code);
+		convertCurrencies.add(currencyCode);
 		setConvertCurrencies(convertCurrencies);
 	}
 
-	public void removeConvertCurrency(String code) {
+	public void removeConvertCurrency(String currencyCode) {
 		Set<String> convertCurrencies = getConvertCurrencies();
-		convertCurrencies.remove(code);
+		convertCurrencies.remove(currencyCode);
 		setConvertCurrencies(convertCurrencies);
+	}
+
+	/**
+	 * Sets the last set decimal value for currency convertion
+	 * 
+	 * @param value
+	 *            A {@link BigDecimal} converted to {@link String}.
+	 */
+	public void setLastConvertValue(String value) {
+		generalPrefs.edit().putString("pref_convert_value", value).apply();
+	}
+
+	public String getLastConvertValue() {
+		return generalPrefs.getString("pref_convert_value", "0.00");
+	}
+
+	/**
+	 * Sets the last selected currency (code) to convert from
+	 * 
+	 * @param currencyCode
+	 */
+	public void setLastConvertCurrencySel(String currencyCode) {
+		generalPrefs.edit().putString("pref_convert_selcurrencycode", currencyCode).apply();
+	}
+
+	public String getLastConvertCurrencySel() {
+		return generalPrefs.getString("pref_convert_selcurrencycode", "");
 	}
 
 }
