@@ -11,10 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import net.vexelon.bgrates.db.models.CurrencyData;
-import net.vexelon.bgrates.db.models.CurrencyLocales;
-import net.vexelon.bgrates.utils.IOUtils;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,6 +21,10 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
+
+import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.utils.IOUtils;
 
 public class BNBSource implements Source {
 
@@ -185,7 +185,7 @@ public class BNBSource implements Source {
 		InputStream is = null;
 		URL url = null;
 		try {
-			url = new URL("http://www.bnb.bg/");
+			url = new URL(URL_BNB_INDEX);
 			URLConnection connection = url.openConnection();
 			connection.setDoInput(true);
 			HttpURLConnection httpConn = (HttpURLConnection) connection;
@@ -195,7 +195,7 @@ public class BNBSource implements Source {
 				throw new SourceException(new String(ByteStreams.toByteArray(is), Charsets.UTF_8.name()));
 			}
 			is = httpConn.getInputStream();
-			Document doc = Jsoup.parse(is, Charsets.UTF_8.name(), "http://www.bnb.bg");
+			Document doc = Jsoup.parse(is, Charsets.UTF_8.name(), URL_BNB_INDEX);
 
 			Element element = doc.select("div#more_information > div.box > div.top > div > ul > li").first();
 
