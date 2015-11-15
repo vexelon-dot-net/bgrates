@@ -10,12 +10,12 @@
         android:entryValues="@array/pref_display_values"
         android:key="pref_currencies_language"
         android:persistent="true"
-        android:title="@string/pref_display_lang_title" />
+        android:title="@string/pref_display_lang_title" android:summary="@string/pref_display_lang_summary"/>
 
     <Preference
         android:enabled="true"
         android:key="rateus"
-        android:title="@string/pref_rateus_title" />
+        android:title="@string/pref_rateus_title" android:summary="@string/pref_rateus_summary"/>
     <Preference
         android:key="about"
         android:title="@string/pref_about_title" >

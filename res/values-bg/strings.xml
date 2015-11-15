@@ -59,6 +59,8 @@
     </string-array>
     <string name="pref_value_update">Сменено на %1$s</string>
     <string name="pref_display_lang_title">Език на валути</string>
-    <string name="pref_rateus_title">Подкрепете ни и оценете приложението</string>
+    <string name="pref_display_lang_summary">Language to use when displaying currencies</string>
+    <string name="pref_rateus_title">Гласувайте за BGrates</string>
+    <string name="pref_rateus_summary">Подкрепете ни и дайте вашето мнение за приложението</string>
     <string name="pref_about_title">Относно BGrates</string>
 </resources>

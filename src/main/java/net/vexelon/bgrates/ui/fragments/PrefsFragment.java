@@ -16,12 +16,15 @@ public class PrefsFragment extends PreferenceFragment implements OnPreferenceCli
 	public static final String KEY_SCREEN_APP_PREFS = "app_prefs";
 	public static final String KEY_PREF_CURRENCIES_LANGUAGE = "pref_currencies_language";
 	public static final String KEY_PREF_RATEUS = "rateus";
+	public static final String KEY_PREF_ABOUT = "about";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
 		addPreferencesFromResource(R.xml.preferences);
+		// final Context ctx = getActivity();
+		// final AppSettings appSettings = new AppSettings(ctx);
 		findPreference(KEY_PREF_RATEUS).setOnPreferenceClickListener(this);
 		findPreference(KEY_PREF_CURRENCIES_LANGUAGE).setOnPreferenceChangeListener(this);
 	}

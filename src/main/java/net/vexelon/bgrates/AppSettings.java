@@ -69,13 +69,17 @@ public class AppSettings {
 	 * @return {@link CurrencyLocales}
 	 */
 	public CurrencyLocales getCurrenciesLanguage() {
-		String value = generalPrefs.getString("pref_currencies_language", "default");
+		String value = getCurrenciesLanguageRaw();
 		if ("en".equals(value)) {
 			return CurrencyLocales.EN;
 		} else if ("bg".equals(value)) {
 			return CurrencyLocales.BG;
 		}
 		return CurrencyLocales.getAppLocale(context);
+	}
+
+	public String getCurrenciesLanguageRaw() {
+		return generalPrefs.getString("pref_currencies_language", "default");
 	}
 
 	/**
