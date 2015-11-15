@@ -4,6 +4,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.IBinder;
+import android.util.Log;
 import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.db.DataSource;
@@ -15,14 +23,6 @@ import net.vexelon.bgrates.remote.BNBSource;
 import net.vexelon.bgrates.remote.Source;
 import net.vexelon.bgrates.remote.SourceException;
 import net.vexelon.bgrates.utils.IOUtils;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.IBinder;
-import android.util.Log;
-
-import com.google.common.collect.Maps;
 
 public class RateService extends Service {
 
@@ -123,7 +123,7 @@ public class RateService extends Service {
 				Source source = new BNBSource();
 				rates = source.downloadRates();
 			} catch (SourceException e) {
-				Log.e(Defs.LOG_TAG, "Could not laod rates from remote!", e);
+				Log.e(Defs.LOG_TAG, "Could not load rates from remote!", e);
 			}
 			return rates;
 		}

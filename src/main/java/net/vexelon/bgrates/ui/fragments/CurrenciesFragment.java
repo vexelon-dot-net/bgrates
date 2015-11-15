@@ -229,7 +229,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				rates = source.downloadRates();
 				updateOK = true;
 			} catch (SourceException e) {
-				Log.e(Defs.LOG_TAG, "Could not laod rates from remote!", e);
+				Log.e(Defs.LOG_TAG, "Could not load rates from remote!", e);
 			}
 			return rates;
 		}
