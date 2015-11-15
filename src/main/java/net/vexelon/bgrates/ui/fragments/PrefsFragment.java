@@ -37,7 +37,7 @@ public class PrefsFragment extends PreferenceFragment implements OnPreferenceCli
 						Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
 			}
 		}
-		return false;
+		return true;
 	}
 
 	@Override
@@ -45,6 +45,7 @@ public class PrefsFragment extends PreferenceFragment implements OnPreferenceCli
 		if (preference.getKey().equals(KEY_PREF_CURRENCIES_LANGUAGE)) {
 			Toast.makeText(getActivity(), getString(R.string.pref_value_update, newValue), Toast.LENGTH_SHORT).show();
 		}
-		return false;
+		// update state with new value
+		return true;
 	}
 }
