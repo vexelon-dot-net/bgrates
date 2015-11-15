@@ -26,10 +26,10 @@
 	    android:layout_weight=".40"
 	    android:layout_gravity="bottom"
 	    android:gravity="right"
-	    android:focusable="false"
+	    android:focusable="true"
 	    android:digits="0123456789." 
 	    android:inputType="numberDecimal" 
-	    android:maxLength="50" 
+	    android:maxLength="10" 
 	    android:text="0.00"
 	    android:lines="1" />
 

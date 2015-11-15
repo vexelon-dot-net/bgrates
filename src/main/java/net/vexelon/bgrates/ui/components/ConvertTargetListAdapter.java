@@ -23,26 +23,38 @@
  */
 package net.vexelon.bgrates.ui.components;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.ui.UIFlags;
+import net.vexelon.bgrates.utils.NumberUtils;
 
 public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 
 	private List<CurrencyData> items;
+	private List<BigDecimal> values;
 
 	public ConvertTargetListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
 		super(context, textViewResId, items);
 		this.items = items;
+		this.values = Lists.newArrayList();
+		for (int i = 0; i < items.size(); i++) {
+			values.add(BigDecimal.ZERO);
+		}
 	}
 
 	private View _getView(int position, View convertView) {
@@ -59,7 +71,11 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 		}
 		setResText(v, R.id.name, currencyData.getName());
 		setResText(v, R.id.code, currencyData.getCode());
-		setResText(v, R.id.rate, currencyData.getRate());
+		BigDecimal value = values.get(position);
+		if (value == null) {
+			value = BigDecimal.ZERO;
+		}
+		setResText(v, R.id.rate, NumberUtils.scaleNumber(value, Defs.SCALE_SHOW_SHORT));
 		return v;
 	}
 
@@ -75,6 +91,35 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 
 	public CurrencyData remove(int position) {
 		return items.remove(position);
+	}
+
+	public void updateValues(CurrencyData sourceCurrency, BigDecimal value) {
+		MathContext mathContext = new MathContext(Defs.SCALE_CALCULATIONS);
+		// convert source currency to BGN value
+		BigDecimal valueBGN;
+		try {
+			BigDecimal rate = new BigDecimal(sourceCurrency.getRate(), mathContext);
+			BigDecimal ratio = new BigDecimal(sourceCurrency.getRatio(), mathContext);
+			valueBGN = value.multiply(rate.divide(ratio, mathContext), mathContext);
+		} catch (Exception e) {
+			Log.e(Defs.LOG_TAG, "Failed to convert source currency to BGN!", e);
+			return;
+		}
+		// convert each destination currency from BGN
+		for (int i = 0; i < items.size(); i++) {
+			CurrencyData currency = items.get(i);
+			BigDecimal result = BigDecimal.ZERO;
+			try {
+				BigDecimal reverseRate = new BigDecimal(currency.getReverseRate(), mathContext);
+				BigDecimal ratio = new BigDecimal(currency.getRatio(), mathContext);
+				result = valueBGN.multiply(reverseRate, mathContext);
+				// result = reverseRate.multiply(ratio,
+				// mathContext).multiply(valueBGN, mathContext);
+			} catch (Exception e) {
+				Log.e(Defs.LOG_TAG, "Failed to calcualte currency " + currency.getCode() + "!", e);
+			}
+			values.set(i, result);
+		}
 	}
 
 	private void setResText(View v, int id, CharSequence text) {
