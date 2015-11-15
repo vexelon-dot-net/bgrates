@@ -68,6 +68,15 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 		return _getView(position, convertView);
 	}
 
+	@Override
+	public void remove(CurrencyData object) {
+		items.remove(object);
+	}
+
+	public CurrencyData remove(int position) {
+		return items.remove(position);
+	}
+
 	private void setResText(View v, int id, CharSequence text) {
 		TextView tx = (TextView) v.findViewById(id);
 		if (tx != null) {

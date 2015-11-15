@@ -49,6 +49,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
@@ -131,6 +132,21 @@ public class ConvertFragment extends AbstractFragment {
 		});
 		// setup target currencies list
 		lvTargetCurrencies = (ListView) view.findViewById(R.id.list_target_currencies);
+		lvTargetCurrencies.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				ConvertTargetListAdapter adapter = (ConvertTargetListAdapter) lvTargetCurrencies.getAdapter();
+				CurrencyData removed = adapter.remove(position);
+				adapter.notifyDataSetChanged();
+				if (removed != null) {
+					new AppSettings(getActivity()).removeConvertCurrency(removed.getCode());
+					Toast.makeText(getActivity(),
+							getActivity().getString(R.string.action_currency_removed, removed.getCode()),
+							Toast.LENGTH_SHORT).show();
+				}
+				return false;
+			}
+		});
 		updateTargetCurrenciesListView();
 	}
 
@@ -160,11 +176,13 @@ public class ConvertFragment extends AbstractFragment {
 		builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				final AppSettings appSettings = new AppSettings(context);
 				CurrencyData currencyData = currenciesList.get(which);
 				if (currencyData != null) {
-					appSettings.addConvertCurrency(currencyData.getCode());
+					// TODO: check if already added
+					new AppSettings(context).addConvertCurrency(currencyData.getCode());
 					updateTargetCurrenciesListView();
+					Toast.makeText(context, context.getString(R.string.action_currency_added, currencyData.getCode()),
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		});

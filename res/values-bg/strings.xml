@@ -38,6 +38,8 @@
     <string name="tab_title_convert">Преобразуване</string>
     <string name="action_refresh">Обновяване</string>
     <string name="action_addcurrency">Добави валута</string>
+    <string name="action_currency_added">Добавяне на %1$s</string>
+    <string name="action_currency_removed">Премахване на %1$s</string>
     <string name="action_sort">Сортиране</string>
     <string name="action_sort_title">Сортиране по:</string>
     <string name="action_sort_name_asc">По име от А-Я</string>

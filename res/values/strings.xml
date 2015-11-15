@@ -39,6 +39,8 @@
     <string name="tab_title_convert">Convert</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_addcurrency">Add currency</string>
+    <string name="action_currency_added">Added: %1$s</string>
+    <string name="action_currency_removed">Removed: %1$s</string>
     <string name="action_sort">Sort</string>
     <string name="action_sort_title">Sort by</string>
     <string name="action_sort_name_asc">Name A-Z</string>
