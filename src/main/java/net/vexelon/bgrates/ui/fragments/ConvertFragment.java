@@ -25,8 +25,10 @@ package net.vexelon.bgrates.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -47,7 +49,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
+import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.db.DataSource;
@@ -69,6 +71,8 @@ public class ConvertFragment extends AbstractFragment {
 	private Spinner spinnerSourceCurrency;
 	private EditText etSourceValue;
 	private ListView lvTargetCurrencies;
+	private List<CurrencyData> currenciesList = Lists.newArrayList();
+	private Map<String, CurrencyData> currenciesMap = Maps.newHashMap();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,15 +100,14 @@ public class ConvertFragment extends AbstractFragment {
 	}
 
 	private void init(View view) {
-		final Context context = getActivity();
 		// setup source currencies
 		spinnerSourceCurrency = (Spinner) view.findViewById(R.id.source_currency);
 		DataSource source = null;
-		List<CurrencyData> currenciesList = Lists.newArrayList();
 		try {
 			source = new SQLiteDataSource();
 			source.connect(getActivity());
 			currenciesList = source.getLastRates(getSelectedCurrenciesLocale());
+			currenciesMap = getCurreniesMap(currenciesList);
 			if (!currenciesList.isEmpty()) {
 				ConvertSourceListAdapter adapter = new ConvertSourceListAdapter(getActivity(),
 						android.R.layout.simple_spinner_item, currenciesList);
@@ -128,32 +131,41 @@ public class ConvertFragment extends AbstractFragment {
 		});
 		// setup target currencies list
 		lvTargetCurrencies = (ListView) view.findViewById(R.id.list_target_currencies);
-		ConvertTargetListAdapter adapter = new ConvertTargetListAdapter(context, R.layout.convert_target_row_layout,
-				currenciesList);
+		updateTargetCurrenciesListView();
+	}
+
+	/**
+	 * Fetches stored target currencies and adds them to the convert list
+	 */
+	private void updateTargetCurrenciesListView() {
+		final AppSettings appSettings = new AppSettings(getActivity());
+		List<CurrencyData> targetCurrencyList = Lists.newArrayList();
+		for (String currencyCode : appSettings.getConvertCurrencies()) {
+			if (currenciesMap.containsKey(currencyCode)) {
+				targetCurrencyList.add(currenciesMap.get(currencyCode));
+			}
+		}
+		ConvertTargetListAdapter adapter = new ConvertTargetListAdapter(getActivity(),
+				R.layout.convert_target_row_layout, targetCurrencyList);
 		lvTargetCurrencies.setAdapter(adapter);
 	}
 
 	private AlertDialog showAddCurrencyMenu() {
-		// TODO
-		DataSource source = null;
-		List<CurrencyData> currenciesList = Lists.newArrayList();
-		try {
-			source = new SQLiteDataSource();
-			source.connect(getActivity());
-			currenciesList = source.getLastRates(getSelectedCurrenciesLocale());
-		} catch (DataSourceException e) {
-			// TODO: Add UI error msg
-			Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);
-		} finally {
-			IOUtils.closeQuitely(source);
-		}
-		ConvertTargetListAdapter adapter = new ConvertTargetListAdapter(getActivity(),
-				R.layout.convert_target_row_layout, currenciesList);
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Select currency").setAdapter(adapter, new DialogInterface.OnClickListener() {
+		final Context context = getActivity();
+		ConvertTargetListAdapter adapter = new ConvertTargetListAdapter(context, R.layout.convert_target_row_layout,
+				currenciesList);
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle(context.getString(R.string.action_addcurrency));
+		builder.setCancelable(true);
+		builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// The 'which' argument contains the index position
-				// of the selected item
+				final AppSettings appSettings = new AppSettings(context);
+				CurrencyData currencyData = currenciesList.get(which);
+				if (currencyData != null) {
+					appSettings.addConvertCurrency(currencyData.getCode());
+					updateTargetCurrenciesListView();
+				}
 			}
 		});
 		return builder.create();
@@ -210,7 +222,7 @@ public class ConvertFragment extends AbstractFragment {
 			items = new String[] { "BGN" };
 
 			// init the edit text box
-			setResText(row.getEditTextId(), "1.00"); // default
+			// setResText(row.getEditTextId(), "1.00"); // default
 
 			break;
 
@@ -218,7 +230,7 @@ public class ConvertFragment extends AbstractFragment {
 		default:
 
 			// init the edit text box
-			setResText(row.getEditTextId(), "0.00");
+			// setResText(row.getEditTextId(), "0.00");
 
 			break;
 		}
@@ -421,24 +433,5 @@ public class ConvertFragment extends AbstractFragment {
 	 * }
 	 * }
 	 */
-	private void setResText(int id, CharSequence text) {
-		TextView tx = (TextView) getActivity().findViewById(id);
-		if (tx != null)
-			tx.setText(text);
-	}
-
-	private CharSequence getResText(int id) {
-		TextView tx = (TextView) getActivity().findViewById(id);
-		if (tx != null)
-			return tx.getText();
-
-		return null;
-	}
-
-	private void appendResText(int id, CharSequence text) {
-		TextView tx = (TextView) getActivity().findViewById(id);
-		if (tx != null)
-			tx.setText(tx.getText().toString() + text);
-	}
 
 }

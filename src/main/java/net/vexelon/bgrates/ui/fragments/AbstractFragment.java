@@ -25,6 +25,9 @@ package net.vexelon.bgrates.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -34,6 +37,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.db.models.CurrencyLocales;
 import net.vexelon.bgrates.ui.Notifications;
 import net.vexelon.bgrates.ui.NotificationsListener;
@@ -88,6 +92,14 @@ public class AbstractFragment extends Fragment {
 
 	protected int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+	}
+
+	protected Map<String, CurrencyData> getCurreniesMap(List<CurrencyData> currenciesList) {
+		Map<String, CurrencyData> currenciesMap = Maps.newHashMap();
+		for (CurrencyData currencyData : currenciesList) {
+			currenciesMap.put(currencyData.getCode(), currencyData);
+		}
+		return currenciesMap;
 	}
 
 }

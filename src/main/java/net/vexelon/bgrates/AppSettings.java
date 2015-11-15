@@ -19,6 +19,10 @@
  */
 package net.vexelon.bgrates;
 
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -55,7 +59,7 @@ public class AppSettings {
 	 * @param value
 	 */
 	public void setCurrenciesSortSelection(int value) {
-		generalPrefs.edit().putInt("pref_currencies_sortby", value).commit();
+		generalPrefs.edit().putInt("pref_currencies_sortby", value).apply();
 	}
 
 	/**
@@ -71,6 +75,38 @@ public class AppSettings {
 			return CurrencyLocales.BG;
 		}
 		return CurrencyLocales.getAppLocale(context);
+	}
+
+	/**
+	 * 
+	 * @param currencyCodes
+	 *            List of currency codes (case-sensitive)
+	 */
+	private void setConvertCurrencies(Set<String> currencyCodes) {
+		generalPrefs.edit().putStringSet("pref_convert_currencycodes", currencyCodes).apply();
+	}
+
+	/**
+	 * Gets saved target convert currencies
+	 * 
+	 * @return
+	 */
+	public Set<String> getConvertCurrencies() {
+		Set<String> emptySet = Sets.newHashSet();
+		// Needs a new Set instance - http://stackoverflow.com/a/14034804
+		return Sets.newHashSet(generalPrefs.getStringSet("pref_convert_currencycodes", emptySet));
+	}
+
+	public void addConvertCurrency(String code) {
+		Set<String> convertCurrencies = getConvertCurrencies();
+		convertCurrencies.add(code);
+		setConvertCurrencies(convertCurrencies);
+	}
+
+	public void removeConvertCurrency(String code) {
+		Set<String> convertCurrencies = getConvertCurrencies();
+		convertCurrencies.remove(code);
+		setConvertCurrencies(convertCurrencies);
 	}
 
 }
