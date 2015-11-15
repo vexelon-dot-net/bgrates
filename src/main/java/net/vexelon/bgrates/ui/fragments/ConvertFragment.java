@@ -25,6 +25,9 @@ package net.vexelon.bgrates.ui.fragments;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +60,7 @@ import net.vexelon.bgrates.db.DataSource;
 import net.vexelon.bgrates.db.DataSourceException;
 import net.vexelon.bgrates.db.SQLiteDataSource;
 import net.vexelon.bgrates.db.models.CurrencyData;
+import net.vexelon.bgrates.db.models.CurrencyLocales;
 import net.vexelon.bgrates.ui.components.ConvertSourceListAdapter;
 import net.vexelon.bgrates.ui.components.ConvertTargetListAdapter;
 import net.vexelon.bgrates.utils.IOUtils;
@@ -98,39 +102,29 @@ public class ConvertFragment extends AbstractFragment {
 		final AppSettings appSettings = new AppSettings(getActivity());
 		// setup source currencies
 		spinnerSourceCurrency = (Spinner) view.findViewById(R.id.source_currency);
-		DataSource source = null;
-		try {
-			source = new SQLiteDataSource();
-			source.connect(getActivity());
-			currenciesList = source.getLastRates(getSelectedCurrenciesLocale());
+		currenciesList = getCurrenciesList();
+		if (!currenciesList.isEmpty()) {
 			currenciesMap = getCurreniesMap(currenciesList);
-			if (!currenciesList.isEmpty()) {
-				ConvertSourceListAdapter adapter = new ConvertSourceListAdapter(getActivity(),
-						android.R.layout.simple_spinner_item, currenciesList);
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				spinnerSourceCurrency.setAdapter(adapter);
-				spinnerSourceCurrency
-						.setSelection(adapter.getSelectedCurrencyPosition(appSettings.getLastConvertCurrencySel()));
-				spinnerSourceCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-					@Override
-					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-						if (updateTargetCurrenciesCalculations()) {
-							// save if value is valid
-							CurrencyData sourceCurrency = (CurrencyData) spinnerSourceCurrency.getSelectedItem();
-							appSettings.setLastConvertCurrencySel(sourceCurrency.getCode());
-						}
-
+			ConvertSourceListAdapter adapter = new ConvertSourceListAdapter(getActivity(),
+					android.R.layout.simple_spinner_item, currenciesList);
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			spinnerSourceCurrency.setAdapter(adapter);
+			spinnerSourceCurrency
+					.setSelection(adapter.getSelectedCurrencyPosition(appSettings.getLastConvertCurrencySel()));
+			spinnerSourceCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					if (updateTargetCurrenciesCalculations()) {
+						// save if value is valid
+						CurrencyData sourceCurrency = (CurrencyData) spinnerSourceCurrency.getSelectedItem();
+						appSettings.setLastConvertCurrencySel(sourceCurrency.getCode());
 					}
 
-					public void onNothingSelected(android.widget.AdapterView<?> parent) {
-					};
-				});
-			}
-		} catch (DataSourceException e) {
-			// TODO: Add UI error msg
-			Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);
-		} finally {
-			IOUtils.closeQuitely(source);
+				}
+
+				public void onNothingSelected(android.widget.AdapterView<?> parent) {
+				};
+			});
 		}
 		// setup source value
 		etSourceValue = (EditText) view.findViewById(R.id.text_source_value);
@@ -243,6 +237,57 @@ public class ConvertFragment extends AbstractFragment {
 			}
 		});
 		return builder.create();
+	}
+
+	/**
+	 * Fetches a sorted list of last downloaded currencies from the database
+	 * 
+	 * @return
+	 */
+	private List<CurrencyData> getCurrenciesList() {
+		DataSource source = null;
+		List<CurrencyData> currenciesList = Lists.newArrayList();
+		try {
+			source = new SQLiteDataSource();
+			source.connect(getActivity());
+			currenciesList = source.getLastRates(getSelectedCurrenciesLocale());
+		} catch (DataSourceException e) {
+			// TODO: Add UI error msg
+			Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);
+		} finally {
+			IOUtils.closeQuitely(source);
+		}
+		addBGNToCurrencyList(currenciesList);
+		// sort by name
+		Collections.sort(currenciesList, new Comparator<CurrencyData>() {
+			@Override
+			public int compare(CurrencyData lhs, CurrencyData rhs) {
+				return lhs.getName().compareToIgnoreCase(rhs.getName());
+			}
+		});
+		return currenciesList;
+	}
+
+	/**
+	 * Adds fictional BGN currency to the convert list
+	 * 
+	 * @param currencyList
+	 */
+	private void addBGNToCurrencyList(List<CurrencyData> currencyList) {
+		CurrencyData currency = new CurrencyData();
+		if (getSelectedCurrenciesLocale() == CurrencyLocales.BG) {
+			currency.setName("Български лев");
+		} else {
+			currency.setName("Bulgarian Lev");
+		}
+		currency.setGold(1);
+		currency.setCode("BGN");
+		currency.setRatio(1);
+		currency.setReverseRate("1");
+		currency.setRate("1");
+		currency.setCurrDate(new Date());
+		currency.setfStar(0);
+		currencyList.add(currency);
 	}
 
 }

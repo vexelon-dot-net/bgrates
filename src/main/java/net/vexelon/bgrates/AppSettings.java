@@ -134,7 +134,7 @@ public class AppSettings {
 	}
 
 	public String getLastConvertCurrencySel() {
-		return generalPrefs.getString("pref_convert_selcurrencycode", "");
+		return generalPrefs.getString("pref_convert_selcurrencycode", "bg");
 	}
 
 }

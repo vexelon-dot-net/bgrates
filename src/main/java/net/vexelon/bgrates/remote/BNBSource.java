@@ -164,7 +164,6 @@ public class BNBSource implements Source {
 	private CurrencyData setEuroCurrency(CurrencyLocales currencyName, Date currencyDate) throws SourceException {
 		CurrencyData euroValue = new CurrencyData();
 		String euro = getEuroValue();
-
 		euroValue.setGold(1);
 		if (currencyName == CurrencyLocales.BG) {
 			euroValue.setName("Евро");
@@ -173,11 +172,10 @@ public class BNBSource implements Source {
 		}
 		euroValue.setCode("EUR");
 		euroValue.setRatio(1);
-		euroValue.setReverseRate("0.511292");
+		euroValue.setReverseRate("0.511292"); // TODO parse from webpage
 		euroValue.setRate(euro.substring(0, 7));
 		euroValue.setCurrDate(currencyDate);
 		euroValue.setfStar(0);
-
 		return euroValue;
 	}
 
