@@ -56,7 +56,6 @@ import net.vexelon.bgrates.db.models.CurrencyLocales;
 import net.vexelon.bgrates.remote.BNBSource;
 import net.vexelon.bgrates.remote.Source;
 import net.vexelon.bgrates.remote.SourceException;
-import net.vexelon.bgrates.ui.UIUtils;
 import net.vexelon.bgrates.ui.components.CurrencyListAdapter;
 import net.vexelon.bgrates.utils.DateTimeUtils;
 import net.vexelon.bgrates.utils.IOUtils;
@@ -72,7 +71,6 @@ public class CurrenciesFragment extends AbstractFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		init(rootView);
-		// <reloadRates(false);
 		return rootView;
 	}
 
@@ -201,8 +199,8 @@ public class CurrenciesFragment extends AbstractFragment {
 					useRemoteSource = true;
 				}
 			} catch (DataSourceException e) {
-				// TODO: Add UI error msg
 				Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);
+				Toast.makeText(getActivity(), R.string.error_db_load_rates, Defs.TOAST_ERR_TIME).show();
 			} finally {
 				IOUtils.closeQuitely(source);
 			}
@@ -251,14 +249,14 @@ public class CurrenciesFragment extends AbstractFragment {
 					source.connect(activity);
 					source.addRates(result);
 				} catch (DataSourceException e) {
-					// TODO: Add UI error msg
 					Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
+					Toast.makeText(getActivity(), R.string.error_db_load_rates, Defs.TOAST_ERR_TIME).show();
 				} finally {
 					IOUtils.closeQuitely(source);
 				}
 				updateCurrenciesListView(result.get(getSelectedCurrenciesLocale()));
 			} else {
-				UIUtils.showAlertDialog(activity, R.string.dlg_parse_error_msg, R.string.dlg_parse_error_title);
+				Toast.makeText(getActivity(), R.string.error_download_rates, Defs.TOAST_ERR_TIME).show();
 			}
 		}
 

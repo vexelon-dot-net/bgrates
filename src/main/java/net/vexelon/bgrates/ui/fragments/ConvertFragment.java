@@ -262,7 +262,7 @@ public class ConvertFragment extends AbstractFragment {
 			source.connect(getActivity());
 			currenciesList = source.getLastRates(getSelectedCurrenciesLocale());
 		} catch (DataSourceException e) {
-			// TODO: Add UI error msg
+			Toast.makeText(getActivity(), R.string.error_db_load_rates, Defs.TOAST_ERR_TIME).show();
 			Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);
 		} finally {
 			IOUtils.closeQuitely(source);
