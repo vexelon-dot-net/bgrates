@@ -81,6 +81,13 @@ public class ConvertFragment extends AbstractFragment {
 	}
 
 	@Override
+	public void onResume() {
+		Log.d(Defs.LOG_TAG, "*** ON RESUME**");
+		refreshUIData();
+		super.onResume();
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// add refresh currencies menu option
 		inflater.inflate(R.menu.convert, menu);
@@ -99,36 +106,24 @@ public class ConvertFragment extends AbstractFragment {
 	}
 
 	private void init(View view) {
-		final AppSettings appSettings = new AppSettings(getActivity());
 		// setup source currencies
 		spinnerSourceCurrency = (Spinner) view.findViewById(R.id.source_currency);
-		currenciesList = getCurrenciesList();
-		if (!currenciesList.isEmpty()) {
-			currenciesMap = getCurreniesMap(currenciesList);
-			ConvertSourceListAdapter adapter = new ConvertSourceListAdapter(getActivity(),
-					android.R.layout.simple_spinner_item, currenciesList);
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			spinnerSourceCurrency.setAdapter(adapter);
-			spinnerSourceCurrency
-					.setSelection(adapter.getSelectedCurrencyPosition(appSettings.getLastConvertCurrencySel()));
-			spinnerSourceCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				@Override
-				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					if (updateTargetCurrenciesCalculations()) {
-						// save if value is valid
-						CurrencyData sourceCurrency = (CurrencyData) spinnerSourceCurrency.getSelectedItem();
-						appSettings.setLastConvertCurrencySel(sourceCurrency.getCode());
-					}
-
+		spinnerSourceCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (updateTargetCurrenciesCalculations()) {
+					// save if value is valid
+					CurrencyData sourceCurrency = (CurrencyData) spinnerSourceCurrency.getSelectedItem();
+					new AppSettings(getActivity()).setLastConvertCurrencySel(sourceCurrency.getCode());
 				}
 
-				public void onNothingSelected(android.widget.AdapterView<?> parent) {
-				};
-			});
-		}
+			}
+
+			public void onNothingSelected(android.widget.AdapterView<?> parent) {
+			};
+		});
 		// setup source value
 		etSourceValue = (EditText) view.findViewById(R.id.text_source_value);
-		etSourceValue.setText(appSettings.getLastConvertValue());
 		etSourceValue.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -150,7 +145,7 @@ public class ConvertFragment extends AbstractFragment {
 			public void afterTextChanged(Editable s) {
 				if (updateTargetCurrenciesCalculations()) {
 					// save if value is valid
-					appSettings.setLastConvertValue(etSourceValue.getText().toString());
+					new AppSettings(getActivity()).setLastConvertValue(etSourceValue.getText().toString());
 				}
 			}
 		});
@@ -171,6 +166,21 @@ public class ConvertFragment extends AbstractFragment {
 				return false;
 			}
 		});
+	}
+
+	private void refreshUIData() {
+		final AppSettings appSettings = new AppSettings(getActivity());
+		currenciesList = getCurrenciesList();
+		if (!currenciesList.isEmpty()) {
+			currenciesMap = getCurreniesMap(currenciesList);
+			ConvertSourceListAdapter adapter = new ConvertSourceListAdapter(getActivity(),
+					android.R.layout.simple_spinner_item, currenciesList);
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			spinnerSourceCurrency.setAdapter(adapter);
+			spinnerSourceCurrency
+					.setSelection(adapter.getSelectedCurrencyPosition(appSettings.getLastConvertCurrencySel()));
+		}
+		etSourceValue.setText(appSettings.getLastConvertValue());
 		updateTargetCurrenciesListView();
 	}
 

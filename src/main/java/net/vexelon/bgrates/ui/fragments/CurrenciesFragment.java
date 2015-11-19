@@ -72,8 +72,14 @@ public class CurrenciesFragment extends AbstractFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		init(rootView);
-		reloadRates(false);
+		// <reloadRates(false);
 		return rootView;
+	}
+
+	@Override
+	public void onResume() {
+		reloadRates(false);
+		super.onResume();
 	}
 
 	@Override
