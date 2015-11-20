@@ -180,6 +180,13 @@ public class ConvertFragment extends AbstractFragment {
 				return false;
 			}
 		});
+		lvTargetCurrencies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Toast.makeText(getActivity(), getActivity().getString(R.string.hint_currency_remove),
+						Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	private void refreshUIData() {
