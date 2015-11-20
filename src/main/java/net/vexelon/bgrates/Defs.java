@@ -30,7 +30,7 @@ public class Defs {
 	public final static int TOAST_INFO_TIME = 4000;
 	public final static int TOAST_ERR_TIME = 3000;
 	public final static int SCALE_SHOW_LONG = 5;
-	public final static int SCALE_SHOW_SHORT = 3;
+	public final static int SCALE_SHOW_SHORT = 2;
 	public final static int SCALE_CALCULATIONS = 10;
 
 	// //////Tsvetoslav
