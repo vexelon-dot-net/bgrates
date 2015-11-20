@@ -4,10 +4,16 @@ bin
 .settings/*
 .classpath
 .project
-local.properties
+
 # Gradle
 .gradle
 build
 gradle.properties
+
 # Others
 libs/
+local.properties
+
+# a-studio
+.idea
+*.iml
