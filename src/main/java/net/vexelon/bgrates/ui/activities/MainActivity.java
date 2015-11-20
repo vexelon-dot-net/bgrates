@@ -26,14 +26,6 @@ package net.vexelon.bgrates.ui.activities;
 import java.util.Calendar;
 import java.util.Locale;
 
-import net.vexelon.bgrates.Defs;
-import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.service.RateService;
-import net.vexelon.bgrates.ui.events.Notifications;
-import net.vexelon.bgrates.ui.events.NotificationsListener;
-import net.vexelon.bgrates.ui.fragments.AbstractFragment;
-import net.vexelon.bgrates.ui.fragments.ConvertFragment;
-import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -48,6 +40,14 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import net.vexelon.bgrates.Defs;
+import net.vexelon.bgrates.R;
+import net.vexelon.bgrates.service.RateService;
+import net.vexelon.bgrates.ui.events.Notifications;
+import net.vexelon.bgrates.ui.events.NotificationsListener;
+import net.vexelon.bgrates.ui.fragments.AbstractFragment;
+import net.vexelon.bgrates.ui.fragments.ConvertFragment;
+import net.vexelon.bgrates.ui.fragments.CurrenciesFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener, NotificationsListener {
 
@@ -77,10 +77,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setDisplayUseLogoEnabled(true);
-		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(false);
 		actionBar.setTitle(R.string.app_name_pure);
-		actionBar.setLogo(R.drawable.icon);
+		// actionBar.setDisplayUseLogoEnabled(true);
+		// actionBar.setLogo(R.drawable.icon);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
