@@ -1,4 +1,4 @@
-package net.vexelon.bgrates.ui;
+package net.vexelon.bgrates.ui.events;
 
 /**
  * A list of notifications that represent various actions across the app's

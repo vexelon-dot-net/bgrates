@@ -82,9 +82,23 @@ public class ConvertFragment extends AbstractFragment {
 
 	@Override
 	public void onResume() {
-		Log.d(Defs.LOG_TAG, "*** ON RESUME**");
+		/*
+		 * Back from Settings or another activity, so we reload all currencies.
+		 */
 		refreshUIData();
 		super.onResume();
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			/*
+			 * Back from Currencies fragment view, so we reload all
+			 * currencies. The user might have updated them.
+			 */
+			refreshUIData();
+		}
 	}
 
 	@Override

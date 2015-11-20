@@ -7,6 +7,7 @@
     <string name="app_name">BGrates M-Tel</string>
     <string name="app_name_pure">BGrates</string>
     <string name="last_update">Последно обновено</string>
+    <string name="last_update_updating_text">Сваляне ...</string>
     <string name="error_download_rates">Грешка при сваляне на валути.</string>
     <string name="error_parse_rates">Грешка при четене на файла с обменните курсове!</string>
     <string name="error_db_load_rates">Грешка при четене на данни!</string>

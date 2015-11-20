@@ -8,6 +8,7 @@
     <string name="app_name_pure">BGrates</string>
     <string name="app_about">BGrates About</string>
     <string name="last_update">Last update</string>
+    <string name="last_update_updating_text">Downloading ...</string>
     <string name="error_download_rates">Failed downloading rates.</string>
     <string name="error_parse_rates">Failed parsing rates!</string>
     <string name="error_db_load_rates">Failed reading db!</string>

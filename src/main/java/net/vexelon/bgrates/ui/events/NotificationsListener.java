@@ -1,4 +1,4 @@
-package net.vexelon.bgrates.ui;
+package net.vexelon.bgrates.ui.events;
 
 public interface NotificationsListener {
 

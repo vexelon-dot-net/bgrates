@@ -93,6 +93,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		switch (id) {
 		case R.id.action_refresh:
 			reloadRates(true);
+			tvLastUpdate.setText(R.string.last_update_updating_text);
 			setRefreshActionButtonState(true);
 			return true;
 		case R.id.action_sort:

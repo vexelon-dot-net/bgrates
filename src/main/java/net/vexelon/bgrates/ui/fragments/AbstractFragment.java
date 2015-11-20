@@ -39,8 +39,8 @@ import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.db.models.CurrencyLocales;
-import net.vexelon.bgrates.ui.Notifications;
-import net.vexelon.bgrates.ui.NotificationsListener;
+import net.vexelon.bgrates.ui.events.Notifications;
+import net.vexelon.bgrates.ui.events.NotificationsListener;
 
 public class AbstractFragment extends Fragment {
 
