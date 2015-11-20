@@ -27,7 +27,7 @@
         </activity>
         
         <!--Service declared in manifest -->
-         <service android:name="net.vexelon.bgrates.service.RateService"/>
+         <service android:name="net.vexelon.bgrates.services.RateService"/>
          
     </application>
 

@@ -1,4 +1,4 @@
-package net.vexelon.bgrates.service;
+package net.vexelon.bgrates.services;
 
 import java.util.Calendar;
 import java.util.List;

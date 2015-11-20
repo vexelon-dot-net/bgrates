@@ -42,7 +42,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
-import net.vexelon.bgrates.service.RateService;
+import net.vexelon.bgrates.services.RateService;
 import net.vexelon.bgrates.ui.events.Notifications;
 import net.vexelon.bgrates.ui.events.NotificationsListener;
 import net.vexelon.bgrates.ui.fragments.AbstractFragment;
@@ -123,7 +123,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		calendar.add(Calendar.SECOND, 30);
-		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), Defs.NOTIFY_INTERVAL,
+		long initialStartTimeout = calendar.getTimeInMillis();
+		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, initialStartTimeout, Defs.NOTIFY_INTERVAL,
 				pendingIntent);
 	}
 
