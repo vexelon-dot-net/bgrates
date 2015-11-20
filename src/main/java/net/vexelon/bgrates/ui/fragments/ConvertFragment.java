@@ -217,7 +217,7 @@ public class ConvertFragment extends AbstractFragment {
 			}
 		}
 		ConvertTargetListAdapter adapter = new ConvertTargetListAdapter(getActivity(),
-				R.layout.convert_target_row_layout, targetCurrencyList);
+				R.layout.convert_target_row_layout, targetCurrencyList, true);
 		lvTargetCurrencies.setAdapter(adapter);
 	}
 
@@ -249,7 +249,7 @@ public class ConvertFragment extends AbstractFragment {
 	private AlertDialog showAddCurrencyMenu() {
 		final Context context = getActivity();
 		ConvertTargetListAdapter adapter = new ConvertTargetListAdapter(context, R.layout.convert_target_row_layout,
-				currenciesList);
+				currenciesList, false);
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(context.getString(R.string.action_addcurrency));
 		builder.setCancelable(true);

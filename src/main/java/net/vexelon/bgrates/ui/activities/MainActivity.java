@@ -131,9 +131,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 	public void cancelService() {
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		alarmManager.cancel(pendingIntent);
-		// Tell the user about what we did.
-		// Toast.makeText(RateService.this, "Cancel!",
-		// Toast.LENGTH_LONG).show();
 	}
 
 	@Override

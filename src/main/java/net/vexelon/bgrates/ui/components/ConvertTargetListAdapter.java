@@ -47,14 +47,16 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 
 	private List<CurrencyData> items;
 	private List<BigDecimal> values;
+	private boolean showValues = false;
 
-	public ConvertTargetListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
+	public ConvertTargetListAdapter(Context context, int textViewResId, List<CurrencyData> items, boolean showValues) {
 		super(context, textViewResId, items);
 		this.items = items;
 		this.values = Lists.newArrayList();
 		for (int i = 0; i < items.size(); i++) {
 			values.add(BigDecimal.ZERO);
 		}
+		this.showValues = showValues;
 	}
 
 	private View _getView(int position, View convertView) {
@@ -71,11 +73,13 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 		}
 		setResText(v, R.id.name, currencyData.getName());
 		setResText(v, R.id.code, currencyData.getCode());
-		BigDecimal value = values.get(position);
-		if (value == null) {
-			value = BigDecimal.ZERO;
+		if (showValues) {
+			BigDecimal value = values.get(position);
+			if (value == null) {
+				value = BigDecimal.ZERO;
+			}
+			setResText(v, R.id.rate, NumberUtils.scaleNumber(value, Defs.SCALE_SHOW_SHORT));
 		}
-		setResText(v, R.id.rate, NumberUtils.scaleNumber(value, Defs.SCALE_SHOW_SHORT));
 		return v;
 	}
 
