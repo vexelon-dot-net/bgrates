@@ -66,6 +66,7 @@ public class CurrenciesFragment extends AbstractFragment {
 
 	private ListView lvCurrencies;
 	private TextView tvLastUpdate;
+	private String lastUpdateLastValue;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,6 +94,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		switch (id) {
 		case R.id.action_refresh:
 			reloadRates(true);
+			lastUpdateLastValue = tvLastUpdate.getText().toString();
 			tvLastUpdate.setText(R.string.last_update_updating_text);
 			setRefreshActionButtonState(true);
 			return true;
@@ -257,6 +259,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				}
 				updateCurrenciesListView(result.get(getSelectedCurrenciesLocale()));
 			} else {
+				tvLastUpdate.setText(lastUpdateLastValue);
 				Toast.makeText(getActivity(), R.string.error_download_rates, Defs.TOAST_ERR_TIME).show();
 			}
 		}
