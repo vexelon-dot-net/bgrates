@@ -15,6 +15,7 @@ public class PrefsFragment extends PreferenceFragment implements OnPreferenceCli
 	public static final String TAG = "preferences";
 	public static final String KEY_SCREEN_APP_PREFS = "app_prefs";
 	public static final String KEY_PREF_CURRENCIES_LANGUAGE = "pref_currencies_language";
+	public static final String KEY_PREF_CURRENCIES_PRECISION = "pref_currencies_precision";
 	public static final String KEY_PREF_RATEUS = "rateus";
 	public static final String KEY_PREF_ABOUT = "about";
 
@@ -45,7 +46,7 @@ public class PrefsFragment extends PreferenceFragment implements OnPreferenceCli
 
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		if (preference.getKey().equals(KEY_PREF_CURRENCIES_LANGUAGE)) {
+		if (preference.getKey().equals(KEY_PREF_CURRENCIES_LANGUAGE) || preference.getKey().equals(KEY_PREF_CURRENCIES_PRECISION)) {
 			Toast.makeText(getActivity(), getString(R.string.pref_value_update, newValue), Toast.LENGTH_SHORT).show();
 		}
 		// update state with new value

@@ -45,9 +45,9 @@
     <string name="prefs_title">BGrates Settings</string>
     <string name="prefs_key_appprefs">app_prefs</string>
     <string-array name="pref_display_names">
-        <item >Default</item>
-        <item >Bulgarian</item>
-        <item >English</item>
+        <item>Default</item>
+        <item>Bulgarian</item>
+        <item>English</item>
     </string-array>
     <string-array name="pref_display_values">
         <item>default</item>
@@ -58,6 +58,17 @@
     <string name="pref_display_lang_default">default</string>
     <string name="pref_display_lang_title">Currencies language</string>
     <string name="pref_display_lang_summary">Language to use when displaying currencies</string>
+    <string-array name="pref_precision_names">
+        <item>Simple</item>
+        <item>Advanced</item>
+    </string-array>
+    <string-array name="pref_precision_values">
+        <item>simple</item>
+        <item>advanced</item>
+    </string-array>
+    <string name="pref_precision_default">simple</string>
+    <string name="pref_precision_title">Currencies precision</string>
+    <string name="pref_precision_summary">Precision to use when displaying currency rates</string>
     <string name="pref_rateus_title">Rate BGrates</string>
     <string name="pref_rateus_summary">Support us by rating this app</string>
 	<string name="pref_about_title">About BGrates</string>

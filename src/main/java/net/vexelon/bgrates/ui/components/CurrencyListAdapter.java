@@ -33,6 +33,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.db.models.CurrencyData;
@@ -42,10 +44,12 @@ import net.vexelon.bgrates.utils.NumberUtils;
 public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 
 	private List<CurrencyData> items;
+	private int precisionMode = AppSettings.PRECISION_SIMPLE;
 
-	public CurrencyListAdapter(Context context, int textViewResId, List<CurrencyData> items) {
+	public CurrencyListAdapter(Context context, int textViewResId, List<CurrencyData> items, int precisionMode) {
 		super(context, textViewResId, items);
 		this.items = items;
+		this.precisionMode = precisionMode;
 	}
 
 	@Override
@@ -63,9 +67,17 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 			setResText(v, R.id.ratio, Integer.toString(currencyData.getRatio()));
 			// rate
 			BigDecimal rateDecimal = new BigDecimal(currencyData.getRate());
-			String rate = NumberUtils.scaleCurrency(rateDecimal, Defs.BGN_CODE);
-			setResText(v, R.id.rate, rate.substring(0, rate.length() - 3));
-			setResText(v, R.id.rate_decimals, rate.substring(rate.length() - 3));
+			switch (precisionMode) {
+				case AppSettings.PRECISION_ADVANCED:
+					String rate = NumberUtils.scaleCurrency(rateDecimal, Defs.SCALE_SHOW_LONG);
+					setResText(v, R.id.rate, rate.substring(0, rate.length() - 3));
+					setResText(v, R.id.rate_decimals, rate.substring(rate.length() - 3));
+					break;
+				case AppSettings.PRECISION_SIMPLE:
+				default:
+					setResText(v, R.id.rate, NumberUtils.scaleCurrency(rateDecimal, Defs.BGN_CODE));
+					break;
+			}
 			// country ID icon
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
 			int imageId = UIFlags.getResourceFromCode(currencyData.getCode());

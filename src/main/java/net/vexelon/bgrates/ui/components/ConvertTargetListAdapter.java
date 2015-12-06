@@ -39,6 +39,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
 import net.vexelon.bgrates.db.models.CurrencyData;
@@ -50,8 +52,9 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 	private List<CurrencyData> items;
 	private List<BigDecimal> values;
 	private boolean showValues = false;
+	private int precisionMode = AppSettings.PRECISION_SIMPLE;
 
-	public ConvertTargetListAdapter(Context context, int textViewResId, List<CurrencyData> items, boolean showValues) {
+	public ConvertTargetListAdapter(Context context, int textViewResId, List<CurrencyData> items, boolean showValues, int precisionMode) {
 		super(context, textViewResId, items);
 		this.items = items;
 		this.values = Lists.newArrayList();
@@ -59,6 +62,7 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 			values.add(BigDecimal.ZERO);
 		}
 		this.showValues = showValues;
+		this.precisionMode = precisionMode;
 	}
 
 	private View _getView(int position, View convertView) {
@@ -80,7 +84,18 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 			if (value == null) {
 				value = BigDecimal.ZERO;
 			}
-			setResText(v, R.id.rate, NumberUtils.scaleCurrency(value, currencyData.getCode()));
+			switch (precisionMode) {
+				case AppSettings.PRECISION_ADVANCED:
+					String rate = NumberUtils.scaleCurrency(value, Defs.SCALE_SHOW_LONG);
+					setResText(v, R.id.rate, rate);
+//					setResText(v, R.id.rate, rate.substring(0, rate.length() - 3));
+					//setResText(v, R.id.rate_decimals, rate.substring(rate.length() - 3));
+					break;
+				case AppSettings.PRECISION_SIMPLE:
+				default:
+					setResText(v, R.id.rate, NumberUtils.scaleCurrency(value, currencyData.getCode()));
+					break;
+			}
 		}
 		return v;
 	}

@@ -83,6 +83,10 @@ public class NumberUtils {
 		return number.setScale(2, RoundingMode.HALF_EVEN).toPlainString();
 	}
 
+	public static String scaleCurrency(BigDecimal number, int n) {
+		return number.setScale(n, RoundingMode.HALF_EVEN).toPlainString();
+	}
+
 	/**
 	 * Rounds a precision to a certain length
 	 * 

@@ -51,6 +51,12 @@
     <string name="pref_value_update">Сменено на %1$s</string>
     <string name="pref_display_lang_title">Език на валути</string>
     <string name="pref_display_lang_summary">Език, на който валутите да се изписват</string>
+    <string-array name="pref_precision_names">
+        <item>Обикновена</item>
+        <item>Разширена</item>
+    </string-array>
+    <string name="pref_precision_title">Точност на валутните стойности</string>
+    <string name="pref_precision_summary">Точност, която да се използва при изобразяване на валутните стойности</string>
     <string name="pref_rateus_title">Гласувайте за BGrates</string>
     <string name="pref_rateus_summary">Подкрепете ни и дайте Вашето мнение за приложението</string>
     <string name="pref_about_title">Относно BGrates</string>

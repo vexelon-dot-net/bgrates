@@ -12,6 +12,15 @@
         android:persistent="true"
         android:title="@string/pref_display_lang_title" android:summary="@string/pref_display_lang_summary"/>
 
+    <ListPreference
+        android:defaultValue="@string/pref_precision_default"
+        android:dialogTitle="@string/pref_precision_title"
+        android:entries="@array/pref_precision_names"
+        android:entryValues="@array/pref_precision_values"
+        android:key="pref_currencies_precision"
+        android:persistent="true"
+        android:title="@string/pref_precision_title" android:summary="@string/pref_precision_summary"/>
+
     <Preference
         android:enabled="true"
         android:key="rateus"

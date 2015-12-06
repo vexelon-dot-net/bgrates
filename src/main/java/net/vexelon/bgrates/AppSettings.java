@@ -34,6 +34,9 @@ public class AppSettings {
 	public static final int SORTBY_NAME = 0;
 	public static final int SORTBY_CODE = 1;
 
+	public static final int PRECISION_SIMPLE = 0;
+	public static final int PRECISION_ADVANCED = 1;
+
 	private SharedPreferences generalPrefs = null;
 	private Context context = null;
 
@@ -80,6 +83,18 @@ public class AppSettings {
 
 	public String getCurrenciesLanguageRaw() {
 		return generalPrefs.getString("pref_currencies_language", "default");
+	}
+
+	/**
+	 *
+	 * @return <ul>
+	 *     <li>0 - PRECISION_SIMPLE</li>
+	 *     <li>1 - PRECISION_ADVANCED</li>
+	 * 	</ul>
+	 */
+	public int getCurrenciesPrecision() {
+		String precision = generalPrefs.getString("pref_currencies_precision", "simple");
+		return precision.equals("advanced") ? PRECISION_ADVANCED : PRECISION_SIMPLE;
 	}
 
 	/**

@@ -148,7 +148,7 @@ public class CurrenciesFragment extends AbstractFragment {
 	 */
 	private void updateCurrenciesListView(List<CurrencyData> currenciesList) {
 		final Activity activity = getActivity();
-		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, currenciesList);
+		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, currenciesList, new AppSettings(activity).getCurrenciesPrecision());
 		lvCurrencies.setAdapter(adapter);
 		sortCurrenciesListView(new AppSettings(activity).getCurrenciesSortSelection());
 		Date lastUpdateDate = currenciesList.iterator().next().getCurrDate();
