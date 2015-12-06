@@ -28,6 +28,7 @@ public class PrefsFragment extends PreferenceFragment implements OnPreferenceCli
 		// final AppSettings appSettings = new AppSettings(ctx);
 		findPreference(KEY_PREF_RATEUS).setOnPreferenceClickListener(this);
 		findPreference(KEY_PREF_CURRENCIES_LANGUAGE).setOnPreferenceChangeListener(this);
+		findPreference(KEY_PREF_CURRENCIES_PRECISION).setOnPreferenceChangeListener(this);
 	}
 
 	@Override
