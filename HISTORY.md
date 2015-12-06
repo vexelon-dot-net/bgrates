@@ -14,7 +14,9 @@ BGrates HISTORY file
 
 ## v3.0.1
 
-  * Fixed crash when updating over 4G connections.
+  * Fixed crash when downloading initial currencies data.
+
+  * Отстранен проблем със сваляне на първоначални данни.
 
 ## v3.0.0
 
