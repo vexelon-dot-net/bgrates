@@ -1,7 +1,7 @@
 BGrates HISTORY file
 =====================
 
-## v3.0.1
+## v3.1.0
 
 ## EN
   * Added simple/advanced currency precision view setting.
@@ -9,11 +9,17 @@ BGrates HISTORY file
   * Improved currencies convert calculations.
 
 ## BG
+
     TODO
+
+## v3.0.1
+
+  * Fixed crash when updating over 4G connections.
 
 ## v3.0.0
 
 ### EN
+
   * Redesigned the app user interface.
   * Automatic daily currency updates.
   * Convert between currencies based on Bulgarian Lev.
@@ -21,6 +27,7 @@ BGrates HISTORY file
   * Minor updates and fixes.
   
 ### BG
+
   * Редизайн на интерфейса на приложението.
   * Автоматично обновяване на валутите ежедневно.
   * Конвертиране на чужда валута към друга такава базирано на българският лев.

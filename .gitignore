@@ -13,7 +13,9 @@ gradle.properties
 # Others
 libs/
 local.properties
+*.orig
 
 # a-studio
 .idea
 *.iml
+
