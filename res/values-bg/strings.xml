@@ -18,8 +18,6 @@
     <string name="about_author">Автори - Петър Петров, Цветослав Цветков</string>
     <string name="about_logo_author">Графично Лого - Стремена Тузсузова</string>
     <string name="about_flag_icons_info">Безплатни икони от:</string>
-    <string name="dlg_lastupdate_title">Обновяване</string>
-    <string name="dlg_lastupdate_msg">Текущите валутни курсове са от предходен ден. Обнови сега ?</string>
     <string name="dlg_yes">Да</string>
     <string name="dlg_no">Не</string>
     <string name="bg_currency_name">лв.</string>
@@ -34,7 +32,7 @@
     <string name="action_currency_added">Добавяне на %1$s</string>
     <string name="action_currency_removed">Премахване на %1$s</string>
     <string name="action_sort">Сортиране</string>
-    <string name="action_sort_title">Сортиране по:</string>
+    <string name="action_sort_title">Сортиране по</string>
     <string name="action_sort_name_asc">По име от А-Я</string>
     <string name="action_sort_name_desc">По име от Я-А</string>
     <string name="action_sort_code_asc">По код от А-Я</string>
@@ -52,8 +50,8 @@
     </string-array>
     <string name="pref_value_update">Сменено на %1$s</string>
     <string name="pref_display_lang_title">Език на валути</string>
-    <string name="pref_display_lang_summary">Language to use when displaying currencies</string>
+    <string name="pref_display_lang_summary">Език, на който валутите да се изписват</string>
     <string name="pref_rateus_title">Гласувайте за BGrates</string>
-    <string name="pref_rateus_summary">Подкрепете ни и дайте вашето мнение за приложението</string>
+    <string name="pref_rateus_summary">Подкрепете ни и дайте Вашето мнение за приложението</string>
     <string name="pref_about_title">Относно BGrates</string>
 </resources>
