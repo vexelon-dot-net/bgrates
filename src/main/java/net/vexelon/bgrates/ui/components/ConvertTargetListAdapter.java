@@ -25,6 +25,7 @@ package net.vexelon.bgrates.ui.components;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -114,13 +115,19 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 			CurrencyData currency = items.get(i);
 			BigDecimal result = BigDecimal.ZERO;
 			try {
-				BigDecimal reverseRate = new BigDecimal(currency.getReverseRate(), mathContext);
+				BigDecimal reverseRate;
+				if ("0".equals(currency.getReverseRate())) {
+					BigDecimal ratio0 = new BigDecimal(currency.getRatio());
+					reverseRate = ratio0.divide(new BigDecimal(currency.getRate(), mathContext), mathContext);
+				} else {
+					reverseRate = new BigDecimal(currency.getReverseRate(), mathContext);
+				}
 				BigDecimal ratio = new BigDecimal(currency.getRatio(), mathContext);
 				result = valueBGN.multiply(reverseRate, mathContext);
 				// result = reverseRate.multiply(ratio,
 				// mathContext).multiply(valueBGN, mathContext);
 			} catch (Exception e) {
-				Log.e(Defs.LOG_TAG, "Failed to calcualte currency " + currency.getCode() + "!", e);
+				Log.e(Defs.LOG_TAG, "Failed to calculate currency " + currency.getCode() + "!", e);
 			}
 			values.set(i, result);
 		}
