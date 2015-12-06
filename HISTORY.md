@@ -1,6 +1,10 @@
 BGrates HISTORY file
 =====================
 
+## v3.0.1
+
+  * Fixed crash when updating over 4G connections.
+
 ## v3.0.0
 
 ### EN
