@@ -1,6 +1,25 @@
 BGrates HISTORY file
 =====================
 
+## v3.0.0
+
+### EN
+
+  * Redesigned the app user interface.
+  * Automatic daily currency updates.
+  * Convert inbetween currencies based on Bulgarian Lev.
+  * Added Euro to the list of currencies.
+  * Minor updates and fixes.
+  
+### BG
+
+  * Редизайн на интерфейса на приложението.
+  * Автоматично обновяване на валутите ежедневно.
+  * Конвертиране на чужда валута към друга такава базирано на българският лев.
+  * Добавяне на Евро към валути.
+  * Други подобрения и оптимизации.
+  
+
 ## v2.3.0
 
   * Updated icons and images. 
