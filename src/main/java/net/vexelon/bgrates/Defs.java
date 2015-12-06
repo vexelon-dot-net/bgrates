@@ -32,6 +32,7 @@ public class Defs {
 	public final static int SCALE_SHOW_LONG = 5;
 	public final static int SCALE_SHOW_SHORT = 2;
 	public final static int SCALE_CALCULATIONS = 10;
+	public final static String BGN_CODE = "BGN";
 
 	// //////Tsvetoslav
 	// Time for request to BNB

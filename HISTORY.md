@@ -4,7 +4,8 @@ BGrates HISTORY file
 ## v3.0.1
 
 ## EN
-  * Fix GOLD convert issue
+  * Fix GOLD convert issue.
+  * Improve currencies convert calculations.
 
 ## BG
     TODO

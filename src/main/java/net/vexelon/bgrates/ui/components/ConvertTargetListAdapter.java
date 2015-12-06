@@ -26,6 +26,7 @@ package net.vexelon.bgrates.ui.components;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -79,7 +80,7 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 			if (value == null) {
 				value = BigDecimal.ZERO;
 			}
-			setResText(v, R.id.rate, NumberUtils.scaleNumber(value, Defs.SCALE_SHOW_SHORT));
+			setResText(v, R.id.rate, NumberUtils.scaleCurrency(value, currencyData.getCode()));
 		}
 		return v;
 	}
@@ -99,7 +100,7 @@ public class ConvertTargetListAdapter extends ArrayAdapter<CurrencyData> {
 	}
 
 	public void updateValues(CurrencyData sourceCurrency, BigDecimal value) {
-		MathContext mathContext = new MathContext(Defs.SCALE_CALCULATIONS);
+		MathContext mathContext = new MathContext(Defs.SCALE_CALCULATIONS, RoundingMode.HALF_EVEN);
 		// convert source currency to BGN value
 		BigDecimal valueBGN;
 		try {

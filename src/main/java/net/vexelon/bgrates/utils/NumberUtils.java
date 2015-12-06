@@ -27,6 +27,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
+import java.text.NumberFormat;
+import java.util.Currency;
 import java.util.Random;
 
 import android.util.Log;
@@ -62,11 +64,23 @@ public class NumberUtils {
 	}
 
 	public static String scaleNumber(BigDecimal number, int n) {
-		return number.setScale(n, BigDecimal.ROUND_HALF_UP).toPlainString();
+		return number.setScale(n, RoundingMode.HALF_UP).toPlainString();
 	}
 
 	public static String roundNumber(BigDecimal number, int n) {
 		return number.round(new MathContext(n, RoundingMode.HALF_UP)).toPlainString();
+	}
+
+	public static String scaleCurrency(BigDecimal number, String code) {
+		try {
+			Currency currency = Currency.getInstance(code);
+			NumberFormat format = NumberFormat.getCurrencyInstance();
+			format.setCurrency(currency);
+			return format.format(number.doubleValue());
+		} catch (IllegalArgumentException e) {
+			// default
+		}
+		return number.setScale(2, RoundingMode.HALF_EVEN).toPlainString();
 	}
 
 	/**

@@ -63,7 +63,7 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 			setResText(v, R.id.ratio, Integer.toString(currencyData.getRatio()));
 			// rate
 			BigDecimal rateDecimal = new BigDecimal(currencyData.getRate());
-			String rate = NumberUtils.scaleNumber(rateDecimal, Defs.SCALE_SHOW_LONG);
+			String rate = NumberUtils.scaleCurrency(rateDecimal, Defs.BGN_CODE);
 			setResText(v, R.id.rate, rate.substring(0, rate.length() - 3));
 			setResText(v, R.id.rate_decimals, rate.substring(rate.length() - 3));
 			// country ID icon
