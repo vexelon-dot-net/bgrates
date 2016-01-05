@@ -13,6 +13,7 @@ public class CurrencyData {
 	private Date currDate;
 	private String title;
 	private int fStar;
+	private boolean isFixed;
 
 	public int getGold() {
 		return gold;
@@ -94,11 +95,28 @@ public class CurrencyData {
 		this.fStar = fStar;
 	}
 
-	@Override
-	public String toString() {
-		return "CurrencyData [gold=" + gold + ", name=" + name + ", code=" + code + ", ratio=" + ratio
-				+ ", reverseRate=" + reverseRate + ", rate=" + rate + ", extraInfo=" + extraInfo + ", currDate="
-				+ currDate + ", title=" + title + ", fStar=" + fStar + "]";
+	public boolean isFixed() {
+		return isFixed;
 	}
 
+	public void setIsFixed(boolean isFixed) {
+		this.isFixed = isFixed;
+	}
+
+	@Override
+	public String toString() {
+		return "CurrencyData{" +
+				"gold=" + gold +
+				", name='" + name + '\'' +
+				", code='" + code + '\'' +
+				", ratio=" + ratio +
+				", reverseRate='" + reverseRate + '\'' +
+				", rate='" + rate + '\'' +
+				", extraInfo='" + extraInfo + '\'' +
+				", currDate=" + currDate +
+				", title='" + title + '\'' +
+				", fStar=" + fStar +
+				", isFixed=" + isFixed +
+				'}';
+	}
 }

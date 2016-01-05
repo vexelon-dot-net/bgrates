@@ -188,6 +188,7 @@ public class CurrenciesFragment extends AbstractFragment {
 	 * 
 	 * @param useRemoteSource
 	 */
+//	TODO - to call lastFixedRates and if haven't to send flag true
 	public void reloadRates(boolean useRemoteSource) {
 		if (!useRemoteSource) {
 			DataSource source = null;
@@ -195,6 +196,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				source = new SQLiteDataSource();
 				source.connect(getActivity());
 				List<CurrencyData> ratesList = source.getLastRates(getSelectedCurrenciesLocale());
+				List<CurrencyData> fixedRatesList = source.getLastFixedRates(getSelectedCurrenciesLocale());
 				if (!ratesList.isEmpty()) {
 					Log.v(Defs.LOG_TAG, "Displaying rates from database...");
 					updateCurrenciesListView(ratesList);
@@ -210,7 +212,8 @@ public class CurrenciesFragment extends AbstractFragment {
 		}
 		if (useRemoteSource) {
 			setRefreshActionButtonState(true);
-			new UpdateRatesTask().execute();
+			//TODO - temp commented
+			//new UpdateRatesTask().execute();
 		}
 	}
 
@@ -233,7 +236,7 @@ public class CurrenciesFragment extends AbstractFragment {
 			try {
 				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
 				Source source = new BNBSource();
-				rates = source.downloadRates();
+				rates = source.downloadRates(true);
 				updateOK = true;
 			} catch (SourceException e) {
 				Log.e(Defs.LOG_TAG, "Could not load rates from remote!", e);

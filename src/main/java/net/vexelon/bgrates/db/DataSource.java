@@ -98,4 +98,12 @@ public interface DataSource extends Closeable {
 	 */
 	List<CurrencyData> getLastRates(CurrencyLocales locale) throws DataSourceException;
 
+	/**
+	 * Fetches the last exchange fixed rates from the underlying data source.
+	 *
+	 * @param locale
+	 * @return
+	 * @throws DataSourceException
+	 */
+	List<CurrencyData> getLastFixedRates(CurrencyLocales locale) throws DataSourceException;
 }

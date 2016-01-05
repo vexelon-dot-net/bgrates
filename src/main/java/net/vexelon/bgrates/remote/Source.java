@@ -39,6 +39,6 @@ public interface Source {
 	 *         {@link CurrencyData} is available.
 	 * @throws SourceException
 	 */
-	Map<CurrencyLocales, List<CurrencyData>> downloadRates() throws SourceException;
+	Map<CurrencyLocales, List<CurrencyData>> downloadRates(boolean getFixedRates) throws SourceException;
 
 }

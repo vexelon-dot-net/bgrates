@@ -7,6 +7,7 @@ import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import java.util.Map;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.w3c.dom.Node;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -32,6 +35,8 @@ public class BNBSource implements Source {
 	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
 	public final static String URL_BNB_FORMAT_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
 	public final static String URL_BNB_INDEX = "http://www.bnb.bg/index.htm";
+	public final static String URL_BNB_FIXED_RATES_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERFixed/index.htm?toLang=_BG";
+	public final static String URL_BNB_FIXED_RATES_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERFixed/index.htm?toLang=_EN";
 	public final static String URI_CACHE_NAME_INDEXHTM = "BGRatesDownloadCacheHTM";
 
 	public final static String XML_TAG_ROWSET = "ROWSET";
@@ -53,7 +58,7 @@ public class BNBSource implements Source {
 	public BNBSource() {
 	}
 
-	public List<CurrencyData> getRatesFromUrl(CurrencyLocales localeName, String ratesUrl) throws SourceException {
+	public List<CurrencyData> getRatesFromUrl(String ratesUrl) throws SourceException {
 		List<CurrencyData> listCurrencyData = Lists.newArrayList();
 		InputStream is = null;
 		XmlPullParserFactory factory = null;
@@ -151,7 +156,12 @@ public class BNBSource implements Source {
 				eventType = parser.next();
 			}
 
-			listCurrencyData.add(setEuroCurrency(localeName, currencyDate));
+
+
+//			setFixedCurrency();
+
+//			listCurrencyData.add(setEuroCurrency(localeName, currencyDate));
+
 
 			return listCurrencyData;
 		} catch (Exception e) {
@@ -159,6 +169,100 @@ public class BNBSource implements Source {
 		} finally {
 			IOUtils.closeQuitely(is);
 		}
+	}
+
+	private List<CurrencyData> getFixedCurrency(String fixedRatesUrl) throws SourceException{
+		List<CurrencyData> listFixedCurrencyData = Lists.newArrayList();
+		CurrencyData fixedCurrencyData = new CurrencyData();
+
+		Date currentYear = getCurrentYear();
+		InputStream is = null;
+		URL url = null;
+		Element div;
+		Elements divChildren;
+		try {
+			url = new URL(fixedRatesUrl);
+			URLConnection connection = url.openConnection();
+			connection.setDoInput(true);
+			//TODO - set cookie
+//			connection.setRequestProperty();
+			HttpURLConnection httpConn = (HttpURLConnection) connection;
+			if (httpConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+				// read error and throw it to caller
+				is = httpConn.getErrorStream();
+				throw new SourceException(new String(ByteStreams.toByteArray(is), Charsets.UTF_8.name()));
+			}
+			is = httpConn.getInputStream();
+			Document doc = Jsoup.parse(is, Charsets.UTF_8.name(), fixedRatesUrl);
+
+//			Element element = doc.select("div#more_information > div.box > div.top > div > ul > li").first();
+			div = doc.select("div#content_box.content > div.doc_entry > div > table > tbody").first();
+			divChildren  = div.children();
+
+			int lineNumber = 1;
+			for (Element table : divChildren) {
+				if(lineNumber>1){
+					System.out.println(table.tagName());
+					Elements tableChildren = table.children();
+					int elementNumber = 1;
+					fixedCurrencyData.setGold(1);
+					fixedCurrencyData.setfStar(0);
+					fixedCurrencyData.setCurrDate(currentYear);
+					fixedCurrencyData.setIsFixed(true);
+					for (Element elem : tableChildren){
+						System.out.println(elem.tagName());
+						Element elemChild = elem.children().first();
+						System.out.print(elemChild.text());//elemChild.text()
+						switch (elementNumber){
+							case 1: fixedCurrencyData.setName(elemChild.text());
+									break;
+							case 2: fixedCurrencyData.setCode(elemChild.text());
+									break;
+							case 3: fixedCurrencyData.setRatio(Integer.parseInt(elemChild.text()));
+									break;
+							case 4: fixedCurrencyData.setRate(elemChild.text());
+									break;
+							case 5: fixedCurrencyData.setReverseRate(elemChild.text());
+									break;
+						}
+						elementNumber++;
+					}
+					listFixedCurrencyData.add(fixedCurrencyData);
+					fixedCurrencyData = new CurrencyData();
+				}
+				lineNumber++;
+			}
+
+			System.out.println(listFixedCurrencyData);
+//			Element euroValue = element.getElementsByTag("strong").first();
+			// String euroValuReturn = euroValue.text();
+
+
+		} catch (Exception e) {
+			throw new SourceException("Failed loading currencies from BNB source!", e);
+		} finally {
+			IOUtils.closeQuitely(is);
+		}
+
+
+
+		return listFixedCurrencyData;
+	}
+
+	//Датата се сетва, като се вземе текущата година и се добави 01.01.
+	private Date getCurrentYear(){
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		String dateInString = "01.01."+year;
+		Date currentYear = null;
+		try {
+			currentYear = sdf.parse(dateInString);
+			System.out.print(currentYear);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+			// use default (today)
+		}
+		return currentYear;
 	}
 
 	private CurrencyData setEuroCurrency(CurrencyLocales currencyName, Date currencyDate) throws SourceException {
@@ -209,10 +313,21 @@ public class BNBSource implements Source {
 	}
 
 	@Override
-	public Map<CurrencyLocales, List<CurrencyData>> downloadRates() throws SourceException {
+	public Map<CurrencyLocales, List<CurrencyData>> downloadRates(boolean getFixedRates) throws SourceException {
 		Map<CurrencyLocales, List<CurrencyData>> result = Maps.newHashMap();
-		result.put(CurrencyLocales.EN, getRatesFromUrl(CurrencyLocales.EN, URL_BNB_FORMAT_EN));
-		result.put(CurrencyLocales.BG, getRatesFromUrl(CurrencyLocales.BG, URL_BNB_FORMAT_BG));
+
+		List<CurrencyData> ratesEN = getRatesFromUrl(URL_BNB_FORMAT_EN);
+		if(getFixedRates){
+			ratesEN.addAll(getFixedCurrency(URL_BNB_FIXED_RATES_EN));
+		}
+		result.put(CurrencyLocales.EN, ratesEN);
+
+		List<CurrencyData> ratesBG = getRatesFromUrl(URL_BNB_FORMAT_BG);
+		if (getFixedRates){
+			ratesBG.addAll(getFixedCurrency(URL_BNB_FIXED_RATES_BG));
+		}
+		result.put(CurrencyLocales.BG, ratesBG);
+
 		return result;
 	}
 

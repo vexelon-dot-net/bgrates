@@ -26,7 +26,7 @@ import net.vexelon.bgrates.utils.IOUtils;
 
 public class RateService extends Service {
 
-	public List<CurrencyData> listCurrency;
+
 
 	@Override
 	public void onCreate() {
@@ -70,10 +70,11 @@ public class RateService extends Service {
 
 		// Toast.makeText(this, "MyAlarmService.onStart()",
 		// Toast.LENGTH_LONG).show();
+		//TODO - to be check why if block is empty
 		if (!isCurrenciesToDate()) {
-
+			new DownloadWebpageTask().execute(false);
 		}
-		new DownloadWebpageTask().execute("");
+
 
 	}
 
@@ -89,39 +90,46 @@ public class RateService extends Service {
 
 	}
 
+
 	/**
 	 * Checks whether have for sysdate currencies.
 	 * 
 	 * @return: true-Have, false-Haven't
 	 */
+	//TODO - to be call new method
 	private boolean isCurrenciesToDate() {
 		Context ctx = RateService.this;
 		DataSource source = null;
+		List<CurrencyData> listCurrency = null;
 		try {
 			source = new SQLiteDataSource();
 			source.connect(ctx);
 			listCurrency = source.getRates(getSelectedCurrenciesLocale(), Calendar.getInstance().getTime());
+			return listCurrency.size()>0;
 		} catch (DataSourceException e) {
 			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 		} finally {
 			IOUtils.closeQuitely(source);
 		}
 
-		if (listCurrency.size() > 0)
-			return true;
-
 		return false;
+
 	}
 
-	private class DownloadWebpageTask extends AsyncTask<String, Void, Map<CurrencyLocales, List<CurrencyData>>> {
+	private class DownloadWebpageTask extends AsyncTask<Object, Void, Map<CurrencyLocales, List<CurrencyData>>> {
 
 		@Override
-		protected Map<CurrencyLocales, List<CurrencyData>> doInBackground(String... urls) {
+		protected Map<CurrencyLocales, List<CurrencyData>> doInBackground(/*String... urls*/Object... param) {
 			Map<CurrencyLocales, List<CurrencyData>> rates = Maps.newHashMap();
+			boolean isFixed = (Boolean)param[0];
+//			for(Object object : param){
+//				isFixed = (Boolean)object;
+//			}
+
 			try {
 				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
 				Source source = new BNBSource();
-				rates = source.downloadRates();
+				rates = source.downloadRates(true);
 			} catch (SourceException e) {
 				Log.e(Defs.LOG_TAG, "Could not load rates from remote!", e);
 			}
