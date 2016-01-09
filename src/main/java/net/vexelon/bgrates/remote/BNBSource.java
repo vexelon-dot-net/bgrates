@@ -16,7 +16,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Node;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -65,6 +64,7 @@ public class BNBSource implements Source {
 		XmlPullParser parser = null;
 		URL url = null;
 		int header = 0;
+		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		Date currencyDate = new Date();
 		try {
 			url = new URL(ratesUrl);
@@ -133,13 +133,12 @@ public class BNBSource implements Source {
 						} else if (tagname.equalsIgnoreCase(XML_TAG_EXTRAINFO)) {
 							currencyData.setExtraInfo(text);
 						} else if (tagname.equalsIgnoreCase(XML_TAG_CURR_DATE)) {
-							DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-							// Date currencyDate = new Date();//move up
 							try {
-								currencyDate = df.parse(text);
+								currencyDate = dateFormat.parse(text);
 							} catch (ParseException e1) {
 								e1.printStackTrace();
 								// use default (today)
+								currencyDate = new Date();
 							}
 							currencyData.setCurrDate(currencyDate);
 						} else if (tagname.equalsIgnoreCase(XML_TAG_TITLE)) {
@@ -156,12 +155,9 @@ public class BNBSource implements Source {
 				eventType = parser.next();
 			}
 
+			// setFixedCurrency();
 
-
-//			setFixedCurrency();
-
-//			listCurrencyData.add(setEuroCurrency(localeName, currencyDate));
-
+			// listCurrencyData.add(setEuroCurrency(localeName, currencyDate));
 
 			return listCurrencyData;
 		} catch (Exception e) {
@@ -171,10 +167,9 @@ public class BNBSource implements Source {
 		}
 	}
 
-	private List<CurrencyData> getFixedCurrency(String fixedRatesUrl) throws SourceException{
+	private List<CurrencyData> getFixedRatesFromUrl(String fixedRatesUrl) throws SourceException {
 		List<CurrencyData> listFixedCurrencyData = Lists.newArrayList();
 		CurrencyData fixedCurrencyData = new CurrencyData();
-
 		Date currentYear = getCurrentYear();
 		InputStream is = null;
 		URL url = null;
@@ -184,8 +179,8 @@ public class BNBSource implements Source {
 			url = new URL(fixedRatesUrl);
 			URLConnection connection = url.openConnection();
 			connection.setDoInput(true);
-			//TODO - set cookie
-//			connection.setRequestProperty();
+			// TODO - set cookie
+			// connection.setRequestProperty();
 			HttpURLConnection httpConn = (HttpURLConnection) connection;
 			if (httpConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 				// read error and throw it to caller
@@ -195,13 +190,14 @@ public class BNBSource implements Source {
 			is = httpConn.getInputStream();
 			Document doc = Jsoup.parse(is, Charsets.UTF_8.name(), fixedRatesUrl);
 
-//			Element element = doc.select("div#more_information > div.box > div.top > div > ul > li").first();
+			// Element element =
+			// doc.select("div#more_information > div.box > div.top > div > ul > li").first();
 			div = doc.select("div#content_box.content > div.doc_entry > div > table > tbody").first();
-			divChildren  = div.children();
+			divChildren = div.children();
 
 			int lineNumber = 1;
 			for (Element table : divChildren) {
-				if(lineNumber>1){
+				if (lineNumber > 1) {
 					System.out.println(table.tagName());
 					Elements tableChildren = table.children();
 					int elementNumber = 1;
@@ -209,21 +205,26 @@ public class BNBSource implements Source {
 					fixedCurrencyData.setfStar(0);
 					fixedCurrencyData.setCurrDate(currentYear);
 					fixedCurrencyData.setIsFixed(true);
-					for (Element elem : tableChildren){
+					for (Element elem : tableChildren) {
 						System.out.println(elem.tagName());
 						Element elemChild = elem.children().first();
-						System.out.print(elemChild.text());//elemChild.text()
-						switch (elementNumber){
-							case 1: fixedCurrencyData.setName(elemChild.text());
-									break;
-							case 2: fixedCurrencyData.setCode(elemChild.text());
-									break;
-							case 3: fixedCurrencyData.setRatio(Integer.parseInt(elemChild.text()));
-									break;
-							case 4: fixedCurrencyData.setRate(elemChild.text());
-									break;
-							case 5: fixedCurrencyData.setReverseRate(elemChild.text());
-									break;
+						System.out.print(elemChild.text());// elemChild.text()
+						switch (elementNumber) {
+						case 1:
+							fixedCurrencyData.setName(elemChild.text());
+							break;
+						case 2:
+							fixedCurrencyData.setCode(elemChild.text());
+							break;
+						case 3:
+							fixedCurrencyData.setRatio(Integer.parseInt(elemChild.text()));
+							break;
+						case 4:
+							fixedCurrencyData.setRate(elemChild.text());
+							break;
+						case 5:
+							fixedCurrencyData.setReverseRate(elemChild.text());
+							break;
 						}
 						elementNumber++;
 					}
@@ -232,28 +233,22 @@ public class BNBSource implements Source {
 				}
 				lineNumber++;
 			}
-
 			System.out.println(listFixedCurrencyData);
-//			Element euroValue = element.getElementsByTag("strong").first();
+			// Element euroValue = element.getElementsByTag("strong").first();
 			// String euroValuReturn = euroValue.text();
-
-
+			return listFixedCurrencyData;
 		} catch (Exception e) {
 			throw new SourceException("Failed loading currencies from BNB source!", e);
 		} finally {
 			IOUtils.closeQuitely(is);
 		}
-
-
-
-		return listFixedCurrencyData;
 	}
 
-	//Датата се сетва, като се вземе текущата година и се добави 01.01.
-	private Date getCurrentYear(){
+	// Датата се сетва, като се вземе текущата година и се добави 01.01.
+	private Date getCurrentYear() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		String dateInString = "01.01."+year;
+		String dateInString = "01.01." + year;
 		Date currentYear = null;
 		try {
 			currentYear = sdf.parse(dateInString);
@@ -265,6 +260,7 @@ public class BNBSource implements Source {
 		return currentYear;
 	}
 
+	@Deprecated
 	private CurrencyData setEuroCurrency(CurrencyLocales currencyName, Date currencyDate) throws SourceException {
 		CurrencyData euroValue = new CurrencyData();
 		String euro = getEuroValue();
@@ -317,14 +313,14 @@ public class BNBSource implements Source {
 		Map<CurrencyLocales, List<CurrencyData>> result = Maps.newHashMap();
 
 		List<CurrencyData> ratesEN = getRatesFromUrl(URL_BNB_FORMAT_EN);
-		if(getFixedRates){
-			ratesEN.addAll(getFixedCurrency(URL_BNB_FIXED_RATES_EN));
+		if (getFixedRates) {
+			ratesEN.addAll(getFixedRatesFromUrl(URL_BNB_FIXED_RATES_EN));
 		}
 		result.put(CurrencyLocales.EN, ratesEN);
 
 		List<CurrencyData> ratesBG = getRatesFromUrl(URL_BNB_FORMAT_BG);
-		if (getFixedRates){
-			ratesBG.addAll(getFixedCurrency(URL_BNB_FIXED_RATES_BG));
+		if (getFixedRates) {
+			ratesBG.addAll(getFixedRatesFromUrl(URL_BNB_FIXED_RATES_BG));
 		}
 		result.put(CurrencyLocales.BG, ratesBG);
 
