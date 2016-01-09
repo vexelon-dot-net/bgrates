@@ -34,8 +34,7 @@ public class BNBSource implements Source {
 	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
 	public final static String URL_BNB_FORMAT_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
 	public final static String URL_BNB_INDEX = "http://www.bnb.bg/index.htm";
-	public final static String URL_BNB_FIXED_RATES_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERFixed/index.htm?toLang=_BG";
-	public final static String URL_BNB_FIXED_RATES_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERFixed/index.htm?toLang=_EN";
+	public final static String URL_BNB_FIXED_RATES = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERFixed/index.htm?toLang=_";
 	public final static String URI_CACHE_NAME_INDEXHTM = "BGRatesDownloadCacheHTM";
 
 	public final static String XML_TAG_ROWSET = "ROWSET";
@@ -167,21 +166,18 @@ public class BNBSource implements Source {
 		}
 	}
 
-	private List<CurrencyData> getFixedRatesFromUrl(String fixedRatesUrl) throws SourceException {
+	private List<CurrencyData> getFixedRates(String language) throws SourceException {
 		List<CurrencyData> listFixedCurrencyData = Lists.newArrayList();
 		CurrencyData fixedCurrencyData = new CurrencyData();
 		Date currentYear = getCurrentYear();
+		String fixedRatesUrl = URL_BNB_FIXED_RATES + language;
 		InputStream is = null;
-		URL url = null;
-		Element div;
-		Elements divChildren;
 		try {
-			url = new URL(fixedRatesUrl);
+			URL url = new URL(fixedRatesUrl);
 			URLConnection connection = url.openConnection();
 			connection.setDoInput(true);
-			// TODO - set cookie
-			// connection.setRequestProperty();
 			HttpURLConnection httpConn = (HttpURLConnection) connection;
+			httpConn.setRequestProperty("Cookie", "userLanguage=" + language);
 			if (httpConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 				// read error and throw it to caller
 				is = httpConn.getErrorStream();
@@ -192,13 +188,13 @@ public class BNBSource implements Source {
 
 			// Element element =
 			// doc.select("div#more_information > div.box > div.top > div > ul > li").first();
-			div = doc.select("div#content_box.content > div.doc_entry > div > table > tbody").first();
-			divChildren = div.children();
+			Element div = doc.select("div#content_box.content > div.doc_entry > div > table > tbody").first();
+			Elements divChildren = div.children();
 
 			int lineNumber = 1;
 			for (Element table : divChildren) {
 				if (lineNumber > 1) {
-					System.out.println(table.tagName());
+					// System.out.println(table.tagName());
 					Elements tableChildren = table.children();
 					int elementNumber = 1;
 					fixedCurrencyData.setGold(1);
@@ -206,9 +202,10 @@ public class BNBSource implements Source {
 					fixedCurrencyData.setCurrDate(currentYear);
 					fixedCurrencyData.setIsFixed(true);
 					for (Element elem : tableChildren) {
-						System.out.println(elem.tagName());
+						// System.out.println(elem.tagName());
 						Element elemChild = elem.children().first();
-						System.out.print(elemChild.text());// elemChild.text()
+						// System.out.print(elemChild.text());//
+						// elemChild.text()
 						switch (elementNumber) {
 						case 1:
 							fixedCurrencyData.setName(elemChild.text());
@@ -314,13 +311,13 @@ public class BNBSource implements Source {
 
 		List<CurrencyData> ratesEN = getRatesFromUrl(URL_BNB_FORMAT_EN);
 		if (getFixedRates) {
-			ratesEN.addAll(getFixedRatesFromUrl(URL_BNB_FIXED_RATES_EN));
+			ratesEN.addAll(getFixedRates("EN"));
 		}
 		result.put(CurrencyLocales.EN, ratesEN);
 
 		List<CurrencyData> ratesBG = getRatesFromUrl(URL_BNB_FORMAT_BG);
 		if (getFixedRates) {
-			ratesBG.addAll(getFixedRatesFromUrl(URL_BNB_FIXED_RATES_BG));
+			ratesBG.addAll(getFixedRates("BG"));
 		}
 		result.put(CurrencyLocales.BG, ratesBG);
 
