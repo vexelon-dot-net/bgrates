@@ -311,13 +311,13 @@ public class BNBSource implements Source {
 
 		List<CurrencyData> ratesEN = getRatesFromUrl(URL_BNB_FORMAT_EN);
 		if (getFixedRates) {
-			ratesEN.addAll(getFixedRates("EN"));
+			ratesEN.addAll(getFixedRates(CurrencyLocales.EN.name()));
 		}
 		result.put(CurrencyLocales.EN, ratesEN);
 
 		List<CurrencyData> ratesBG = getRatesFromUrl(URL_BNB_FORMAT_BG);
 		if (getFixedRates) {
-			ratesBG.addAll(getFixedRates("BG"));
+			ratesBG.addAll(getFixedRates(CurrencyLocales.BG.name()));
 		}
 		result.put(CurrencyLocales.BG, ratesBG);
 
