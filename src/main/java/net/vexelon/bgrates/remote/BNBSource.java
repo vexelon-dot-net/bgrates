@@ -27,6 +27,7 @@ import com.google.common.io.ByteStreams;
 
 import net.vexelon.bgrates.db.models.CurrencyData;
 import net.vexelon.bgrates.db.models.CurrencyLocales;
+import net.vexelon.bgrates.utils.DateTimeUtils;
 import net.vexelon.bgrates.utils.IOUtils;
 
 public class BNBSource implements Source {
@@ -175,7 +176,7 @@ public class BNBSource implements Source {
 		List<CurrencyData> listFixedCurrencyData = Lists.newArrayList();
 		CurrencyData fixedCurrencyData = new CurrencyData();
 
-		Date currentYear = getCurrentYear();
+		Date currentYear = DateTimeUtils.getCurrentYear();
 		InputStream is = null;
 		URL url = null;
 		Element div;
@@ -247,22 +248,6 @@ public class BNBSource implements Source {
 
 
 		return listFixedCurrencyData;
-	}
-
-	//Датата се сетва, като се вземе текущата година и се добави 01.01.
-	private Date getCurrentYear(){
-		int year = Calendar.getInstance().get(Calendar.YEAR);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		String dateInString = "01.01."+year;
-		Date currentYear = null;
-		try {
-			currentYear = sdf.parse(dateInString);
-			System.out.print(currentYear);
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-			// use default (today)
-		}
-		return currentYear;
 	}
 
 	private CurrencyData setEuroCurrency(CurrencyLocales currencyName, Date currencyDate) throws SourceException {

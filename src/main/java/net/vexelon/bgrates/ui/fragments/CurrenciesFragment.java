@@ -212,8 +212,7 @@ public class CurrenciesFragment extends AbstractFragment {
 		}
 		if (useRemoteSource) {
 			setRefreshActionButtonState(true);
-			//TODO - temp commented
-			//new UpdateRatesTask().execute();
+			new UpdateRatesTask().execute();
 		}
 	}
 

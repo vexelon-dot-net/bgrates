@@ -1,6 +1,9 @@
 package net.vexelon.bgrates.services;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ import net.vexelon.bgrates.db.models.CurrencyLocales;
 import net.vexelon.bgrates.remote.BNBSource;
 import net.vexelon.bgrates.remote.Source;
 import net.vexelon.bgrates.remote.SourceException;
+import net.vexelon.bgrates.utils.DateTimeUtils;
 import net.vexelon.bgrates.utils.IOUtils;
 
 public class RateService extends Service {
@@ -70,11 +74,9 @@ public class RateService extends Service {
 
 		// Toast.makeText(this, "MyAlarmService.onStart()",
 		// Toast.LENGTH_LONG).show();
-		//TODO - to be check why if block is empty
-		if (!isCurrenciesToDate()) {
-			new DownloadWebpageTask().execute(false);
+		if (!isCurrenciesToDate() || !isFixedCurrenciesToYear()) {
+			new DownloadWebpageTask().execute(!isFixedCurrenciesToYear());
 		}
-
 
 	}
 
@@ -96,7 +98,6 @@ public class RateService extends Service {
 	 * 
 	 * @return: true-Have, false-Haven't
 	 */
-	//TODO - to be call new method
 	private boolean isCurrenciesToDate() {
 		Context ctx = RateService.this;
 		DataSource source = null;
@@ -113,8 +114,33 @@ public class RateService extends Service {
 		}
 
 		return false;
-
 	}
+
+	/**
+	 * Checks whether has currencies for current year.
+	 *
+	 * @return: true-Have, false-Haven't
+	 */
+
+	private boolean isFixedCurrenciesToYear(){
+		Date currentYear = DateTimeUtils.getCurrentYear();
+		Context ctx = RateService.this;
+		DataSource source = null;
+		List<CurrencyData> listFixedCurrency = null;
+		try{
+			source = new SQLiteDataSource();
+			source.connect(ctx);
+			listFixedCurrency = source.getFixedRates(getSelectedCurrenciesLocale(), currentYear);
+			return listFixedCurrency.size()>0;
+		}catch (DataSourceException e) {
+			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
+		} finally {
+			IOUtils.closeQuitely(source);
+		}
+
+		return  false;
+	}
+
 
 	private class DownloadWebpageTask extends AsyncTask<Object, Void, Map<CurrencyLocales, List<CurrencyData>>> {
 
@@ -129,7 +155,7 @@ public class RateService extends Service {
 			try {
 				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
 				Source source = new BNBSource();
-				rates = source.downloadRates(true);
+				rates = source.downloadRates(isFixed);
 			} catch (SourceException e) {
 				Log.e(Defs.LOG_TAG, "Could not load rates from remote!", e);
 			}

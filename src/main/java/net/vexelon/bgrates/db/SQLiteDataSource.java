@@ -273,8 +273,41 @@ public class SQLiteDataSource implements DataSource {
 		// make sure to close the cursor
 		cursor.close();
 		return resultCurrency;
-
 	}
+
+	@Override
+	public List<CurrencyData> getFixedRates(CurrencyLocales locale, Date dateOfCurrency) throws DataSourceException{
+		List<CurrencyData> resultFixedCurrency = null;
+		Cursor cursor = null;
+		try{
+			resultFixedCurrency= new ArrayList<CurrencyData>();
+			String whereClause = Defs.COLUMN_CURR_DATE + " = ? AND " + Defs.COLUMN_LOCALE + " = ? ";
+			String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, "yyyy-MM-dd"), locale.toString() };
+
+			cursor = database.query(Defs.TABLE_FIXED_CURRENCY, ALL_COLUMNS, whereClause, whereArgs, null, null, null);
+
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				CurrencyData comment = cursorToCurrency(cursor,false);
+				resultFixedCurrency.add(comment);
+				cursor.moveToNext();
+			}
+			// make sure to close the cursor
+			cursor.close();
+
+
+		}catch (SQLiteException s) {
+			database.execSQL(dbHelper.CREATE_TABLE_FIXED_CURRENCY);
+		}finally {
+			if(cursor!=null){
+				cursor.close();
+			}
+
+		}
+
+		return resultFixedCurrency;
+	}
+
 
 	@Override
 	public List<CurrencyData> getRates(CurrencyLocales locale) throws DataSourceException {

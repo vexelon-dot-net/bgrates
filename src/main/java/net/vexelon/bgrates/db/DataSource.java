@@ -79,6 +79,9 @@ public interface DataSource extends Closeable {
 	 */
 	List<CurrencyData> getRates(CurrencyLocales locale, Date date) throws DataSourceException;
 
+
+	List<CurrencyData> getFixedRates(CurrencyLocales locale, Date date) throws DataSourceException;
+
 	/**
 	 * Adds exchange rates data for given download {@link Date}.
 	 * 

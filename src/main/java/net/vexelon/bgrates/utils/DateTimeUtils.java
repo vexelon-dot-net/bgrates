@@ -24,6 +24,8 @@
 package net.vexelon.bgrates.utils;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -38,6 +40,23 @@ public class DateTimeUtils {
 	protected static final Calendar CALENDAR = Calendar.getInstance();
 	protected static DateFormat DT_FORMAT = null;
 	protected static DateFormat DATE_FORMAT = null;
+
+	//Датата се сетва, като се вземе текущата година и се добави 01.01. Използва се за фиксираните валути
+	public static Date getCurrentYear(){
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		String dateInString = "01.01."+year;
+		Date currentYear = null;
+		try {
+			currentYear = sdf.parse(dateInString);
+			System.out.print(currentYear);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+			// use default (today)
+		}
+		return currentYear;
+	}
+
 
 	private static void initDateFormat(Context context) {
 		if (DT_FORMAT == null) {
