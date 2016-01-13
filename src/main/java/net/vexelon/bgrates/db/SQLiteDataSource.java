@@ -24,7 +24,6 @@ public class SQLiteDataSource implements DataSource {
 			Defs.COLUMN_RATIO, Defs.COLUMN_REVERSERATE, Defs.COLUMN_RATE, Defs.COLUMN_EXTRAINFO, Defs.COLUMN_CURR_DATE,
 			Defs.COLUMN_TITLE, Defs.COLUMN_F_STAR };
 
-	// Database fields
 	private SQLiteDatabase database;
 	private CurrenciesSQLiteDB dbHelper;
 
@@ -55,7 +54,6 @@ public class SQLiteDataSource implements DataSource {
 		return formatter.format(date);
 	}
 
-
 	@Override
 	public void addRates(Map<CurrencyLocales, List<CurrencyData>> rates) throws DataSourceException {
 
@@ -63,20 +61,21 @@ public class SQLiteDataSource implements DataSource {
 		ContentValues valuesDate = new ContentValues();
 		for (Map.Entry<CurrencyLocales, List<CurrencyData>> currenciesData : rates.entrySet()) {
 
-			//Данните от сайта на БНБ се разделят на два списъка - от динамични валути и от статични валути
+			// Данните от сайта на БНБ се разделят на два списъка - от динамични
+			// валути и от статични валути
 			List<CurrencyData> dynamicCurrencies = new ArrayList<CurrencyData>();
 			List<CurrencyData> fixedCurrencies = new ArrayList<CurrencyData>();
-			for (CurrencyData currency : currenciesData.getValue()){
-				if (currency.isFixed()){
+			for (CurrencyData currency : currenciesData.getValue()) {
+				if (currency.isFixed()) {
 					fixedCurrencies.add(currency);
-				}else{
+				} else {
 					dynamicCurrencies.add(currency);
 				}
 			}
 
-			////За всеки от списъците се прави проверка дали го има в базата.
-			//За динамични валути
-			//TODO - да се ползва новия метод
+			// //За всеки от списъците се прави проверка дали го има в базата.
+			// За динамични валути
+			// TODO - да се ползва новия метод
 			if (!isHaveRates(currenciesData.getKey(), dynamicCurrencies.get(1).getCurrDate(), false)) {
 				for (int i = 0; i < dynamicCurrencies.size(); i++) {
 					values.put(Defs.COLUMN_GOLD, dynamicCurrencies.get(i).getGold());
@@ -92,7 +91,9 @@ public class SQLiteDataSource implements DataSource {
 					values.put(Defs.COLUMN_F_STAR, dynamicCurrencies.get(i).getfStar());
 					values.put(Defs.COLUMN_LOCALE, currenciesData.getKey().toString());
 
-					database.insert(Defs.TABLE_CURRENCY, null, values);//TODO remove comment
+					database.insert(Defs.TABLE_CURRENCY, null, values);// TODO
+																		// remove
+																		// comment
 					values = new ContentValues();
 
 				}
@@ -100,13 +101,16 @@ public class SQLiteDataSource implements DataSource {
 				valuesDate.put(Defs.COLUMN_CURR_DATE,
 						parseDateToString(currenciesData.getValue().get(1).getCurrDate(), "yyyy-MM-dd"));
 				valuesDate.put(Defs.COLUMN_LOCALE, currenciesData.getKey().toString());
-				database.insert(Defs.TABLE_CURRENCY_DATE, null, valuesDate);//TODO remove comment
+				database.insert(Defs.TABLE_CURRENCY_DATE, null, valuesDate);// TODO
+																			// remove
+																			// comment
 
 				valuesDate = new ContentValues();
 			}
 
-			//За фиксирани валути. Може да го има вече в базата, защото се добавят веднъж годишно
-			if(fixedCurrencies.size()>0){
+			// За фиксирани валути. Може да го има вече в базата, защото се
+			// добавят веднъж годишно
+			if (fixedCurrencies.size() > 0) {
 				if (!isHaveRates(currenciesData.getKey(), fixedCurrencies.get(1).getCurrDate(), true)) {
 					for (int i = 0; i < fixedCurrencies.size(); i++) {
 						values.put(Defs.COLUMN_GOLD, fixedCurrencies.get(i).getGold());
@@ -122,7 +126,9 @@ public class SQLiteDataSource implements DataSource {
 						values.put(Defs.COLUMN_F_STAR, fixedCurrencies.get(i).getfStar());
 						values.put(Defs.COLUMN_LOCALE, currenciesData.getKey().toString());
 
-						database.insert(Defs.TABLE_FIXED_CURRENCY, null, values);//TODO remove comment
+						database.insert(Defs.TABLE_FIXED_CURRENCY, null, values);// TODO
+																					// remove
+																					// comment
 						values = new ContentValues();
 
 					}
@@ -137,9 +143,9 @@ public class SQLiteDataSource implements DataSource {
 		String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, "yyyy-MM-dd"), locale.toString() };
 
 		Cursor cursor = null;
-		if(isFixed){
+		if (isFixed) {
 			cursor = database.query(Defs.TABLE_FIXED_CURRENCY, tableColumns, whereClause, whereArgs, null, null, null);
-		}else{
+		} else {
 			cursor = database.query(Defs.TABLE_CURRENCY_DATE, tableColumns, whereClause, whereArgs, null, null, null);
 		}
 		if (cursor.moveToFirst()) {
@@ -150,7 +156,6 @@ public class SQLiteDataSource implements DataSource {
 			return false;
 		}
 	}
-
 
 	@Override
 	public List<CurrencyData> getLastRates(CurrencyLocales locale) throws DataSourceException {
@@ -172,7 +177,7 @@ public class SQLiteDataSource implements DataSource {
 
 			cursor2.moveToFirst();
 			while (!cursor2.isAfterLast()) {
-				CurrencyData comment = cursorToCurrency(cursor2,false);
+				CurrencyData comment = cursorToCurrency(cursor2, false);
 				lastRates.add(comment);
 				cursor2.moveToNext();
 			}
@@ -181,7 +186,6 @@ public class SQLiteDataSource implements DataSource {
 
 		}
 		cursor.close();
-
 
 		return lastRates;
 	}
@@ -192,25 +196,27 @@ public class SQLiteDataSource implements DataSource {
 		try {
 
 			lastRates = new ArrayList<CurrencyData>();
-			String[] tableColumns = new String[]{Defs.COLUMN_CURR_DATE};
+			String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
 			String whereClause = Defs.COLUMN_LOCALE + " = ? ";
-			String[] whereArgs = new String[]{locale.toString()};
+			String[] whereArgs = new String[] { locale.toString() };
 
-//			Cursor cursor = database.query(Defs.TABLE_FIXED_CURRENCY, tableColumns, whereClause, whereArgs, null, null,Defs.COLUMN_CURR_DATE + " DESC");
-			Cursor cursor = database.query(true, Defs.TABLE_FIXED_CURRENCY, tableColumns, whereClause, whereArgs, null, null,Defs.COLUMN_CURR_DATE + " DESC", null);
-
+			// Cursor cursor = database.query(Defs.TABLE_FIXED_CURRENCY,
+			// tableColumns, whereClause, whereArgs, null,
+			// null,Defs.COLUMN_CURR_DATE + " DESC");
+			Cursor cursor = database.query(true, Defs.TABLE_FIXED_CURRENCY, tableColumns, whereClause, whereArgs, null,
+					null, Defs.COLUMN_CURR_DATE + " DESC", null);
 
 			if (cursor.moveToFirst()) {
 				String whereClause2 = Defs.COLUMN_CURR_DATE + " = ? AND " + Defs.COLUMN_LOCALE + " = ? ";
-				String[] whereArgs2 = new String[]{cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
-						locale.toString()};
+				String[] whereArgs2 = new String[] { cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
+						locale.toString() };
 
-				Cursor cursor2 = database.query(Defs.TABLE_FIXED_CURRENCY, ALL_COLUMNS, whereClause2, whereArgs2, null, null,
-						null);
+				Cursor cursor2 = database.query(Defs.TABLE_FIXED_CURRENCY, ALL_COLUMNS, whereClause2, whereArgs2, null,
+						null, null);
 
 				cursor2.moveToFirst();
 				while (!cursor2.isAfterLast()) {
-					CurrencyData comment = cursorToCurrency(cursor2,true);
+					CurrencyData comment = cursorToCurrency(cursor2, true);
 					lastRates.add(comment);
 					cursor2.moveToNext();
 				}
@@ -219,8 +225,6 @@ public class SQLiteDataSource implements DataSource {
 
 			}
 			cursor.close();
-
-
 
 		} catch (SQLiteException s) {
 			database.execSQL(dbHelper.CREATE_TABLE_FIXED_CURRENCY);
@@ -255,7 +259,7 @@ public class SQLiteDataSource implements DataSource {
 		return resultCurrency;
 	}
 
-	//TODO - new method...
+	// TODO - new method...
 	@Override
 	public List<CurrencyData> getRates(CurrencyLocales locale, Date dateOfCurrency) throws DataSourceException {
 		List<CurrencyData> resultCurrency = new ArrayList<CurrencyData>();
@@ -266,7 +270,7 @@ public class SQLiteDataSource implements DataSource {
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			CurrencyData comment = cursorToCurrency(cursor,false);
+			CurrencyData comment = cursorToCurrency(cursor, false);
 			resultCurrency.add(comment);
 			cursor.moveToNext();
 		}
@@ -319,7 +323,7 @@ public class SQLiteDataSource implements DataSource {
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			CurrencyData comment = cursorToCurrency(cursor,false);
+			CurrencyData comment = cursorToCurrency(cursor, false);
 			currencies.add(comment);
 			cursor.moveToNext();
 		}

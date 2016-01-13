@@ -148,7 +148,8 @@ public class CurrenciesFragment extends AbstractFragment {
 	 */
 	private void updateCurrenciesListView(List<CurrencyData> currenciesList) {
 		final Activity activity = getActivity();
-		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, currenciesList, new AppSettings(activity).getCurrenciesPrecision());
+		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, currenciesList,
+				new AppSettings(activity).getCurrenciesPrecision());
 		lvCurrencies.setAdapter(adapter);
 		sortCurrenciesListView(new AppSettings(activity).getCurrenciesSortSelection());
 		Date lastUpdateDate = currenciesList.iterator().next().getCurrDate();
@@ -188,7 +189,7 @@ public class CurrenciesFragment extends AbstractFragment {
 	 * 
 	 * @param useRemoteSource
 	 */
-//	TODO - to call lastFixedRates and if haven't to send flag true
+	// TODO - to call lastFixedRates and if haven't to send flag true
 	public void reloadRates(boolean useRemoteSource) {
 		if (!useRemoteSource) {
 			DataSource source = null;

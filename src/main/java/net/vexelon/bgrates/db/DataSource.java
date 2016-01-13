@@ -51,6 +51,7 @@ public interface DataSource extends Closeable {
 	 * Fetches a list of dates for which exchange rates were downloaded and
 	 * available in the underlying data source.
 	 * 
+	 * @param locale
 	 * @return A {@link List} of {@link Date} objects or an empty {@link List},
 	 *         if no dates are available.
 	 * @throws DataSourceException
@@ -85,7 +86,6 @@ public interface DataSource extends Closeable {
 	/**
 	 * Adds exchange rates data for given download {@link Date}.
 	 * 
-	 * @param date
 	 * @param rates
 	 *            A {@link Map} of language and {@link CurrencyData} list
 	 *            values.
