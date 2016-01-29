@@ -42,6 +42,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -101,6 +102,9 @@ public class CurrenciesFragment extends AbstractFragment {
 		case R.id.action_sort:
 			newSortMenu().show();
 			return true;
+		case R.id.action_filter:
+			newFilterMenu().show();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -133,6 +137,34 @@ public class CurrenciesFragment extends AbstractFragment {
 							Toast.makeText(getActivity(),
 									sortByAscending ? R.string.action_sort_name_asc : R.string.action_sort_name_desc,
 									Toast.LENGTH_SHORT).show();
+							break;
+						}
+						dialog.dismiss();
+					}
+				});
+		return builder.create();
+	}
+
+	private AlertDialog newFilterMenu() {
+		final AppSettings appSettings = new AppSettings(getActivity());
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle(R.string.action_filter_title).setSingleChoiceItems(R.array.action_filter_values,
+				appSettings.getCurrenciesFilterSelection(), new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						appSettings.setCurrenciesFilterSelection(which);
+						filterCurrenciesListView(which);
+						// notify user
+						switch (appSettings.getCurrenciesFilterSelection()) {
+						case AppSettings.FILTERBY_ALL:
+							Toast.makeText(getActivity(), R.string.action_filter_all, Toast.LENGTH_SHORT).show();
+							break;
+						case AppSettings.FILTERBY_NONFIXED:
+							Toast.makeText(getActivity(), R.string.action_filter_nonfixed, Toast.LENGTH_SHORT).show();
+							break;
+						case AppSettings.FILTERBY_FIXED:
+							Toast.makeText(getActivity(), R.string.action_filter_fixed, Toast.LENGTH_SHORT).show();
 							break;
 						}
 						dialog.dismiss();
@@ -185,11 +217,30 @@ public class CurrenciesFragment extends AbstractFragment {
 	}
 
 	/**
+	 * Filter currencies by rate type
+	 * 
+	 * @param filterBy
+	 */
+	private void filterCurrenciesListView(final int filterBy) {
+		final CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
+		adapter.getFilter().filter(Integer.toString(filterBy), new Filter.FilterListener() {
+			@Override
+			public void onFilterComplete(int count) {
+				System.out.println("filterCurrenciesListView=" + count);
+				if (count > 0) {
+					adapter.notifyDataSetChanged();
+				} else {
+					adapter.notifyDataSetInvalidated();
+				}
+			}
+		});
+	}
+
+	/**
 	 * Reloads currencies from a remote source.
 	 * 
 	 * @param useRemoteSource
 	 */
-	// TODO - to call lastFixedRates and if haven't to send flag true
 	public void reloadRates(boolean useRemoteSource) {
 		if (!useRemoteSource) {
 			DataSource source = null;
@@ -197,7 +248,7 @@ public class CurrenciesFragment extends AbstractFragment {
 				source = new SQLiteDataSource();
 				source.connect(getActivity());
 				List<CurrencyData> ratesList = source.getLastRates(getSelectedCurrenciesLocale());
-				List<CurrencyData> fixedRatesList = source.getLastFixedRates(getSelectedCurrenciesLocale());
+				ratesList.addAll(source.getLastFixedRates(getSelectedCurrenciesLocale()));
 				if (!ratesList.isEmpty()) {
 					Log.v(Defs.LOG_TAG, "Displaying rates from database...");
 					updateCurrenciesListView(ratesList);
@@ -246,7 +297,6 @@ public class CurrenciesFragment extends AbstractFragment {
 
 		@Override
 		protected void onPostExecute(Map<CurrencyLocales, List<CurrencyData>> result) {
-			// notifyListeners(Notifications.UPDATE_RATES_DONE);
 			setRefreshActionButtonState(false);
 			if (updateOK && !result.isEmpty()) {
 				DataSource source = null;

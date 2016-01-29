@@ -34,6 +34,10 @@ public class AppSettings {
 	public static final int SORTBY_NAME = 0;
 	public static final int SORTBY_CODE = 1;
 
+	public static final int FILTERBY_ALL = 0;
+	public static final int FILTERBY_NONFIXED = 1;
+	public static final int FILTERBY_FIXED = 2;
+
 	public static final int PRECISION_SIMPLE = 0;
 	public static final int PRECISION_ADVANCED = 1;
 
@@ -49,10 +53,10 @@ public class AppSettings {
 	 * Gets currencies sorting
 	 * 
 	 * @return
-	 * 		<ul>
-	 *         <li>-1 (Default)
-	 *         <li>0 (Name)
-	 *         <li>1 (Code)
+	 *         <ul>
+	 *         <li>-1 None (Default)
+	 *         <li>0 Name
+	 *         <li>1 Code
 	 */
 	public int getCurrenciesSortSelection() {
 		return generalPrefs.getInt("pref_currencies_sortby", -1);
@@ -64,6 +68,27 @@ public class AppSettings {
 	 */
 	public void setCurrenciesSortSelection(int value) {
 		generalPrefs.edit().putInt("pref_currencies_sortby", value).apply();
+	}
+
+	/**
+	 * Gets currencies filtering
+	 * 
+	 * @return
+	 *         <ul>
+	 *         <li>0 All
+	 *         <li>1 Non-Fixed (Default)
+	 *         <li>2 Fixed
+	 */
+	public int getCurrenciesFilterSelection() {
+		return generalPrefs.getInt("pref_currencies_filterby", FILTERBY_NONFIXED);
+	}
+
+	/**
+	 * 
+	 * @param value
+	 */
+	public void setCurrenciesFilterSelection(int value) {
+		generalPrefs.edit().putInt("pref_currencies_filterby", value).apply();
 	}
 
 	/**
@@ -88,9 +113,9 @@ public class AppSettings {
 	/**
 	 *
 	 * @return <ul>
-	 *     <li>0 - PRECISION_SIMPLE</li>
-	 *     <li>1 - PRECISION_ADVANCED</li>
-	 * 	</ul>
+	 *         <li>0 - PRECISION_SIMPLE</li>
+	 *         <li>1 - PRECISION_ADVANCED</li>
+	 *         </ul>
 	 */
 	public int getCurrenciesPrecision() {
 		String precision = generalPrefs.getString("pref_currencies_precision", "simple");

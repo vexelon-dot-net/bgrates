@@ -31,8 +31,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.common.collect.Lists;
 
 import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.Defs;
@@ -43,11 +46,14 @@ import net.vexelon.bgrates.utils.NumberUtils;
 
 public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 
+	private final List<CurrencyData> itemsImmutable;
 	private List<CurrencyData> items;
 	private int precisionMode = AppSettings.PRECISION_SIMPLE;
+	private CurrencyFilter filter = null;
 
 	public CurrencyListAdapter(Context context, int textViewResId, List<CurrencyData> items, int precisionMode) {
 		super(context, textViewResId, items);
+		this.itemsImmutable = Lists.newArrayList(items.iterator());
 		this.items = items;
 		this.precisionMode = precisionMode;
 	}
@@ -68,15 +74,15 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 			// rate
 			BigDecimal rateDecimal = new BigDecimal(currencyData.getRate());
 			switch (precisionMode) {
-				case AppSettings.PRECISION_ADVANCED:
-					String rate = NumberUtils.scaleCurrency(rateDecimal, Defs.SCALE_SHOW_LONG);
-					setResText(v, R.id.rate, rate.substring(0, rate.length() - 3));
-					setResText(v, R.id.rate_decimals, rate.substring(rate.length() - 3));
-					break;
-				case AppSettings.PRECISION_SIMPLE:
-				default:
-					setResText(v, R.id.rate, NumberUtils.scaleCurrency(rateDecimal, Defs.BGN_CODE));
-					break;
+			case AppSettings.PRECISION_ADVANCED:
+				String rate = NumberUtils.scaleCurrency(rateDecimal, Defs.SCALE_SHOW_LONG);
+				setResText(v, R.id.rate, rate.substring(0, rate.length() - 3));
+				setResText(v, R.id.rate_decimals, rate.substring(rate.length() - 3));
+				break;
+			case AppSettings.PRECISION_SIMPLE:
+			default:
+				setResText(v, R.id.rate, NumberUtils.scaleCurrency(rateDecimal, Defs.BGN_CODE));
+				break;
 			}
 			// country ID icon
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
@@ -92,6 +98,11 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 		return v;
 	}
 
+	@Override
+	public int getCount() {
+		return items.size();
+	}
+
 	private void setResText(View v, int id, CharSequence text) {
 		TextView tx = (TextView) v.findViewById(id);
 		if (tx != null) {
@@ -99,4 +110,55 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 		}
 	}
 
+	@Override
+	public Filter getFilter() {
+		if (filter == null) {
+			filter = new CurrencyFilter();
+		}
+		return filter;
+	}
+
+	private class CurrencyFilter extends Filter {
+
+		@Override
+		protected FilterResults performFiltering(CharSequence constraint) {
+			FilterResults results = new FilterResults();
+			List<CurrencyData> currenciesFiltered = Lists.newArrayList();
+			int filterBy = Integer.parseInt(constraint.toString());
+
+			System.out.println("filterby=" + filterBy);
+
+			switch (filterBy) {
+			case AppSettings.FILTERBY_ALL:
+				currenciesFiltered.addAll(itemsImmutable);
+				break;
+			case AppSettings.FILTERBY_NONFIXED:
+				for (CurrencyData currency : itemsImmutable) {
+					if (!currency.isFixed()) {
+						currenciesFiltered.add(currency);
+					}
+				}
+				break;
+			case AppSettings.FILTERBY_FIXED:
+				for (CurrencyData currency : itemsImmutable) {
+					if (currency.isFixed()) {
+						currenciesFiltered.add(currency);
+					}
+				}
+				break;
+			}
+
+			results.values = currenciesFiltered;
+			results.count = currenciesFiltered.size();
+			return results;
+		}
+
+		@Override
+		protected void publishResults(CharSequence constraint, FilterResults results) {
+			System.out.println("CurrencyFilter.publishResults=" + results.count);
+			if (results.count > 0) {
+				items = (List<CurrencyData>) results.values;
+			}
+		}
+	}
 }

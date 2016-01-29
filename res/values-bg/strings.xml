@@ -3,7 +3,7 @@
 
     <string name="text_ok">OK</string>
     <string name="text_cancel">Отказ</string>
-    
+
     <string name="app_name">BGrates M-Tel</string>
     <string name="app_name_pure">BGrates</string>
     <string name="last_update">Последно обновено</string>
@@ -37,16 +37,26 @@
     <string name="action_sort_name_desc">По име от Я-А</string>
     <string name="action_sort_code_asc">По код от А-Я</string>
     <string name="action_sort_code_desc">По код от Я-А</string>
-	<string-array name="action_sort_values">
-		<item >Наименование</item>
-		<item >Код</item>
-	</string-array>
+    <string-array name="action_sort_values">
+        <item>Наименование</item>
+        <item>Код</item>
+    </string-array>
+    <string name="action_filter">Филтър</string>
+    <string name="action_filter_title">Показване на валутни курсове</string>
+    <string name="action_filter_fixed">Фиксирани курсове</string>
+    <string name="action_filter_nonfixed">Нефиксирани курсове</string>
+    <string name="action_filter_all">Всички курсове</string>
+    <string-array name="action_filter_values">
+        <item>Всички курсове</item>
+        <item>Само нефиксирани курсове</item>
+        <item>Само фиксирани курсове</item>
+    </string-array>
     <string name="action_settings">Настройки</string>
     <string name="prefs_title">BGrates Настройки</string>
     <string-array name="pref_display_names">
-        <item >По подразбиране</item>
-        <item >Български</item>
-        <item >Английски</item>
+        <item>По подразбиране</item>
+        <item>Български</item>
+        <item>Английски</item>
     </string-array>
     <string name="pref_value_update">Сменено на %1$s</string>
     <string name="pref_display_lang_title">Език на валути</string>

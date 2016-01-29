@@ -4,6 +4,7 @@ BGrates HISTORY file
 ## v3.1.0
 
 ## EN
+  * Added fixed/non-fixed currencies filter.
   * Added simple/advanced currency precision view setting.
   * Fixed GOLD convert issue.
   * Improved currencies convert calculations.

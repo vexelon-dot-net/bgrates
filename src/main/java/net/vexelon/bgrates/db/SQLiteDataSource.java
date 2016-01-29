@@ -18,6 +18,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
+import com.google.common.collect.Lists;
+
 public class SQLiteDataSource implements DataSource {
 
 	private static final String[] ALL_COLUMNS = { Defs.COLUMN_ID, Defs.COLUMN_GOLD, Defs.COLUMN_NAME, Defs.COLUMN_CODE,
@@ -56,9 +58,9 @@ public class SQLiteDataSource implements DataSource {
 
 	@Override
 	public void addRates(Map<CurrencyLocales, List<CurrencyData>> rates) throws DataSourceException {
-
 		ContentValues values = new ContentValues();
 		ContentValues valuesDate = new ContentValues();
+
 		for (Map.Entry<CurrencyLocales, List<CurrencyData>> currenciesData : rates.entrySet()) {
 
 			// Данните от сайта на БНБ се разделят на два списъка - от динамични
@@ -159,7 +161,7 @@ public class SQLiteDataSource implements DataSource {
 
 	@Override
 	public List<CurrencyData> getLastRates(CurrencyLocales locale) throws DataSourceException {
-		List<CurrencyData> lastRates = new ArrayList<CurrencyData>();
+		List<CurrencyData> lastRates = Lists.newArrayList();
 		String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
 		String whereClause = Defs.COLUMN_LOCALE + " = ? ";
 		String[] whereArgs = new String[] { locale.toString() };
@@ -192,10 +194,8 @@ public class SQLiteDataSource implements DataSource {
 
 	@Override
 	public List<CurrencyData> getLastFixedRates(CurrencyLocales locale) throws DataSourceException {
-		List<CurrencyData> lastRates = null;
+		List<CurrencyData> lastRates = Lists.newArrayList();
 		try {
-
-			lastRates = new ArrayList<CurrencyData>();
 			String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
 			String whereClause = Defs.COLUMN_LOCALE + " = ? ";
 			String[] whereArgs = new String[] { locale.toString() };
@@ -234,7 +234,7 @@ public class SQLiteDataSource implements DataSource {
 
 	@Override
 	public List<Date> getAvailableRatesDates(CurrencyLocales locale) throws DataSourceException {
-		List<Date> resultCurrency = new ArrayList<Date>();
+		List<Date> resultCurrency = Lists.newArrayList();
 		String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
 		String whereClause = Defs.COLUMN_LOCALE + " = ? ";
 		String[] whereArgs = new String[] { locale.toString() };
@@ -280,11 +280,11 @@ public class SQLiteDataSource implements DataSource {
 	}
 
 	@Override
-	public List<CurrencyData> getFixedRates(CurrencyLocales locale, Date dateOfCurrency) throws DataSourceException{
+	public List<CurrencyData> getFixedRates(CurrencyLocales locale, Date dateOfCurrency) throws DataSourceException {
 		List<CurrencyData> resultFixedCurrency = null;
 		Cursor cursor = null;
-		try{
-			resultFixedCurrency= new ArrayList<CurrencyData>();
+		try {
+			resultFixedCurrency = new ArrayList<CurrencyData>();
 			String whereClause = Defs.COLUMN_CURR_DATE + " = ? AND " + Defs.COLUMN_LOCALE + " = ? ";
 			String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, "yyyy-MM-dd"), locale.toString() };
 
@@ -292,18 +292,17 @@ public class SQLiteDataSource implements DataSource {
 
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				CurrencyData comment = cursorToCurrency(cursor,false);
+				CurrencyData comment = cursorToCurrency(cursor, false);
 				resultFixedCurrency.add(comment);
 				cursor.moveToNext();
 			}
 			// make sure to close the cursor
 			cursor.close();
 
-
-		}catch (SQLiteException s) {
+		} catch (SQLiteException s) {
 			database.execSQL(dbHelper.CREATE_TABLE_FIXED_CURRENCY);
-		}finally {
-			if(cursor!=null){
+		} finally {
+			if (cursor != null) {
 				cursor.close();
 			}
 
@@ -311,7 +310,6 @@ public class SQLiteDataSource implements DataSource {
 
 		return resultFixedCurrency;
 	}
-
 
 	@Override
 	public List<CurrencyData> getRates(CurrencyLocales locale) throws DataSourceException {
