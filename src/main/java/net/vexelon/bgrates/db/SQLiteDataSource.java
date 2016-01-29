@@ -132,7 +132,6 @@ public class SQLiteDataSource implements DataSource {
 																					// remove
 																					// comment
 						values = new ContentValues();
-
 					}
 				}
 			}
@@ -222,11 +221,11 @@ public class SQLiteDataSource implements DataSource {
 				}
 				// make sure to close the cursor
 				cursor2.close();
-
 			}
 			cursor.close();
 
 		} catch (SQLiteException s) {
+			// TODO: move to onUpgrade
 			database.execSQL(dbHelper.CREATE_TABLE_FIXED_CURRENCY);
 		}
 		return lastRates;

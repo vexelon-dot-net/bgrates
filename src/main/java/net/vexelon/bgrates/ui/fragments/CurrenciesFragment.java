@@ -23,7 +23,6 @@
  */
 package net.vexelon.bgrates.ui.fragments;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +45,7 @@ import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import net.vexelon.bgrates.AppSettings;
 import net.vexelon.bgrates.Defs;
 import net.vexelon.bgrates.R;
@@ -175,50 +175,38 @@ public class CurrenciesFragment extends AbstractFragment {
 
 	/**
 	 * Populates the list of currencies
-	 * 
+	 *
 	 * @param currenciesList
 	 */
 	private void updateCurrenciesListView(List<CurrencyData> currenciesList) {
 		final Activity activity = getActivity();
+		AppSettings appSettings = new AppSettings(activity);
+
 		CurrencyListAdapter adapter = new CurrencyListAdapter(activity, R.layout.currency_row_layout, currenciesList,
-				new AppSettings(activity).getCurrenciesPrecision());
+				appSettings.getCurrenciesPrecision());
 		lvCurrencies.setAdapter(adapter);
-		sortCurrenciesListView(new AppSettings(activity).getCurrenciesSortSelection());
+
+		// sortCurrenciesListView(appSettings.getCurrenciesSortSelection());
+		filterCurrenciesListView(appSettings.getCurrenciesFilterSelection());
+
 		Date lastUpdateDate = currenciesList.iterator().next().getCurrDate();
 		tvLastUpdate.setText(DateTimeUtils.toDateText(activity, lastUpdateDate));
 	}
 
 	/**
 	 * Sorts currencies by given criteria
-	 * 
+	 *
 	 * @param sortBy
 	 */
 	private void sortCurrenciesListView(final int sortBy) {
 		CurrencyListAdapter adapter = (CurrencyListAdapter) lvCurrencies.getAdapter();
-		adapter.sort(new Comparator<CurrencyData>() {
-			@Override
-			public int compare(CurrencyData lhs, CurrencyData rhs) {
-				switch (sortBy) {
-				case AppSettings.SORTBY_CODE:
-					if (sortByAscending) {
-						return lhs.getCode().compareToIgnoreCase(rhs.getCode());
-					}
-					return rhs.getCode().compareToIgnoreCase(lhs.getCode());
-				case AppSettings.SORTBY_NAME:
-				default:
-					if (sortByAscending) {
-						return lhs.getName().compareToIgnoreCase(rhs.getName());
-					}
-					return rhs.getName().compareToIgnoreCase(lhs.getName());
-				}
-			}
-		});
+		adapter.sortBy(new AppSettings(getActivity()).getCurrenciesSortSelection(), sortByAscending);
 		adapter.notifyDataSetChanged();
 	}
 
 	/**
 	 * Filter currencies by rate type
-	 * 
+	 *
 	 * @param filterBy
 	 */
 	private void filterCurrenciesListView(final int filterBy) {
@@ -226,8 +214,8 @@ public class CurrenciesFragment extends AbstractFragment {
 		adapter.getFilter().filter(Integer.toString(filterBy), new Filter.FilterListener() {
 			@Override
 			public void onFilterComplete(int count) {
-				System.out.println("filterCurrenciesListView=" + count);
 				if (count > 0) {
+					adapter.sortBy(new AppSettings(getActivity()).getCurrenciesSortSelection(), sortByAscending);
 					adapter.notifyDataSetChanged();
 				} else {
 					adapter.notifyDataSetInvalidated();
@@ -238,7 +226,7 @@ public class CurrenciesFragment extends AbstractFragment {
 
 	/**
 	 * Reloads currencies from a remote source.
-	 * 
+	 *
 	 * @param useRemoteSource
 	 */
 	public void reloadRates(boolean useRemoteSource) {
@@ -284,10 +272,23 @@ public class CurrenciesFragment extends AbstractFragment {
 		@Override
 		protected Map<CurrencyLocales, List<CurrencyData>> doInBackground(Void... params) {
 			Map<CurrencyLocales, List<CurrencyData>> rates = Maps.newHashMap();
+			Date currentYear = DateTimeUtils.getCurrentYear();
+			boolean isDownloadFixed = false;
 			try {
+				DataSource dataSource = null;
+				try {
+					dataSource = new SQLiteDataSource();
+					dataSource.connect(activity);
+					isDownloadFixed = dataSource.getFixedRates(getSelectedCurrenciesLocale(), currentYear).isEmpty();
+				} catch (DataSourceException e) {
+					Log.e(Defs.LOG_TAG, "Could not read fixed currencies from database!", e);
+				} finally {
+					IOUtils.closeQuitely(dataSource);
+				}
+				Log.v(Defs.LOG_TAG, "DownloadFixedRates=" + isDownloadFixed);
 				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
 				Source source = new BNBSource();
-				rates = source.downloadRates(true);
+				rates = source.downloadRates(isDownloadFixed);
 				updateOK = true;
 			} catch (SourceException e) {
 				Log.e(Defs.LOG_TAG, "Could not load rates from remote!", e);

@@ -198,8 +198,8 @@ public class ConvertFragment extends AbstractFragment {
 					android.R.layout.simple_spinner_item, currenciesList);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spinnerSourceCurrency.setAdapter(adapter);
-			spinnerSourceCurrency
-					.setSelection(adapter.getSelectedCurrencyPosition(appSettings.getLastConvertCurrencySel()));
+			spinnerSourceCurrency.setSelection(adapter.getSelectedCurrencyPosition(appSettings
+					.getLastConvertCurrencySel()));
 		}
 		etSourceValue.setText(appSettings.getLastConvertValue());
 		updateTargetCurrenciesListView();
@@ -282,6 +282,7 @@ public class ConvertFragment extends AbstractFragment {
 			source = new SQLiteDataSource();
 			source.connect(getActivity());
 			currenciesList = source.getLastRates(getSelectedCurrenciesLocale());
+			currenciesList.addAll(source.getLastFixedRates(getSelectedCurrenciesLocale()));
 		} catch (DataSourceException e) {
 			Toast.makeText(getActivity(), R.string.error_db_load_rates, Defs.TOAST_ERR_TIME).show();
 			Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);

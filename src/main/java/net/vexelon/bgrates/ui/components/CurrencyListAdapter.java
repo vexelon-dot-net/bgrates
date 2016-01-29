@@ -24,6 +24,8 @@
 package net.vexelon.bgrates.ui.components;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.content.Context;
@@ -103,19 +105,40 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 		return items.size();
 	}
 
-	private void setResText(View v, int id, CharSequence text) {
-		TextView tx = (TextView) v.findViewById(id);
-		if (tx != null) {
-			tx.setText(text);
-		}
-	}
-
 	@Override
 	public Filter getFilter() {
 		if (filter == null) {
 			filter = new CurrencyFilter();
 		}
 		return filter;
+	}
+
+	public void sortBy(final int sortBy, final boolean sortByAscending) {
+		Collections.sort(items, new Comparator<CurrencyData>() {
+			@Override
+			public int compare(CurrencyData lhs, CurrencyData rhs) {
+				switch (sortBy) {
+				case AppSettings.SORTBY_CODE:
+					if (sortByAscending) {
+						return lhs.getCode().compareToIgnoreCase(rhs.getCode());
+					}
+					return rhs.getCode().compareToIgnoreCase(lhs.getCode());
+				case AppSettings.SORTBY_NAME:
+				default:
+					if (sortByAscending) {
+						return lhs.getName().compareToIgnoreCase(rhs.getName());
+					}
+					return rhs.getName().compareToIgnoreCase(lhs.getName());
+				}
+			}
+		});
+	}
+
+	private void setResText(View v, int id, CharSequence text) {
+		TextView tx = (TextView) v.findViewById(id);
+		if (tx != null) {
+			tx.setText(text);
+		}
 	}
 
 	private class CurrencyFilter extends Filter {
@@ -125,8 +148,6 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 			FilterResults results = new FilterResults();
 			List<CurrencyData> currenciesFiltered = Lists.newArrayList();
 			int filterBy = Integer.parseInt(constraint.toString());
-
-			System.out.println("filterby=" + filterBy);
 
 			switch (filterBy) {
 			case AppSettings.FILTERBY_ALL:
@@ -155,7 +176,6 @@ public class CurrencyListAdapter extends ArrayAdapter<CurrencyData> {
 
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
-			System.out.println("CurrencyFilter.publishResults=" + results.count);
 			if (results.count > 0) {
 				items = (List<CurrencyData>) results.values;
 			}
