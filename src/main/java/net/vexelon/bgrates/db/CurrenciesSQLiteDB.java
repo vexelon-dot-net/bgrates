@@ -41,17 +41,20 @@ public class CurrenciesSQLiteDB extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 		// on upgrade drop older tables
-		Log.w(CurrenciesSQLiteDB.class.getName(), "Upgrading database from version " + oldVersion + " to " + newVersion
-				+ ", which will destroy all old data");
-		// TOOD - remove drop Execution
-		db.execSQL("DROP TABLE IF EXISTS " + Defs.TABLE_CURRENCY);
-		db.execSQL("DROP TABLE IF EXISTS " + Defs.TABLE_CURRENCY_DATE);
-		db.execSQL("DROP TABLE IF EXISTS " + Defs.TABLE_FIXED_CURRENCY);
-
-		// create new tables
-		onCreate(db);
+		Log.w(Defs.LOG_TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
+		switch (oldVersion) {
+		case 1:
+			/**
+			 * Upgrade from database v1 to v2
+			 */
+			database.execSQL(CREATE_TABLE_FIXED_CURRENCY);
+			break;
+		default:
+			Log.w(Defs.LOG_TAG, "Unknown old db version=" + oldVersion);
+			break;
+		}
 	}
 
 }

@@ -25,6 +25,7 @@ public class SQLiteDataSource implements DataSource {
 	private static final String[] ALL_COLUMNS = { Defs.COLUMN_ID, Defs.COLUMN_GOLD, Defs.COLUMN_NAME, Defs.COLUMN_CODE,
 			Defs.COLUMN_RATIO, Defs.COLUMN_REVERSERATE, Defs.COLUMN_RATE, Defs.COLUMN_EXTRAINFO, Defs.COLUMN_CURR_DATE,
 			Defs.COLUMN_TITLE, Defs.COLUMN_F_STAR };
+	private static final String DATE_FORMAT = "yyyy-MM-dd";
 
 	private SQLiteDatabase database;
 	private CurrenciesSQLiteDB dbHelper;
@@ -47,13 +48,11 @@ public class SQLiteDataSource implements DataSource {
 	}
 
 	private Date parseStringToDate(String date, String format) throws ParseException {
-		SimpleDateFormat formatter = new SimpleDateFormat(format);
-		return formatter.parse(date);
+		return new SimpleDateFormat(format).parse(date);
 	}
 
 	private String parseDateToString(Date date, String dateFormat) {
-		DateFormat formatter = new SimpleDateFormat(dateFormat);
-		return formatter.format(date);
+		return new SimpleDateFormat(dateFormat).format(date);
 	}
 
 	@Override
@@ -88,7 +87,7 @@ public class SQLiteDataSource implements DataSource {
 					values.put(Defs.COLUMN_RATE, dynamicCurrencies.get(i).getRate());
 					values.put(Defs.COLUMN_EXTRAINFO, dynamicCurrencies.get(i).getExtraInfo());
 					values.put(Defs.COLUMN_CURR_DATE,
-							parseDateToString(dynamicCurrencies.get(i).getCurrDate(), "yyyy-MM-dd"));
+							parseDateToString(dynamicCurrencies.get(i).getCurrDate(), DATE_FORMAT));
 					values.put(Defs.COLUMN_TITLE, dynamicCurrencies.get(i).getTitle());
 					values.put(Defs.COLUMN_F_STAR, dynamicCurrencies.get(i).getfStar());
 					values.put(Defs.COLUMN_LOCALE, currenciesData.getKey().toString());
@@ -101,7 +100,7 @@ public class SQLiteDataSource implements DataSource {
 				}
 
 				valuesDate.put(Defs.COLUMN_CURR_DATE,
-						parseDateToString(currenciesData.getValue().get(1).getCurrDate(), "yyyy-MM-dd"));
+						parseDateToString(currenciesData.getValue().get(1).getCurrDate(), DATE_FORMAT));
 				valuesDate.put(Defs.COLUMN_LOCALE, currenciesData.getKey().toString());
 				database.insert(Defs.TABLE_CURRENCY_DATE, null, valuesDate);// TODO
 																			// remove
@@ -123,7 +122,7 @@ public class SQLiteDataSource implements DataSource {
 						values.put(Defs.COLUMN_RATE, fixedCurrencies.get(i).getRate());
 						values.put(Defs.COLUMN_EXTRAINFO, fixedCurrencies.get(i).getExtraInfo());
 						values.put(Defs.COLUMN_CURR_DATE,
-								parseDateToString(fixedCurrencies.get(i).getCurrDate(), "yyyy-MM-dd"));
+								parseDateToString(fixedCurrencies.get(i).getCurrDate(), DATE_FORMAT));
 						values.put(Defs.COLUMN_TITLE, fixedCurrencies.get(i).getTitle());
 						values.put(Defs.COLUMN_F_STAR, fixedCurrencies.get(i).getfStar());
 						values.put(Defs.COLUMN_LOCALE, currenciesData.getKey().toString());
@@ -141,7 +140,7 @@ public class SQLiteDataSource implements DataSource {
 	private Boolean isHaveRates(CurrencyLocales locale, Date dateOfCurrency, boolean isFixed) {
 		String[] tableColumns = new String[] { Defs.COLUMN_CURR_DATE };
 		String whereClause = Defs.COLUMN_CURR_DATE + " = ? AND " + Defs.COLUMN_LOCALE + " = ? ";
-		String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, "yyyy-MM-dd"), locale.toString() };
+		String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, DATE_FORMAT), locale.toString() };
 
 		Cursor cursor = null;
 		if (isFixed) {
@@ -184,7 +183,6 @@ public class SQLiteDataSource implements DataSource {
 			}
 			// make sure to close the cursor
 			cursor2.close();
-
 		}
 		cursor.close();
 
@@ -224,9 +222,8 @@ public class SQLiteDataSource implements DataSource {
 			}
 			cursor.close();
 
-		} catch (SQLiteException s) {
-			// TODO: move to onUpgrade
-			database.execSQL(dbHelper.CREATE_TABLE_FIXED_CURRENCY);
+		} catch (SQLiteException e) {
+			throw new DataSourceException("Could not get last fixed rates! locale=" + locale, e);
 		}
 		return lastRates;
 	}
@@ -245,12 +242,11 @@ public class SQLiteDataSource implements DataSource {
 		while (!cursor.isAfterLast()) {
 			try {
 				resultCurrency.add(parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
-						"yyyy-MM-dd"));
+						DATE_FORMAT));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				throw new DataSourceException(e);
+				// TODO: proper handling of date
+				e.printStackTrace();
 			}
-
 			cursor.moveToNext();
 		}
 		// make sure to close the cursor
@@ -263,7 +259,7 @@ public class SQLiteDataSource implements DataSource {
 	public List<CurrencyData> getRates(CurrencyLocales locale, Date dateOfCurrency) throws DataSourceException {
 		List<CurrencyData> resultCurrency = new ArrayList<CurrencyData>();
 		String whereClause = Defs.COLUMN_CURR_DATE + " = ? AND " + Defs.COLUMN_LOCALE + " = ? ";
-		String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, "yyyy-MM-dd"), locale.toString() };
+		String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, DATE_FORMAT), locale.toString() };
 
 		Cursor cursor = database.query(Defs.TABLE_CURRENCY, ALL_COLUMNS, whereClause, whereArgs, null, null, null);
 
@@ -285,7 +281,7 @@ public class SQLiteDataSource implements DataSource {
 		try {
 			resultFixedCurrency = new ArrayList<CurrencyData>();
 			String whereClause = Defs.COLUMN_CURR_DATE + " = ? AND " + Defs.COLUMN_LOCALE + " = ? ";
-			String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, "yyyy-MM-dd"), locale.toString() };
+			String[] whereArgs = new String[] { parseDateToString(dateOfCurrency, DATE_FORMAT), locale.toString() };
 
 			cursor = database.query(Defs.TABLE_FIXED_CURRENCY, ALL_COLUMNS, whereClause, whereArgs, null, null, null);
 
@@ -298,15 +294,13 @@ public class SQLiteDataSource implements DataSource {
 			// make sure to close the cursor
 			cursor.close();
 
-		} catch (SQLiteException s) {
-			database.execSQL(dbHelper.CREATE_TABLE_FIXED_CURRENCY);
+		} catch (SQLiteException e) {
+			throw new DataSourceException("Could not get fixed rates! locale=" + locale, e);
 		} finally {
 			if (cursor != null) {
 				cursor.close();
 			}
-
 		}
-
 		return resultFixedCurrency;
 	}
 
@@ -340,8 +334,9 @@ public class SQLiteDataSource implements DataSource {
 		currency.setExtraInfo(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_EXTRAINFO)));
 		try {
 			currency.setCurrDate(parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
-					"yyyy-MM-dd"));
+					DATE_FORMAT));
 		} catch (ParseException e) {
+			// TODO: proper handling of date
 			e.printStackTrace();
 		}
 		currency.setTitle(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_TITLE)));
