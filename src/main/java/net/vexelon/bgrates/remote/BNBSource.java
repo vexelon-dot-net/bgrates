@@ -232,7 +232,6 @@ public class BNBSource implements Source {
 				}
 				lineNumber++;
 			}
-			System.out.println(listFixedCurrencyData);
 			// Element euroValue = element.getElementsByTag("strong").first();
 			// String euroValuReturn = euroValue.text();
 			return listFixedCurrencyData;
@@ -242,7 +241,6 @@ public class BNBSource implements Source {
 			IOUtils.closeQuitely(is);
 		}
 	}
-
 
 	@Deprecated
 	private CurrencyData setEuroCurrency(CurrencyLocales currencyName, Date currencyDate) throws SourceException {
