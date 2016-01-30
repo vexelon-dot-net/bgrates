@@ -30,8 +30,6 @@ import net.vexelon.bgrates.utils.IOUtils;
 
 public class RateService extends Service {
 
-
-
 	@Override
 	public void onCreate() {
 
@@ -55,21 +53,14 @@ public class RateService extends Service {
 
 	@Override
 	public void onDestroy() {
-
-		// TODO Auto-generated method stub
-
 		super.onDestroy();
 
 		// Toast.makeText(this, "MyAlarmService.onDestroy()",
 		// Toast.LENGTH_LONG).show();
-
 	}
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-
-		// TODO Auto-generated method stub
-
 		super.onStart(intent, startId);
 
 		// Toast.makeText(this, "MyAlarmService.onStart()",
@@ -77,21 +68,15 @@ public class RateService extends Service {
 		if (!isCurrenciesToDate() || !isFixedCurrenciesToYear()) {
 			new DownloadWebpageTask().execute(!isFixedCurrenciesToYear());
 		}
-
 	}
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-
-		// TODO Auto-generated method stub
-
 		// Toast.makeText(this, "MyAlarmService.onUnbind()",
 		// Toast.LENGTH_LONG).show();
 
 		return super.onUnbind(intent);
-
 	}
-
 
 	/**
 	 * Checks whether have for sysdate currencies.
@@ -106,7 +91,7 @@ public class RateService extends Service {
 			source = new SQLiteDataSource();
 			source.connect(ctx);
 			listCurrency = source.getRates(getSelectedCurrenciesLocale(), Calendar.getInstance().getTime());
-			return listCurrency.size()>0;
+			return listCurrency.size() > 0;
 		} catch (DataSourceException e) {
 			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 		} finally {
@@ -122,36 +107,33 @@ public class RateService extends Service {
 	 * @return: true-Have, false-Haven't
 	 */
 
-	private boolean isFixedCurrenciesToYear(){
+	private boolean isFixedCurrenciesToYear() {
 		Date currentYear = DateTimeUtils.getCurrentYear();
 		Context ctx = RateService.this;
 		DataSource source = null;
 		List<CurrencyData> listFixedCurrency = null;
-		try{
+		try {
 			source = new SQLiteDataSource();
 			source.connect(ctx);
 			listFixedCurrency = source.getFixedRates(getSelectedCurrenciesLocale(), currentYear);
-			return listFixedCurrency.size()>0;
-		}catch (DataSourceException e) {
+			return listFixedCurrency.size() > 0;
+		} catch (DataSourceException e) {
 			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
 		} finally {
 			IOUtils.closeQuitely(source);
 		}
-
-		return  false;
+		return false;
 	}
-
 
 	private class DownloadWebpageTask extends AsyncTask<Object, Void, Map<CurrencyLocales, List<CurrencyData>>> {
 
 		@Override
-		protected Map<CurrencyLocales, List<CurrencyData>> doInBackground(/*String... urls*/Object... param) {
+		protected Map<CurrencyLocales, List<CurrencyData>> doInBackground(Object... param) {
 			Map<CurrencyLocales, List<CurrencyData>> rates = Maps.newHashMap();
-			boolean isFixed = (Boolean)param[0];
-//			for(Object object : param){
-//				isFixed = (Boolean)object;
-//			}
-
+			boolean isFixed = (Boolean) param[0];
+			// for(Object object : param){
+			// isFixed = (Boolean)object;
+			// }
 			try {
 				Log.v(Defs.LOG_TAG, "Loading rates from remote source...");
 				Source source = new BNBSource();
