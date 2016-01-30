@@ -4,6 +4,8 @@ BGrates HISTORY file
 ## v3.1.0
 
 ## EN
+
+  * Added fixed currency rates.
   * Added fixed/non-fixed currencies filter.
   * Added simple/advanced currency precision view setting.
   * Fixed GOLD convert issue.
@@ -11,7 +13,11 @@ BGrates HISTORY file
 
 ## BG
 
-    TODO
+  * Добавен пълен списък на фиксирани валутни курсове.
+  * Добавен филтър за фиксирани и нефиксирани валутни курсове.
+  * Добавена настройка за просто и сложно изписване на валутните стойности.
+  * Оправен проблем с конвертиране на валути към злато и обратно.
+  * Подобрен алгоритъм за превръщане на една валута към друга при конвертиране.
 
 ## v3.0.1
 
