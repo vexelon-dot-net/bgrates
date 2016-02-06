@@ -32,29 +32,22 @@ public class RateService extends Service {
 
 	@Override
 	public void onCreate() {
-
 		// TODO Auto-generated method stub
 		// Toast.makeText(this, "MyAlarmService.onCreate()",
 		// Toast.LENGTH_LONG).show();
-
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
-
 		// TODO Auto-generated method stub
-
 		// Toast.makeText(this, "MyAlarmService.onBind()",
 		// Toast.LENGTH_LONG).show();
-
 		return null;
-
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
 		// Toast.makeText(this, "MyAlarmService.onDestroy()",
 		// Toast.LENGTH_LONG).show();
 	}
@@ -62,7 +55,6 @@ public class RateService extends Service {
 	@Override
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
-
 		// Toast.makeText(this, "MyAlarmService.onStart()",
 		// Toast.LENGTH_LONG).show();
 		if (!isCurrenciesToDate() || !isFixedCurrenciesToYear()) {
@@ -74,7 +66,6 @@ public class RateService extends Service {
 	public boolean onUnbind(Intent intent) {
 		// Toast.makeText(this, "MyAlarmService.onUnbind()",
 		// Toast.LENGTH_LONG).show();
-
 		return super.onUnbind(intent);
 	}
 
@@ -97,7 +88,6 @@ public class RateService extends Service {
 		} finally {
 			IOUtils.closeQuitely(source);
 		}
-
 		return false;
 	}
 
@@ -144,8 +134,11 @@ public class RateService extends Service {
 			return rates;
 		}
 
-		// onPostExecute results of the AsyncTask - add currencies in DB if not
-		// exists
+		/**
+		 * Add currencies in DB, if not existing
+		 * 
+		 * @param result
+		 */
 		@Override
 		protected void onPostExecute(Map<CurrencyLocales, List<CurrencyData>> result) {
 			Context ctx = RateService.this;
@@ -167,5 +160,4 @@ public class RateService extends Service {
 		Context ctx = RateService.this;
 		return new AppSettings(ctx).getCurrenciesLanguage();
 	}
-
 }

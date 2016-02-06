@@ -43,7 +43,7 @@ public class CurrenciesSQLiteDB extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 		// on upgrade drop older tables
-		Log.w(Defs.LOG_TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
+		Log.i(Defs.LOG_TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
 		switch (oldVersion) {
 		case 1:
 			/**

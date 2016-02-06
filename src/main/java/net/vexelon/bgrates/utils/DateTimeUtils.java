@@ -41,15 +41,19 @@ public class DateTimeUtils {
 	protected static DateFormat DT_FORMAT = null;
 	protected static DateFormat DATE_FORMAT = null;
 
-	//Датата се сетва, като се вземе текущата година и се добави 01.01. Използва се за фиксираните валути
-	public static Date getCurrentYear(){
+	/**
+	 * Датата се сетва, като се вземе текущата година и се добави 01.01.
+	 * Използва се за фиксираните валути.
+	 * 
+	 * @return
+	 */
+	public static Date getCurrentYear() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		String dateInString = "01.01."+year;
+		String dateInString = "01.01." + year;
 		Date currentYear = null;
 		try {
 			currentYear = sdf.parse(dateInString);
-			System.out.print(currentYear);
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 			// use default (today)
@@ -57,11 +61,10 @@ public class DateTimeUtils {
 		return currentYear;
 	}
 
-
 	private static void initDateFormat(Context context) {
 		if (DT_FORMAT == null) {
-			DT_FORMAT = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT,
-					context.getResources().getConfiguration().locale);
+			DT_FORMAT = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, context.getResources()
+					.getConfiguration().locale);
 		}
 		if (DATE_FORMAT == null) {
 			DATE_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM,
@@ -112,7 +115,7 @@ public class DateTimeUtils {
 	}
 
 	/**
-	 * Reset <code>Date</code> object to start 00:00:00 time of the day.
+	 * Reset {@code date} object to start 00:00:00 time of the day.
 	 * 
 	 * @param date
 	 * @return
