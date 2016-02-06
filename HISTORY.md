@@ -5,7 +5,7 @@ BGrates HISTORY file
 
 ## EN
 
-  * Added fixed currency rates.
+  * Added fixed currency rates. EUR currency is part of the fixed rates.
   * Added fixed/non-fixed currencies filter.
   * Added simple/advanced currency precision view setting.
   * Fixed GOLD convert issue.
@@ -13,7 +13,7 @@ BGrates HISTORY file
 
 ## BG
 
-  * Добавен пълен списък на фиксирани валутни курсове.
+  * Добавен пълен списък на фиксирани валутни курсове. Eвро валутата е част от фиксираните курсове.
   * Добавен филтър за фиксирани и нефиксирани валутни курсове.
   * Добавена настройка за просто и сложно изписване на валутните стойности.
   * Оправен проблем с конвертиране на валути към злато и обратно.
