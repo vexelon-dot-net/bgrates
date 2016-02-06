@@ -22,8 +22,6 @@
     <string name="dlg_no">Не</string>
     <string name="bg_currency_name">лв.</string>
     <string name="menu_convert">Преобразуване</string>
-    <string name="conv_hint_msg">Преобразуване на валути</string>
-    <string name="text_selectcurrency">Изберете валута:</string>
     <string name="tab_title_currencies">Обменни курсове</string>
     <string name="tab_title_convert">Преобразуване</string>
     <string name="hint_currency_remove">Натисни и задръж, за да премахнеш.</string>
