@@ -36,7 +36,7 @@ public class Defs {
 
 	// //////Tsvetoslav
 	// Time for request to BNB
-	public static final long NOTIFY_INTERVAL = 3600 * 1000; // 1 hour
+	public static final long NOTIFY_INTERVAL = 6 * 3600 * 1000; // 6 hours
 	// Parameters which used into SQLite//
 	// Name of DB
 	public static final String DATABASE_NAME = "currencies.db";
