@@ -57,8 +57,9 @@ public class RateService extends Service {
 		super.onStart(intent, startId);
 		// Toast.makeText(this, "MyAlarmService.onStart()",
 		// Toast.LENGTH_LONG).show();
-		if (!isCurrenciesToDate() || !isFixedCurrenciesToYear()) {
-			new DownloadWebpageTask().execute(!isFixedCurrenciesToYear());
+		boolean isFixedCurrenciesOK = isFixedCurrenciesToYear();
+		if (!isCurrenciesToDate() || !isFixedCurrenciesOK) {
+			new DownloadWebpageTask().execute(!isFixedCurrenciesOK);
 		}
 	}
 
@@ -84,7 +85,7 @@ public class RateService extends Service {
 			listCurrency = source.getRates(getSelectedCurrenciesLocale(), Calendar.getInstance().getTime());
 			return listCurrency.size() > 0;
 		} catch (DataSourceException e) {
-			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
+			Log.e(Defs.LOG_TAG, "Could not load currencies from database!", e);
 		} finally {
 			IOUtils.closeQuitely(source);
 		}
@@ -108,7 +109,7 @@ public class RateService extends Service {
 			listFixedCurrency = source.getFixedRates(getSelectedCurrenciesLocale(), currentYear);
 			return listFixedCurrency.size() > 0;
 		} catch (DataSourceException e) {
-			Log.e(Defs.LOG_TAG, "Could not save currencies to database!", e);
+			Log.e(Defs.LOG_TAG, "Could not load fixed currencies from database!", e);
 		} finally {
 			IOUtils.closeQuitely(source);
 		}
