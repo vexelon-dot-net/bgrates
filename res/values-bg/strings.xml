@@ -3,6 +3,7 @@
 
     <string name="text_ok">OK</string>
     <string name="text_cancel">Отказ</string>
+    <string name="text_close">Затвори</string>
 
     <string name="app_name">BGrates M-Tel</string>
     <string name="app_name_pure">BGrates</string>
@@ -68,4 +69,16 @@
     <string name="pref_rateus_title">Гласувайте за BGrates</string>
     <string name="pref_rateus_summary">Подкрепете ни и дайте Вашето мнение за приложението</string>
     <string name="pref_about_title">Относно BGrates</string>
+    <string name="pref_nosupport_title">Важно съобщение</string>
+    <string name="pref_nosupport_message">Здравейте!&lt;br&gt;&lt;br&gt;
+Изключително сме щастливи, че използвате &lt;b&gt;BGrates&lt;/b&gt;!
+&lt;br&gt;&lt;br&gt;
+Приложението е в Google Play вече &lt;b&gt;близо 6 години&lt;/b&gt; и с радост можем да кажем, че е достатъчно стабилен инструмент за работа.
+&lt;br&gt;&lt;br&gt;
+За съжалние обаче, това ще бъде последното обновление на &lt;b&gt;BGrates&lt;/b&gt;. От тук нататък ще концентрираме работата и усилията си върху алтернативното open source приложение &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt;.
+Нови функции и обновления ще да бъдат внасяни само в &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt; и ще се радваме, ако го разгледате.
+&lt;br&gt;&lt;br&gt;
+Приятен ден!&lt;br&gt;
+Разработчиците</string>
+
 </resources>

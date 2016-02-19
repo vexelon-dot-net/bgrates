@@ -41,6 +41,9 @@ public class AppSettings {
 	public static final int PRECISION_SIMPLE = 0;
 	public static final int PRECISION_ADVANCED = 1;
 
+	public static final int NOSUPPORT_NOT_ACK = 0;
+	public static final int NOSUPPORT_ACK = 1;
+
 	private SharedPreferences generalPrefs = null;
 	private Context context = null;
 
@@ -179,6 +182,14 @@ public class AppSettings {
 
 	public String getLastConvertCurrencySel() {
 		return generalPrefs.getString("pref_convert_selcurrencycode", "bg");
+	}
+
+	public int getSupportNotification() {
+		return generalPrefs.getInt("pref_support_info", 0);
+	}
+
+	public void setSupportNotification(int value) {
+		generalPrefs.edit().putInt("pref_support_info", value).apply();
 	}
 
 }

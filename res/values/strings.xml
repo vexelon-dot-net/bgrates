@@ -3,6 +3,7 @@
 
     <string name="text_ok">OK</string>
     <string name="text_cancel">Cancel</string>
+    <string name="text_close">Close</string>
 
     <string name="app_name">BGrates M-Tel</string>
     <string name="app_name_pure">BGrates</string>
@@ -82,5 +83,17 @@
     <string name="pref_rateus_title">Rate BGrates</string>
     <string name="pref_rateus_summary">Support us by rating this app</string>
     <string name="pref_about_title">About BGrates</string>
+    <string name="pref_nosupport_title">Important Info</string>
+    <string name="pref_nosupport_message">Hey there!
+&lt;br&gt;&lt;br&gt;
+We are extremely happy to have you as a &lt;b&gt;BGrates&lt;/b&gt; user!
+&lt;br&gt;&lt;br&gt;
+The app is in Google Play for almost &lt;b&gt;6 years now&lt;/b&gt; and we are happy to say that it is a pretty stable working tool.
+&lt;br&gt;&lt;br&gt;
+Unfortunately this will be the last update of &lt;b&gt;BGrates&lt;/b&gt;. From here on we will concentrate our efforts on an alternative open source app called &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt;.
+New features and updates will follow only in &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt;, so come check it out.
+&lt;br&gt;&lt;br&gt;
+Have a great day!&lt;br&gt;
+The developers</string>
 
 </resources>
