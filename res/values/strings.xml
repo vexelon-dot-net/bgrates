@@ -19,6 +19,7 @@
     <string name="about_logo_author">Logo - Stremena Tuzsuzova</string>
     <string name="about_bnb_info">Exchange rate information is updated from the web site of the Bulgarian National Bank.</string>
     <string name="about_bnb_info_2">The exchange rates of currencies are calculated on the basis of the fixed exchange rate of the Bulgarian lev to the euro, and the information source is the exchange rates of the euro against these currencies published by the European Central Bank</string>
+    <string name="about_bnb_info_3">Try our new &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt; app.</string>
     <string name="about_flag_icons_info">Icons and images by:</string>
     <string name="dlg_yes">Yes</string>
     <string name="dlg_no">No</string>
@@ -90,8 +91,8 @@ We are extremely happy to have you as a &lt;b&gt;BGrates&lt;/b&gt; user!
 &lt;br&gt;&lt;br&gt;
 The app is in Google Play for almost &lt;b&gt;6 years now&lt;/b&gt; and we are happy to say that it is a pretty stable working tool.
 &lt;br&gt;&lt;br&gt;
-Unfortunately this will be the last update of &lt;b&gt;BGrates&lt;/b&gt;. From here on we will concentrate our efforts on an alternative open source app called &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt;.
-New features and updates will follow only in &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt;, so come check it out.
+Unfortunately this will be the last update of &lt;b&gt;BGrates&lt;/b&gt;. From here on we will concentrate our efforts on a new, open source app called &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt;.
+You\'ll find many new features and updates in the new app, so &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;check it out&lt;/a&gt; now.
 &lt;br&gt;&lt;br&gt;
 Have a great day!&lt;br&gt;
 The developers</string>

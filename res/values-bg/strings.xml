@@ -16,6 +16,7 @@
     <string name="about_version">вер.</string>
     <string name="about_bnb_info">Обменните курсове се предоставят и обновяват от сайта на Българска Национална Банка.</string>
     <string name="about_bnb_info_2">Обменните валутни курсове на чуждестранните валути се изчисляват на основата на фиксирания курс на лева спрямо еврото, като за източник се използват публикуваните от Европейската централна банка курсове на еврото към същите валути за съответния ден.</string>
+    <string name="about_bnb_info_3">Опитайте новото ни приложение - &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt;.</string>
     <string name="about_author">Автори - Петър Петров, Цветослав Цветков</string>
     <string name="about_logo_author">Графично Лого - Стремена Тузсузова</string>
     <string name="about_flag_icons_info">Безплатни икони от:</string>
@@ -75,8 +76,8 @@
 &lt;br&gt;&lt;br&gt;
 Приложението е в Google Play вече &lt;b&gt;близо 6 години&lt;/b&gt; и с радост можем да кажем, че е достатъчно стабилен инструмент за работа.
 &lt;br&gt;&lt;br&gt;
-За съжалние обаче, това ще бъде последното обновление на &lt;b&gt;BGrates&lt;/b&gt;. От тук нататък ще концентрираме работата и усилията си върху алтернативното open source приложение &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt;.
-Нови функции и обновления ще да бъдат внасяни само в &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt; и ще се радваме, ако го разгледате.
+За съжалние обаче, това ще бъде последното обновление на &lt;b&gt;BGrates&lt;/b&gt;. От тук нататък ще концентрираме работата и усилията си върху ново безплатно, open source приложение &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;Currency BG&lt;/a&gt;.
+Там ще намерите много нови функции и обновления и ще се радваме, ако го &lt;a href="market://details?id=net.vexelon.currencybg.app"&gt;разгледате&lt;/a&gt;.
 &lt;br&gt;&lt;br&gt;
 Приятен ден!&lt;br&gt;
 Разработчиците</string>

@@ -21,13 +21,21 @@
     	android:layout_height="wrap_content" 
     	android:gravity="center_horizontal">
 </TextView>
-<TextView style="@style/FontList" 
-    	android:id="@+id/about_row2" 
-    	android:layout_width="fill_parent" 
-    	android:layout_height="wrap_content"
-    	android:paddingLeft="10sp"
-    	android:paddingRight="10sp"
-    	android:gravity="left">
+<TextView style="@style/FontList"
+	android:id="@+id/about_row_tryit"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingLeft="10sp"
+	android:paddingRight="10sp"
+	android:gravity="left">
+</TextView>
+<TextView style="@style/FontList"
+	android:id="@+id/about_row2"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingLeft="10sp"
+	android:paddingRight="10sp"
+	android:gravity="left">
 </TextView>
 </LinearLayout>
 </ScrollView>

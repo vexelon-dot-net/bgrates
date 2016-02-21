@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,7 +45,12 @@ public class AboutActivity extends Activity {
 		setText(R.id.about_row1, sb.toString());
 		Linkify.addLinks((TextView) view.findViewById(R.id.about_row1), Linkify.ALL);
 
-		sb = new StringBuilder();
+		TextView tv = (TextView) findViewById(R.id.about_row_tryit);
+		tv.setText(Html.fromHtml(getResString(R.string.about_bnb_info_3)));
+		tv.setMovementMethod(LinkMovementMethod.getInstance());
+
+		sb.setLength(0);
+		sb.append("\n");
 		sb.append(getResString(R.string.about_author));
 		sb.append("\n");
 		sb.append("https://github.com/petarov/bgrates");
