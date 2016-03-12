@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import com.google.common.collect.Lists;
 
@@ -60,7 +61,6 @@ public class SQLiteDataSource implements DataSource {
 		ContentValues valuesDate = new ContentValues();
 
 		for (Map.Entry<CurrencyLocales, List<CurrencyData>> currenciesData : rates.entrySet()) {
-
 			// Данните от сайта на БНБ се разделят на два списъка - от динамични
 			// валути и от статични валути
 			List<CurrencyData> dynamicCurrencies = new ArrayList<CurrencyData>();
@@ -71,6 +71,16 @@ public class SQLiteDataSource implements DataSource {
 				} else {
 					dynamicCurrencies.add(currency);
 				}
+			}
+
+			// make sure there is sufficient data in the lists
+			if (dynamicCurrencies.isEmpty() || dynamicCurrencies.size() < 2) {
+				Log.w(Defs.LOG_TAG, "Dynamic currencies list empty (" + dynamicCurrencies.size() + ")!");
+				return;
+			}
+			if (fixedCurrencies.isEmpty() || fixedCurrencies.size() < 2) {
+				Log.w(Defs.LOG_TAG, "Fixed currencies list is empty (" + fixedCurrencies.size() + ")!");
+				return;
 			}
 
 			// //За всеки от списъците се прави проверка дали го има в базата.
@@ -234,14 +244,14 @@ public class SQLiteDataSource implements DataSource {
 		String whereClause = Defs.COLUMN_LOCALE + " = ? ";
 		String[] whereArgs = new String[] { locale.toString() };
 
-		Cursor cursor = database.query(true, Defs.TABLE_CURRENCY_DATE, tableColumns, whereClause, whereArgs, null,
-				null, null, null);
+		Cursor cursor = database.query(true, Defs.TABLE_CURRENCY_DATE, tableColumns, whereClause, whereArgs, null, null,
+				null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			try {
-				resultCurrency.add(parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
-						DATE_FORMAT));
+				resultCurrency.add(
+						parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)), DATE_FORMAT));
 			} catch (ParseException e) {
 				// TODO: proper handling of date
 				e.printStackTrace();
@@ -332,8 +342,8 @@ public class SQLiteDataSource implements DataSource {
 		currency.setRate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_RATE)));
 		currency.setExtraInfo(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_EXTRAINFO)));
 		try {
-			currency.setCurrDate(parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)),
-					DATE_FORMAT));
+			currency.setCurrDate(
+					parseStringToDate(cursor.getString(cursor.getColumnIndex(Defs.COLUMN_CURR_DATE)), DATE_FORMAT));
 		} catch (ParseException e) {
 			// TODO: proper handling of date
 			e.printStackTrace();
