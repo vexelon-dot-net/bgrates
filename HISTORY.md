@@ -10,6 +10,7 @@ BGrates HISTORY file
   * Added simple/advanced currency precision view setting.
   * Fixed GOLD convert issue.
   * Improved currencies convert calculations.
+  * Minor updates and fixes.
 
 ## BG
 
@@ -18,6 +19,7 @@ BGrates HISTORY file
   * Добавена настройка за просто и сложно изписване на валутните стойности.
   * Оправен проблем с конвертиране на валути към злато и обратно.
   * Подобрен алгоритъм за превръщане на една валута към друга при конвертиране.
+  * Други подобрения и оптимизации.
 
 ## v3.0.1
 

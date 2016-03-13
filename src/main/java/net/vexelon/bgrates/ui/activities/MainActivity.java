@@ -201,7 +201,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 			// Return a PlaceholderFragment (defined as a static inner class
 			// below).
 			Fragment fragment = PlaceholderFragment.newInstance(position + 1);
-			((AbstractFragment) fragment).addListener(MainActivity.this);
+			// ((AbstractFragment) fragment).addListener(MainActivity.this);
 			return fragment;
 		}
 
