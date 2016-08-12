@@ -1,6 +1,16 @@
 BGrates HISTORY file
 =====================
 
+## v3.1.1
+
+## EN
+
+  * Fixed currency download issue.
+
+## BG
+
+  * Отстранен проблем със сваляне на валутите.
+
 ## v3.1.0
 
 ## EN
