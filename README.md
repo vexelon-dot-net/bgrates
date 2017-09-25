@@ -3,7 +3,7 @@ _.o0 BGRates 0o._
 
 [![Build Status](https://travis-ci.org/vexelon-dot-net/bgrates.svg?branch=master)](https://travis-ci.org/vexelon-dot-net/bgrates)
 
-<a href='https://play.google.com/store/apps/details?id=net.vexelon.bgrates&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Предлага се в Google Play   ' src='https://play.google.com/intl/en_us/badges/images/generic/bg_badge_web_generic.png'/></a>
+<a href='https://play.google.com/store/apps/details?id=net.vexelon.bgrates&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Предлага се в Google Play   ' src='https://play.google.com/intl/en_us/badges/images/generic/bg_badge_web_generic.png' width="180px"/></a>
 
 [BGrates](https://play.google.com/store/apps/details?id=net.vexelon.bgrates) is an Android application that delivers up-to-date currency exchange rates for Bulgarian Lev (BGN). Exchange rate information is updated from the web site of the Bulgarian National Bank - http://www.bnb.bg
 
