@@ -3,9 +3,7 @@ _.o0 BGRates 0o._
 
 [![Build Status](https://travis-ci.org/vexelon-dot-net/bgrates.svg?branch=master)](https://travis-ci.org/vexelon-dot-net/bgrates)
 
-<a href="https://play.google.com/store/apps/details?id=net.vexelon.bgrates&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-AC-global-none-all-co-pr-py-PartBadges-Oct1515-1">
-<img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" width="180px" />
-</a>
+<a href='https://play.google.com/store/apps/details?id=net.vexelon.bgrates&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Предлага се в Google Play   ' src='https://play.google.com/intl/en_us/badges/images/generic/bg_badge_web_generic.png'/></a>
 
 [BGrates](https://play.google.com/store/apps/details?id=net.vexelon.bgrates) is an Android application that delivers up-to-date currency exchange rates for Bulgarian Lev (BGN). Exchange rate information is updated from the web site of the Bulgarian National Bank - http://www.bnb.bg
 
@@ -21,9 +19,6 @@ Please read [HISTORY](HISTORY) for a list of changes.
 
 # Development 
 
-[![Join the chat at https://gitter.im/petarov/bgrates](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/petarov/bgrates?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-
 To generate Eclipse project files run:
 
     gradle eclipse
@@ -35,10 +30,6 @@ To build the project run:
 To install a debug build run:
 
     gradle installDebug
-
-To check what other tasks are available run:
-
-    gradle tasks
 
 # License
 [MIT License](LICENSE)
