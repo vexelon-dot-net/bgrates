@@ -118,7 +118,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Not
 
 	public void startService() {
 		Intent myIntent = new Intent(MainActivity.this, RateService.class);
-		pendingIntent = PendingIntent.getService(MainActivity.this, 0, myIntent, 0);
+		pendingIntent = PendingIntent.getService(MainActivity.this, 0, myIntent, PendingIntent.FLAG_MUTABLE);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());

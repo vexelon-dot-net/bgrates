@@ -32,10 +32,10 @@ import net.vexelon.bgrates.utils.IOUtils;
 public class BNBSource implements Source {
 
 	// Addresses on BNB for get on XML file
-	public final static String URL_BNB_FORMAT_BG = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
-	public final static String URL_BNB_FORMAT_EN = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
-	public final static String URL_BNB_INDEX = "http://www.bnb.bg/index.htm";
-	public final static String URL_BNB_FIXED_RATES = "http://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERFixed/index.htm?toLang=_";
+	public final static String URL_BNB_FORMAT_BG = "https://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=BG";
+	public final static String URL_BNB_FORMAT_EN = "https://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERForeignCurrencies/?download=xml&lang=EN";
+	public final static String URL_BNB_INDEX = "https://www.bnb.bg/index.htm";
+	public final static String URL_BNB_FIXED_RATES = "https://www.bnb.bg/Statistics/StExternalSector/StExchangeRates/StERFixed/index.htm?toLang=_";
 	public final static String URI_CACHE_NAME_INDEXHTM = "BGRatesDownloadCacheHTM";
 
 	public final static String XML_TAG_ROWSET = "ROWSET";
